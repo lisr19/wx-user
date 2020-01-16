@@ -6,21 +6,25 @@
 					<div class="content-card">
 						<div class="input-box" @click="showSelect('转介来源')">
 							<span> <em>*</em>转介来源：</span>
-							<input class="name"  v-model="healthData.sourceOfReferral" :value="healthData.zjName"  placeholder="转介来源" disabled />
+							<input  v-model="healthData.sourceOfReferral" :value="healthData.zjName"  placeholder="转介来源" disabled />
 						</div>
 						<div class="input-box" @click="showSelect('隶属区域')">
 							<span> <em>*</em>隶属区域：</span>
-							<input class="name"  v-model="healthData.subordinateArea" placeholder="隶属区域" disabled />
+							<input   v-model="healthData.subordinateArea" placeholder="隶属区域" disabled />
 						</div>
 						<div class="input-box" @click="showSelect('居住方式')">
-							<span> <em>*</em>隶属区域：</span>
-							<input class="name"  v-model="healthData.living" placeholder="居住方式" disabled />
+							<span> <em>*</em>居住方式：</span>
+							<input   v-model="healthData.living" :value="healthData.zjfsName" placeholder="居住方式" disabled />
 						</div>
 					</div>
 					<div class="content-card">
 							<div class="input-box" @click="openMyData('name')">
 								<span> <em>*</em>姓名：</span>
-								<input class="name"  v-model="healthData.name" placeholder="请输入姓名" disabled />
+								<input  v-model="healthData.name" placeholder="请输入姓名" disabled />
+							</div>
+							<div class="input-box" @click="openMyData('gender')">
+								<span> <em>*</em>性别：</span>
+								<input  v-model="healthData.gender" placeholder="请选择性别" disabled />
 							</div>
 							<!--<div @click="openMyData('gender')">-->
 								<!--<FormItem label="性别：" prop="gender">-->
@@ -30,19 +34,17 @@
 								<!--</FormItem>-->
 							<!--</div>-->
 
-						<div @click="">
-							<FormItem  prop="birthday" label="出生年月：">
-								<div @click="showPopFn" class="birthday-box">
-									<i-input class="birthday"  v-model="healthData.birthday" placeholder="出生年月" disabled/>
-									<span>年龄:{{healthData.age?healthData.age:0}}</span>
-								</div>
-							</FormItem>
+
+							<div class="input-box" @click="showPopFn">
+								<span> <em>*</em>出生年月：</span>
+								<input  v-model="healthData.birthday" placeholder="出生年月" disabled />
+								<span>年龄:{{healthData.age?healthData.age:0}}</span>
+							</div>
+						<div class="input-box" @click="showSelect('文化')">
+							<span> <em>*</em>文化：</span>
+							<input  v-model="healthData.educationLevel" :value="healthData.whName"  placeholder="请选择文化" disabled />
 						</div>
-						<FormItem  prop="educationLevel" label="文化：">
-							<Select class="educationLevel" v-model="healthData.educationLevel">
-								<Option v-for="item in educationLevel" :value="item.key" :key="item.key">{{ item.Level }}</Option>
-							</Select>
-						</FormItem>
+
 						<FormItem  prop="nativePlace" label="籍贯：">
 							<Select class="nativePlace" v-model="healthData.nativePlace">
 								<Option v-for="item in nativePlace" :value="item.name" :key="item.id">{{ item.name }}</Option>
@@ -198,28 +200,26 @@
 		</div>
 		<div  v-if="isEdit" class="btn" @click="saveData">保存修改</div>
 		<div v-else class="btn" @click="saveData">保存</div>
-		<van-popup v-model="show" position="bottom" :style="{ height: '40%' }">
-			<!--<van-datetime-picker-->
-					<!--v-model="currentDate"-->
-					<!--type="date"-->
-					<!--:min-date="minDate"-->
-					<!--:max-date="maxDate"-->
-					<!--:formatter="formatter"-->
-					<!--@confirm="confirmFn()"-->
-					<!--@cancel="cancelFn()"-->
-			<!--/>-->
+
+		<van-popup :show="show" position="bottom" :style="{ height: '40%' }">
+			<van-datetime-picker
+					v-model="currentDate"
+					type="date"
+					:min-date="minDate"
+					:max-date="maxDate"
+					@confirm="confirmFn"
+					@cancel="cancelFn"
+			/>
 		</van-popup>
 
-
 		<van-popup :show="showA" position="bottom" :style="{ height: '40%' }">
-			<van-picker :columns="listName"  @cancel="onCancel" @confirm="onConfirm"   value-key="itemName"  show-toolbar/>
+			<van-picker :columns="listName"  @cancel="onCancel" @confirm="onConfirm"   value-key="itemName"  default-index="id" show-toolbar/>
 		</van-popup>
 	</div>
 </template>
 
 <script>
 	// import {getNation, getDistrict, getProvince,getSourceList,getPayList,getResidenceList,addHealthRecord,getHealthRecordList,editHealthRecord} from "@/lib/API/comment";
-	// import { MessageBox,Indicator  } from 'mint-ui';
 	// import {getUserDate} from "@/lib/API/login-enroll";
 	export default {
 
@@ -229,9 +229,9 @@
 				showA:false,
 				listName:[],
 				healthId:'', //用户档案ID
-				minDate: new Date(1900,0,1),
-				maxDate: new Date(),
-				currentDate: new Date(1950,0,1),
+				minDate: new Date(1900,0,1).getTime(),
+				maxDate: new Date().getTime(),
+				currentDate: new Date(1950,0,1).getTime(),
 				show:false,
 				isEdit:false,
 				birthday:'', //生日
@@ -255,42 +255,42 @@
 				// 性别
 				gender:[
 					{
-						sex:'男',
+						itemName:'男',
 						key:1
 					},
 					{
-						sex:'女',
+						itemName:'女',
 						key:2
 					},
 				],
 				// 学历
-				educationLevel:[
+				educationLevelArr:[
 					{
-						Level:'小学',
+						itemName:'小学',
 						key:1
 					},
 					{
-						Level:'初中',
+						itemName:'初中',
 						key:2
 					},
 					{
-						Level:'中专',
+						itemName:'中专',
 						key:3
 					},
 					{
-						Level:'大专',
+						itemName:'大专',
 						key:4
 					},
 					{
-						Level:'大学本科',
+						itemName:'大学本科',
 						key:5
 					},
 					{
-						Level:'研究生',
+						itemName:'研究生',
 						key:6
 					},
 					{
-						Level:'研究生以上',
+						itemName:'研究生以上',
 						key:7
 					},
 				],
@@ -384,10 +384,13 @@
 					this.getSourceList()// 转介来源
 				}else if(type==='居住方式'){
 					this.listName=this.liveList
+				}else if(type==='文化'){
+					this.listName=this.educationLevelArr
 				}
 				this.showA = true
 			},
 			onConfirm(event) {
+				console.log(event);
 				const { picker, value, index } = event.mp.detail;
 				if(this.showType==='转介来源'){
 				    this.healthData.sourceOfReferral = value.id
@@ -396,7 +399,10 @@
 					this.healthData.subordinateArea = value.itemName
 				}else if(this.showType==='居住方式'){
 					this.healthData.living = value.itemName
-				}
+				}else if(this.showType==='文化'){
+					this.healthData.whName = value.itemName
+					this.healthData.educationLevel = value.key
+			}
 				setTimeout(()=>{
 					this.showA = false
 				})
@@ -410,7 +416,7 @@
 				this.getNation() // 民族
 				// this.getDistrict() // 隶属区域
 				this.getProvince()// 籍贯
-				// this.getSourceList()// 转介来源
+				this.getSourceList()// 转介来源
 				this.getPayList()// 医疗付款方式
 				this.getResidenceList()// 现居住地列表
 				this.getDay(0,'-') //当前时间
@@ -485,6 +491,24 @@
 							console.log('有健康档案')
 							this.isEdit = true
 							this.healthData=res.data.list[0]
+							this.sourceList.forEach((item,index)=>{
+								console.log(item);
+								if(item.id===this.healthData.sourceOfReferral){
+									this.healthData.zjName=item.itemName
+								}
+							})
+							this.liveList.forEach((item,index)=>{
+								console.log(item);
+								if(item.key===this.healthData.living){
+									this.healthData.zjfsName=item.itemName
+								}
+							})
+
+							this.educationLevelArr.forEach((item,index)=>{
+								if(item.key===this.healthData.educationLevel){
+									this.healthData.whName=item.itemName
+								}
+							})
 							for(let i in this.healthData){
 								if(this.healthData[i]==='null')
 									this.healthData[i]=null
@@ -948,9 +972,6 @@
 				}).then(res =>{
 					if(res.code === 200) {
 						this.listName = res.data.list
-						// list.forEach((i)=>{
-						// 	this.listName.push(i.itemName)
-						// })
 					}}).catch((req)=>{
 					console.log(req)
 				})
@@ -977,9 +998,7 @@
 				}).then(res =>{
 					if(res.code === 200) {
 						this.listName = res.data.list
-						// list.forEach((i)=>{
-						// 	this.listName.push(i.itemName)
-						// })
+						this.sourceList = res.data.list
 					}}).catch((req)=>{
 					console.log(req)
 				})
@@ -1011,14 +1030,14 @@
 			showPopFn() {
 				this.show = true;
 				console.log(this.currentDate);
-				this.currentDate = 	this.healthData.birthday?new Date(this.healthData.birthday.replace(/-/g,",")):new Date(1950,0,1)
+				this.currentDate = 	this.healthData.birthday?new Date(this.healthData.birthday.replace(/-/g,",")).getTime():new Date(1950,0,1).getTime()
 			},
-			confirmFn() { // 确定按钮
+			confirmFn(event) { // 确定按钮
+				this.currentDate=event.mp.detail
+				this.healthData.birthday = this.formatDate(new Date(this.currentDate))
+				this.getAge()
 				setTimeout(()=>{
-					console.log(this.formatDate(this.currentDate))
-					this.healthData.birthday = this.formatDate(this.currentDate)
 					this.show = false
-					this.getAge()
 				},100)
 			},
 			cancelFn(){

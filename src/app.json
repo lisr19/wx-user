@@ -1,6 +1,6 @@
 {
   "pages": [
-    "pages/phr/main",
+
     "pages/index/main",
     "pages/login/main",
     "pages/register/main",
@@ -22,6 +22,7 @@
     "pages/nurse/main",
     "pages/nurse-detail/main",
     "pages/pay/main",
+    "pages/phr/main",
     "pages/pay/pay-success/main"
 
 
@@ -43,6 +44,8 @@
     "van-rate": "static/vant/rate/index",
     "van-area": "static/vant/area/index",
     "van-action-sheet": "static/vant/action-sheet/index",
+    "van-dropdown-menu": "static/vant/dropdown-menu/index",
+    "van-dropdown-item": "static/vant/dropdown-item/index",
     "i-input": "static/iview/input/index"
   },
   "window": {
