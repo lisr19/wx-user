@@ -1,42 +1,35 @@
 <template>
 	<div class="main">
-		<h1>健康档案</h1>
+		<h2>健康档案</h2>
 		<div class="content">
-			<Form :rules="rules"  :model="healthData" ref="healthDataForm">
 				<div class="body-one">
 					<div class="content-card">
-						<FormItem  prop="sourceOfReferral" label="转介来源：">
-							<Select v-model="healthData.sourceOfReferral" placeholder="转介来源">
-								<Option :value="item.id" :key="item.id"  v-for="item in sourceList">{{item.itemName}}
-								</Option>
-							</Select>
-						</FormItem>
-						<FormItem  prop="subordinateArea" label="隶属区域：">
-							<Select class="subordinateArea" v-model="healthData.subordinateArea" >
-								<Option v-for="(item,index) in suboAreaList" :value="item.itemName" :key="index">{{ item.itemName }}</Option>
-							</Select>
-						</FormItem>
-						<FormItem  prop="living" label="居住方式：">
-							<Select class="living" v-model="healthData.living" >
-								<Option v-for="(item,index) in liveList" :value="item.key" :key="index">{{ item.living }}</Option>
-							</Select>
-						</FormItem>
+						<div class="input-box" @click="showSelect('转介来源')">
+							<span> <em>*</em>转介来源：</span>
+							<input class="name"  v-model="healthData.sourceOfReferral" :value="healthData.zjName"  placeholder="转介来源" disabled />
+						</div>
+						<div class="input-box" @click="showSelect('隶属区域')">
+							<span> <em>*</em>隶属区域：</span>
+							<input class="name"  v-model="healthData.subordinateArea" placeholder="隶属区域" disabled />
+						</div>
+						<div class="input-box" @click="showSelect('居住方式')">
+							<span> <em>*</em>隶属区域：</span>
+							<input class="name"  v-model="healthData.living" placeholder="居住方式" disabled />
+						</div>
 					</div>
 					<div class="content-card">
-						<div class="ng-box">
-							<div @click="openMyData('name')">
-								<FormItem  prop="name" label="姓名：">
-									<i-input class="name"  v-model="healthData.name" placeholder="请输入姓名" disabled  />
-								</FormItem>
+							<div class="input-box" @click="openMyData('name')">
+								<span> <em>*</em>姓名：</span>
+								<input class="name"  v-model="healthData.name" placeholder="请输入姓名" disabled />
 							</div>
-							<div @click="openMyData('gender')">
-								<FormItem label="性别：" prop="gender">
-									<Select  v-model="healthData.gender" placeholder="请选择性别" disabled  >
-										<Option v-for="item in gender" :value="item.key" :key="item.key">{{item.sex}}</Option>
-									</Select>
-								</FormItem>
-							</div>
-						</div>
+							<!--<div @click="openMyData('gender')">-->
+								<!--<FormItem label="性别：" prop="gender">-->
+									<!--<Select  v-model="healthData.gender" placeholder="请选择性别" disabled  >-->
+										<!--<Option v-for="item in gender" :value="item.key" :key="item.key">{{item.sex}}</Option>-->
+									<!--</Select>-->
+								<!--</FormItem>-->
+							<!--</div>-->
+
 						<div @click="">
 							<FormItem  prop="birthday" label="出生年月：">
 								<div @click="showPopFn" class="birthday-box">
@@ -202,20 +195,24 @@
 						</div>
 					</FormItem>
 				</div>
-			</Form>
 		</div>
 		<div  v-if="isEdit" class="btn" @click="saveData">保存修改</div>
 		<div v-else class="btn" @click="saveData">保存</div>
 		<van-popup v-model="show" position="bottom" :style="{ height: '40%' }">
-			<van-datetime-picker
-					v-model="currentDate"
-					type="date"
-					:min-date="minDate"
-					:max-date="maxDate"
-					:formatter="formatter"
-					@confirm="confirmFn()"
-					@cancel="cancelFn()"
-			/>
+			<!--<van-datetime-picker-->
+					<!--v-model="currentDate"-->
+					<!--type="date"-->
+					<!--:min-date="minDate"-->
+					<!--:max-date="maxDate"-->
+					<!--:formatter="formatter"-->
+					<!--@confirm="confirmFn()"-->
+					<!--@cancel="cancelFn()"-->
+			<!--/>-->
+		</van-popup>
+
+
+		<van-popup :show="showA" position="bottom" :style="{ height: '40%' }">
+			<van-picker :columns="listName"  @cancel="onCancel" @confirm="onConfirm"   value-key="itemName"  show-toolbar/>
 		</van-popup>
 	</div>
 </template>
@@ -227,55 +224,10 @@
 	export default {
 
 		data() {
-			var checkPhone = (rule,value,callback) => {
-				let mobile = /^[1]([3-9])[0-9]{9}$/
-				let tel = /^0(\d{2,3}|\d{2,3}-|)?\d{7,8}$/
-				if(value===''||value===null||value===undefined){
-					callback()
-				}
-				if (!tel.test(value) && !mobile.test(value)){
-					return callback(new Error('号码格式错误'))
-				}else {
-					callback()
-				}
-			}
 			return {
-				rules: {
-					sourceOfReferral:[{required: true, message: '请选择转介来源', trigger: 'change',type:'number'}],
-					living:[{required: true, message: '请选居住方式', trigger: 'change',type:'number'}],
-					subordinateArea:[{required: true, message: '请选隶属区域', trigger: 'change'}],
-					name:[{required: true, message: '姓名不能为空', trigger: 'blur'}],
-					gender:[{required: true, message: '请选择性别', trigger: 'blur',type:'number'}],
-					birthday:[{required: true, message: '出生日期不能为空', trigger: 'blur'}],
-					educationLevel:[{required: true, message: '请选择文化水平', trigger: 'change',type:'number'}],
-					maritalStatus:[{required: true, message: '请选择婚姻状况', trigger: 'change',type:'number'}],
-					medicalPaymentMethod :[{required: true, message: '请选择医疗支付方式', trigger: 'change',type:'number'}],
-					workplaceContactPhone :[
-						{ message: '单位联系人号码格式错误',trigger: 'blur，change', validator:checkPhone },
-						// { pattern: /^[1]([3-9])[0-9]{9}$/, message: '单位联系人号码格式错误', trigger: 'blur' }
-					], //非必填
-					residenceContactPhone :[
-						{message: '住址联系号码格式错误', trigger: 'blur，change',validator:checkPhone},
-					], //非必填
-					residenceAddress  :[{required: true, message: '住所地址不能为空', trigger: 'blur'}],
-					// 病情筛选
-					diabetesMellitus  :[{required: true, message: '请选择是否糖尿病', trigger: 'change',type:'number'}],
-					smokingStatus   :[{required: true, message: '请选择是否吸烟', trigger: 'change',type:'number'}],
-					hereditaryDisease :[{required: true, message: '请选择是否有心脑血管家族遗传病史', trigger: 'change',type:'number'}],
-					takeAntihypertensiveDrugs  :[{required: true, message: '请选择是否正在服用降压药',trigger: 'change',type:'number'}],
-					littlePhysicalExercise   :[{required: true, message: '请选择体育锻炼情况',trigger: 'change',type:'number'}],
-					height :[{required: true, message: '身高不能为空'},
-						{ pattern: /\d+(\.\d{0,2})?/, message: '请输入正确的身高', trigger: 'blur' }
-					],
-					weight :[{required: true, message: '体重不能为空'},
-						{ pattern: /\d+(\.\d{0,2})?/, message: '请输入正确的体重', trigger: 'blur' }
-					],
-					diastolicBloodPressur:[{ pattern: /(^[1-9]\d*$)/, message: '只能为正整数,最多4位数', trigger: 'blur' }], //舒张压
-					systolicBloodPressur:[{ pattern: /(^[1-9]\d*$)/, message: '只能为正整数,最多4位数', trigger: 'blur'}],  // 收缩压
-					// triglyceride:[{ pattern: /\d+(\.\d{0,2})?/, message: '只能为小于32767数字', trigger: 'blur' }],  // 甘油三脂(TC)
-					// highDensityLipteinCholesterol:[{ pattern: /\d+(\.\d{0,2})?/, message: '只能为小于32767数字', trigger: 'blur' }],  // 高密度脂蛋白胆固醇
-					// lowDensityLipteinCholesterol:[{ pattern: /\d+(\.\d{0,2})?/, message: '只能为小于32767数字', trigger: 'blur' }],  // 低密度脂蛋白胆固醇
-				},
+				showType:null,
+				showA:false,
+				listName:[],
 				healthId:'', //用户档案ID
 				minDate: new Date(1900,0,1),
 				maxDate: new Date(),
@@ -287,15 +239,15 @@
 				sourceList:[], //转介来源
 				liveList:[
 					{
-						living:'独居',
+						itemName:'独居',
 						key:0
 					},
 					{
-						living:'只与配偶同住',
+						itemName:'只与配偶同住',
 						key:1
 					},
 					{
-						living:'与家人同住',
+						itemName:'与家人同住',
 						key:2
 					},
 				],
@@ -422,12 +374,43 @@
 			},300)
 		},
 		methods: {
+			showSelect(type){
+				this.listName = []
+				this.showType =type
+				console.log(this.showType);
+				if(type==='隶属区域'){
+					this.getDistrict()
+				}else if(type==='转介来源'){
+					this.getSourceList()// 转介来源
+				}else if(type==='居住方式'){
+					this.listName=this.liveList
+				}
+				this.showA = true
+			},
+			onConfirm(event) {
+				const { picker, value, index } = event.mp.detail;
+				if(this.showType==='转介来源'){
+				    this.healthData.sourceOfReferral = value.id
+				    this.healthData.zjName = value.itemName
+			    }else if(this.showType==='隶属区域'){
+					this.healthData.subordinateArea = value.itemName
+				}else if(this.showType==='居住方式'){
+					this.healthData.living = value.itemName
+				}
+				setTimeout(()=>{
+					this.showA = false
+				})
+
+			},
+			onCancel(){
+				this.showA = false
+			},
 			//初始化，获取数据
 			init(){
 				this.getNation() // 民族
-				this.getDistrict() // 隶属区域
+				// this.getDistrict() // 隶属区域
 				this.getProvince()// 籍贯
-				this.getSourceList()// 转介来源
+				// this.getSourceList()// 转介来源
 				this.getPayList()// 医疗付款方式
 				this.getResidenceList()// 现居住地列表
 				this.getDay(0,'-') //当前时间
@@ -955,13 +938,22 @@
 			},
 			// 隶属区域
 			async getDistrict(){
-				let res =await getDistrict({
-					page:0,
-					size:13
-				})
-				if(res.code === 200){
-					this.suboAreaList=res.data.list
+				let params={
+					size:15
 				}
+				await this.$fly.request({
+					method:'get',
+					url:"subordinateAreaList/list",
+					params
+				}).then(res =>{
+					if(res.code === 200) {
+						this.listName = res.data.list
+						// list.forEach((i)=>{
+						// 	this.listName.push(i.itemName)
+						// })
+					}}).catch((req)=>{
+					console.log(req)
+				})
 			},
 			// 籍贯
 			async getProvince(){
@@ -975,10 +967,22 @@
 			},
 			// 转介来源
 			async getSourceList(){
-				let res =await getSourceList({size:10})
-				if(res.code === 200){
-					this.sourceList = res.data.list
+				let params={
+					size:15
 				}
+				await this.$fly.request({
+					method:'get',
+					url:"sourceOfReferralList/list",
+					params
+				}).then(res =>{
+					if(res.code === 200) {
+						this.listName = res.data.list
+						// list.forEach((i)=>{
+						// 	this.listName.push(i.itemName)
+						// })
+					}}).catch((req)=>{
+					console.log(req)
+				})
 			},
 			// 医疗付款方式
 			async getPayList(){
@@ -1216,13 +1220,6 @@
 		font-weight:400;
 		color:rgba(153,153,153,1);
 	}
-	.ng-box>>>.ivu-form-item-label{
-
-	}
-	.ng-box>>>.ivu-form-item-content{
-		/*width: 200px;*/
-		/*width: 50%;*/
-	}
 	.diabetesMellitus>>>.ivu-radio-wrapper{
 		margin-left: 20px;
 		font-size:28px;
@@ -1246,9 +1243,15 @@
 	.main {
 		padding-top: 90px;
 		padding-bottom: 80px;
-		/*background-color: #fff;*/
 		background-color: #F7F7F7;
 		min-height: 100%;
+		input{
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			height: 60px;
+			line-height: 60px;
+			padding-left: 10px;
+		}
 		.head-bar{
 			width: 100%;
 			height:90px;
@@ -1277,25 +1280,6 @@
 				}
 			}
 		}
-		h1{
-			height:56px;
-			font-size:40px;
-			font-family:PingFangSC;
-			font-weight:500;
-			color:rgba(51,51,51,1);
-			line-height:56px;
-			text-align: left;
-			background-color: #F7F7F7;
-			padding:30px 32px 90px;
-			span{
-				font-size:28px;
-				font-family:PingFangSC;
-				font-weight:400;
-				color:rgba(102,102,102,1);
-				display: inline-block;
-				margin-left: 15px;
-			}
-		}
 		h2{
 			height:56px;
 			font-size:40px;
@@ -1313,18 +1297,23 @@
 				width: 100%;
 				padding: 21px 0;
 				border-bottom: 2px solid #DEDEDE;
-				.birthday-box{
+				.input-box{
 					display: flex;
-					justify-content: space-between;
-					.birthday{
-						/*width:224px;*/
-						width: 50%;
-					}
+					align-items: center;
 					span{
-						font-size:30px;
-						font-family:PingFangSC;
-						font-weight:400;
-						color:rgba(68,68,68,1);
+						flex: 1;
+						display: flex;
+						em{
+							color: red;
+						}
+					}
+					input{
+						border: 1px solid #ccc;
+						flex: 2;
+						border-radius: 4px;
+						height: 60px;
+						line-height: 60px;
+						padding-left: 10px;
 					}
 				}
 			}
@@ -1334,7 +1323,6 @@
 			background-color: #F7F7F7;
 		}
 		.btn{
-			/*width:690px;*/
 			width: 90%;
 			height:80px;
 			text-align: center;

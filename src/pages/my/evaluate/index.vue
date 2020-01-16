@@ -35,7 +35,7 @@
 		<div class="mark-box" v-if="showEval">
 			<div class="e-card">
 				<p>您对护士服务满意吗？</p>
-				<van-rate  v-model="score"  :size="32" color="#FDA500"/>
+				<van-rate  v-model="score"  :size="32" color="#FDA500" @change="onChangeRate"/>
 				<textarea class="input-tex" v-model="evaluation" placeholder="请输入评语" />
 				<span class="num">{{evaluation.length}}/250</span>
 				<div class="terms" @click="cyyShow=true">
@@ -105,6 +105,9 @@
 				this.showEval=true
 				this.evaluation = ''
 				this.orderId = item.id
+			},
+			onChangeRate(e){
+				this.score=e.mp.detail
 			},
 			// 去评论
 			async goEvaluate(){

@@ -84,6 +84,7 @@
 </template>
 
 <script>
+	import {mapState} from 'vuex'
 	export default {
 		data(){
 			return{
@@ -122,7 +123,11 @@
 				show:false,
 			}
 		},
-
+		computed:{
+			...mapState({
+				orderData:state=>state.user.orderData,
+			}),
+		},
 		beforeMount(){
 			if(this.$route.query.from==='选项目'){
 				this.nurseId =null
@@ -148,14 +153,14 @@
 		onShow(){
 			this.nurseId = wx.getStorageSync('nurseId')
 			this.nurseName = wx.getStorageSync('nurseName')
-			if(this.$route.query&&this.$route.query.from==='订单列表'){
-				let rp = this.$route.query
-				console.log(rp);
-				this.contact = rp.contact
-				this.address = rp.serviceAddress
-				this.phone =  rp.contactPhone
-				this.subordinateArea =  rp.subordinateArea
-				this.hospitalId =  rp.hospitalId
+			if(this.$route.query&&this.$route.query.from==='订单'){
+				let oData = this.orderData
+				console.log(oData);
+				this.selectName = oData.selectName
+				this.totalPrice = oData.amount
+				this.serviceId = oData.serviceId
+				this.selectImg = oData.selectImg
+				this.selectContent = oData.selectContent
 			}
 			if(this.selectName!=this.$route.query.selectName){
 				this.selectName = this.$route.query.selectName
@@ -165,9 +170,6 @@
 			}
 			if(this.serviceId!=this.$route.query.serviceId){
 				this.serviceId = this.$route.query.serviceId
-			}
-			if(this.detailServiceIds!=this.$route.query.detailServiceIds){
-				this.detailServiceIds = this.$route.query.detailServiceIds
 			}
 			if(this.selectImg!=this.$route.query.selectImg){
 				this.selectImg = this.$route.query.selectImg

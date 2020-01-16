@@ -32,8 +32,8 @@
 					</div>
 					<div class="btn-box">
 						<span class="btn orange" v-if="item.orderStatus===0" @click.stop="goPay(item)">去付款</span>
-						<span class="btn" v-if="item.orderStatus===5 ||item.orderStatus===6 ||item.orderStatus===7||item.orderStatus===8">再次预约</span>
-						<span class="btn" v-if="item.orderStatus===-2||item.orderStatus===-1" >重新预订</span>
+						<span class="btn" v-if="item.orderStatus===5 ||item.orderStatus===6 ||item.orderStatus===7||item.orderStatus===8" @click="againReserve(item)">再次预约</span>
+						<span class="btn" v-if="item.orderStatus===-2||item.orderStatus===-1" @click="againReserve(item)">重新预订</span>
 						<span class="btn" v-if="item.orderStatus===0 ||item.orderStatus===1 || item.orderStatus===2|| item.orderStatus===3|| item.orderStatus===4" @click.stop="quitOrder(item)">取消</span>
 					</div>
 				</li>
@@ -249,25 +249,26 @@
 				})
 			},
 			againReserve(item){
+				// this.$router.push({path:'/pages/order/write-order/main',query:{from:'订单列表'}})
 				// console.log(item);
-				this.$router.push({path:'/pages/order/write-order/main',
-					query:{
-						totalPrice:item.amount,
-						serviceId:item.serviceId,
-						selectName:item.serviceName,
-						selectImg:item.servicePicUrl,
-						selectContent:item.serviceContent,
-						hospitalId:item.hospitalId,
-						from:'订单列表',
-						contact:item.contact,
-						address:item.serviceAddress,
-						contactPhone:item.contactPhone,
-						subordinateArea:item.subordinateArea,
-						hospital:item.hospital,
-						nurseName:item.nurseName,
-						nurseId:item.nurseId,
-					},
-				})
+				// this.$router.push({path:'/pages/order/write-order/main',
+				// 	query:{
+				// 		totalPrice:item.amount,
+				// 		serviceId:item.serviceId,
+				// 		selectName:item.serviceName,
+				// 		selectImg:item.servicePicUrl,
+				// 		selectContent:item.serviceContent,
+				// 		hospitalId:item.hospitalId,
+				// 		from:'订单列表',
+				// 		contact:item.contact,
+				// 		address:item.serviceAddress,
+				// 		contactPhone:item.contactPhone,
+				// 		subordinateArea:item.subordinateArea,
+				// 		hospital:item.hospital,
+				// 		nurseName:item.nurseName,
+				// 		nurseId:item.nurseId,
+				// 	},
+				// })
 			}
 		}
 

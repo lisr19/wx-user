@@ -53,11 +53,11 @@
 		<div class="mark-box" v-if="showEval">
 			<div class="e-card">
 				<p>您对护士服务满意吗？</p>
-				<van-rate  v-model="score"  :size="32" color="#FDA500"/>
+				<van-rate  v-model="score"  :size="32" color="#FDA500" @change="onChangeRate"/>
 				<textarea class="input-tex" v-model="evaluation" placeholder="请输入评语" />
 				<span class="num">{{evaluation.length}}/250</span>
 				<div class="terms" @click="cyyShow=true">
-					<img src="../../../../static/img/cyy.png" alt="">选择常用语
+					<img src="/static/img/cyy.png" alt="">选择常用语
 				</div>
 			</div>
 			<div class="btn2" @click="goEvaluate()">发表评论</div>
@@ -68,10 +68,7 @@
 
 <script>
 	// 0-订单提交 -1订单拒绝 -2-订单取消 1-订单支付完成 2-订单审核通过 3-订单已接单 4-订单处理中 5-订单完成，待评价 6-再次预约，待评价 7-转院，待评价 8-评价完成
-	// import {postNewCommen,getCommentList} from "@/lib/API/comment";
-	// import {getOrderDetail,cancleOrder,goEvaluate} from "@/lib/API/order";
-	// import headBar from '@/components/header/head-bar'
-	// import { MessageBox  } from 'mint-ui';
+	import {mapState,mapActions} from 'vuex'
 	export default {
 		name:'order-details',
 		data(){
@@ -108,6 +105,12 @@
 			this.getOrderDetail({id:this.orderId})
 		},
 		methods:{
+			...mapActions([
+				'setOrderData'
+			]),
+			onChangeRate(e){
+				this.score=e.mp.detail
+			},
 			// 获取订单详情
 			async getOrderDetail(params){
 				await this.$fly.request({
@@ -117,6 +120,7 @@
 				}).then(res =>{
 					if(res.code === 200) {
 						this.order = res.data
+						this.$store.dispatch('setOrderData',this.order)
 						this.childList = res.data.nursingServiceDetailList
 						this.nurseName =res.data.nurseList&&res.data.nurseList.length!==0? res.data.nurseList[0].name:''
 						this.nursePhone =res.data.nurseList&&res.data.nurseList.length!==0? res.data.nurseList[0].username:''
@@ -127,29 +131,39 @@
 			},
 			// 取消订单
 			async cancleOrder(){
-				let res = await cancleOrder({orderId:this.orderId})
-				if(res.code===200){
-					this.$toast('取消订单成功')
-					this.$route.params.callback && this.$route.params.callback()
-					setTimeout(()=>{
-						this.$router.back()
-					},300)
-				}else {
-					this.$toast(res.message)
-				}
+				let params = {orderId:this.orderId}
+				await this.$fly.request({
+					method:'put',
+					url:"orderList/cancel",
+					params
+				}).then(res =>{
+					if(res.code === 200) {
+						this.$toast('取消订单成功')
+						setTimeout(()=>{
+							this.$router.back()
+						},300)
+					}else {
+						this.$toast(res.message)
+					}}).catch((req)=>{
+					console.log(req)
+				})
 			},
 			quitOrder(){
-				MessageBox.confirm('您确定取消该订单吗?').then(action => {
-					if(action==='confirm'){
-						this.cancleOrder()
+				wx.showModal({
+					title:'提示',
+					content: '您确定取消该订单吗?',
+					success (res) {
+						if (res.confirm) {
+							this.cancleOrder()
+						} else if (res.cancel) {
+							console.log('用户点击取消')
+						}
 					}
-				}).catch(() => {
-					console.log('取消');
 				})
 			},
 			// 去付款
 			goPay(){
-				this.$router.push({name:'支付',query:{
+				this.$router.push({path:'/pages/pay/main',query:{
 						totalPrice:this.order.amount,
 						serviceId:this.order.serviceId,
 						selectName:this.order.serviceName,
@@ -199,18 +213,24 @@
 			},
 			//再次预订
 			againReserve(){
-				this.$router.push({name:'下订单',query:{
-						totalPrice:this.order.amount,
-						serviceId:this.order.serviceId,
-						selectName:this.order.serviceName,
-						selectImg:this.order.servicePicUrl,
-						selectContent:this.order.serviceContent,
-						from:'订单列表'
-					},params:{
-						selectImg:this.order.servicePicUrl,
-						orderMsg:this.order
-					}
-				})
+				this.$router.push({path:'/pages/order/write-order/main',query:{from:'订单'}})
+				// this.$router.push({path:'/pages/order/write-order/main',query:{
+				// 		totalPrice:this.order.amount,
+				// 		serviceId:this.order.serviceId,
+				// 		selectName:this.order.serviceName,
+				// 		selectImg:this.order.servicePicUrl,
+				// 		selectContent:this.order.serviceContent,
+				// 		from:'订单列表',
+				// 		contact:this.order.contact,
+				// 		address:this.order.serviceAddress,
+				// 		phone:this.order.contactPhone,
+				// 		subordinateArea:this.order.subordinateArea,
+				// 		hospital:this.order.hospital.name,
+				// 		hospitalId:this.order.hospitalId,
+				// 	},params:{
+				// 		orderMsg:this.order
+				// 	}
+				// })
 			}
 		},
 	}
