@@ -23,7 +23,6 @@
 		</div>
 		<div class="card-info">
 			<div class="nurse-info">
-				<!--<img src="/static/icon/hl1.png" alt="">-->
 				<img :src="selectImg" alt="">
 				<div class="nurse-content">
 					<p class="type">{{selectName}}</p>
@@ -156,26 +155,35 @@
 			if(this.$route.query&&this.$route.query.from==='订单'){
 				let oData = this.orderData
 				console.log(oData);
-				this.selectName = oData.selectName
+				this.contact = oData.contact
+				this.contactPhone = oData.contactPhone
+				this.subordinateArea = oData.subordinateArea
+				this.address = oData.serviceAddress
+				this.selectImg = oData.servicePicUrl
+				this.selectName = oData.serviceName
+				this.selectContent = oData.serviceContent
 				this.totalPrice = oData.amount
 				this.serviceId = oData.serviceId
-				this.selectImg = oData.selectImg
-				this.selectContent = oData.selectContent
-			}
-			if(this.selectName!=this.$route.query.selectName){
-				this.selectName = this.$route.query.selectName
-			}
-			if(this.totalPrice!=this.$route.query.totalPrice){
-				this.totalPrice = this.$route.query.totalPrice
-			}
-			if(this.serviceId!=this.$route.query.serviceId){
-				this.serviceId = this.$route.query.serviceId
-			}
-			if(this.selectImg!=this.$route.query.selectImg){
-				this.selectImg = this.$route.query.selectImg
-			}
-			if(this.selectContent!=this.$route.query.selectContent){
-				this.selectContent = this.$route.query.selectContent
+				this.hospitalId = oData.hospitalId
+				this.hospital = oData.hospital?oData.hospital.name:null
+				this.nurseId =oData.nurseList[0].id
+				this.nurseName =oData.nurseList[0].name
+			}else {
+				if(this.selectName!=this.$route.query.selectName){
+					this.selectName = this.$route.query.selectName
+				}
+				if(this.totalPrice!=this.$route.query.totalPrice){
+					this.totalPrice = this.$route.query.totalPrice
+				}
+				if(this.serviceId!=this.$route.query.serviceId){
+					this.serviceId = this.$route.query.serviceId
+				}
+				if(this.selectImg!=this.$route.query.selectImg){
+					this.selectImg = this.$route.query.selectImg
+				}
+				if(this.selectContent!=this.$route.query.selectContent){
+					this.selectContent = this.$route.query.selectContent
+				}
 			}
 		},
 		methods: {
@@ -187,6 +195,7 @@
 			onConfirmB(event) {
 				const { picker, value, index } = event.mp.detail;
 				this.hospital = value
+				this.hospitalId = index
 				this.showB = false
 			},
 			onCancel(){
@@ -244,7 +253,7 @@
 							serviceTime:this.date,
 							subordinateArea:this.subordinateArea,
 							serviceId:this.serviceId,
-							hospitalId:this.hospital?this.hospital:null
+							hospitalId:this.hospitalId?this.hospitalId:null
 						}})
 				}
 			},
@@ -395,7 +404,8 @@
 					serviceId:this.serviceId,
 				}
 				if(this.hospital){
-					params.hospitalId=this.hospital
+					// params.hospitalId=this.hospital
+					params.hospitalId=this.hospitalId
 				}
 				if(this.detailServiceIds){
 					params.detailServiceIds=this.detailServiceIds

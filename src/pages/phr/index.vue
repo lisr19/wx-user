@@ -26,14 +26,6 @@
 								<span> <em>*</em>性别：</span>
 								<input  v-model="healthData.gender" placeholder="请选择性别" disabled />
 							</div>
-							<!--<div @click="openMyData('gender')">-->
-								<!--<FormItem label="性别：" prop="gender">-->
-									<!--<Select  v-model="healthData.gender" placeholder="请选择性别" disabled  >-->
-										<!--<Option v-for="item in gender" :value="item.key" :key="item.key">{{item.sex}}</Option>-->
-									<!--</Select>-->
-								<!--</FormItem>-->
-							<!--</div>-->
-
 
 							<div class="input-box" @click="showPopFn">
 								<span> <em>*</em>出生年月：</span>
@@ -44,60 +36,63 @@
 							<span> <em>*</em>文化：</span>
 							<input  v-model="healthData.educationLevel" :value="healthData.whName"  placeholder="请选择文化" disabled />
 						</div>
+						<div class="input-box" @click="showSelect('籍贯')">
+							<span> <em>*</em>籍贯：</span>
+							<input  v-model="healthData.nativePlace"   placeholder="请选择籍贯" disabled />
+						</div>
+						<div class="input-box" @click="showSelect('民族')">
+							<span> <em>*</em>民族：</span>
+							<input  v-model="healthData.nationality" :value="healthData.mzName"  placeholder="请选择民族" disabled />
+						</div>
 
-						<FormItem  prop="nativePlace" label="籍贯：">
-							<Select class="nativePlace" v-model="healthData.nativePlace">
-								<Option v-for="item in nativePlace" :value="item.name" :key="item.id">{{ item.name }}</Option>
-							</Select>
-						</FormItem>
-						<FormItem  prop="nationality" label="民族：">
-							<Select class="nationality" v-model="healthData.nationality">
-								<Option v-for="item in nationality" :value="item.name" :key="item.id">{{ item.name }}</Option>
-							</Select>
-						</FormItem>
-						<FormItem  prop="occupation" label="职业：">
-							<i-input class="occupation" v-model="healthData.occupation" placeholder="输入职业"  />
-						</FormItem>
-						<FormItem  prop="maritalStatus" label="婚姻状况：">
-							<Select class="maritalStatus" v-model="healthData.maritalStatus">
-								<Option v-for="item in maritalStatus" :value="item.key" :key="item.key">{{ item.maritalStatus }}</Option>
-							</Select>
-						</FormItem>
-						<FormItem  prop="medicalPaymentMethod" label="医疗付款方式：">
-							<Select class="medicalPaymentMethod" v-model="healthData.medicalPaymentMethod">
-								<Option v-for="item in payList" :value="item.id" :key="item.id">{{ item.itemName }}</Option>
-							</Select>
-						</FormItem>
-						<FormItem  prop="residence" label="现居住地：">
-							<Select v-model="healthData.residence">
-								<Option v-for="item in resiList" :value="item.itemName" :key="item.value">{{ item.itemName }}</Option>
-							</Select>
-						</FormItem>
-						<FormItem  prop="workplace" label="工作单位：">
-							<i-input class="workplace" type="textarea" :rows="3" v-model="healthData.workplace" placeholder="工作单位"  />
-						</FormItem>
-						<FormItem  prop="workplaceContact" label="单位联系人：">
-							<i-input class="workplaceContact" v-model="healthData.workplaceContact" placeholder="单位联系人" :maxlength="8" />
-						</FormItem>
-						<FormItem  prop="workplaceContactPhone" label="单位联系电话：">
-							<i-input class="workplaceContactPhone" v-model="healthData.workplaceContactPhone" placeholder="单位联系电话"  :maxlength="13"/>
-						</FormItem>
+						<div class="input-box" >
+							<span> <em>*</em>职业：</span>
+							<input  v-model="healthData.occupation"  placeholder="请输入职业" disabled />
+						</div>
+						<div class="input-box" @click="showSelect('婚姻状况')">
+							<span> <em>*</em>婚姻状况：</span>
+							<input  v-model="healthData.maritalStatus" :value="healthData.fyzkName"  placeholder="请选择婚姻状况" disabled />
+						</div>
+						<div class="input-box" @click="showSelect('医疗付款方式')">
+							<span> <em>*</em>医疗付款方式：</span>
+							<input  v-model="healthData.medicalPaymentMethod" :value="healthData.ylfkName"  placeholder="请选择医疗付款方式" disabled />
+						</div>
+
+						<div class="input-box" @click="showSelect('现居住地')">
+							<span> 现居住地：</span>
+							<input  v-model="healthData.residence"   placeholder="请选择现居住地" disabled />
+						</div>
+						<div class="input-box">
+							<span> 工作单位：</span>
+							<input  v-model="healthData.workplace"   placeholder="工作单位"  />
+						</div>
+						<div class="input-box">
+							<span> 单位联系人：</span>
+							<input  v-model="healthData.workplaceContact"   placeholder="单位联系人"  />
+						</div>
+						<div class="input-box">
+							<span> 单位联系电话：</span>
+							<input  v-model="healthData.workplaceContactPhone"   placeholder="单位联系电话"  />
+						</div>
+
 					</div>
 					<div class="content-card" style="border: none">
-						<FormItem  prop="residenceAddress" label="住所地址：">
-							<i-input type="textarea" :rows="3" class="residenceAddress" v-model="healthData.residenceAddress" placeholder="住所地址"  />
-						</FormItem>
-						<FormItem  prop="residenceContact" label="住所联系人：">
-							<i-input class="residenceContact" v-model="healthData.residenceContact" placeholder="住所联系人"  :maxlength="8"/>
-						</FormItem>
-						<FormItem  prop="relation" label="关系：">
-							<Select class="relation" v-model="healthData.relation">
-								<Option v-for="item in relation" :value="item.key" :key="item.key">{{ item.relation }}</Option>
-							</Select>
-						</FormItem>
-						<FormItem  prop="residenceContactPhone" label="联系人电话：">
-							<i-input class="residenceContactPhone"  v-model="healthData.residenceContactPhone" placeholder="联系人电话"  :maxlength="13"/>
-						</FormItem>
+						<div class="input-box">
+							<span> <em>*</em>住所地址：</span>
+							<input  v-model="healthData.residenceAddress"   placeholder="住所地址"  />
+						</div>
+						<div class="input-box">
+							<span> 住所联系人：</span>
+							<input  v-model="healthData.residenceContact"   placeholder="住所联系人"  />
+						</div>
+						<div class="input-box">
+							<span> 关系：</span>
+							<input  v-model="healthData.relation"   placeholder="请选择关系"  />
+						</div>
+						<div class="input-box">
+							<span> 联系人电话：</span>
+							<input  v-model="healthData.residenceContactPhone"   placeholder="联系人电话"  maxlength="13"/>
+						</div>
 					</div>
 				</div>
 				<div class="line"></div>
@@ -115,10 +110,10 @@
 						<h4><span class="tip">2</span>当前血压水平(mmHg)</h4>
 						<div style="display: flex;justify-content: space-between">
 							<FormItem  prop="diastolicBloodPressur" label="舒张压(mmHg)" style="display: flex;margin: 0">
-								<i-input  class="diastolicBloodPressur" :maxlength="4"  v-model="healthData.diastolicBloodPressur" placeholder=""  />
+								<input  class="diastolicBloodPressur" :maxlength="4"  v-model="healthData.diastolicBloodPressur" placeholder=""  />
 							</FormItem>
 							<FormItem  prop="systolicBloodPressur" label="收缩压(mmHg)" style="display: flex;margin: 0">
-								<i-input class="systolicBloodPressur"  :maxlength="4" v-model="healthData.systolicBloodPressur" placeholder=""  />
+								<input class="systolicBloodPressur"  :maxlength="4" v-model="healthData.systolicBloodPressur" placeholder=""  />
 							</FormItem>
 						</div>
 						<FormItem  prop="takeAntihypertensiveDrugs" label="正在服用降压药：">
@@ -138,15 +133,15 @@
 					<FormItem class="xuezhi sc" label="">
 						<h4><span class="tip">4</span>血脂水平</h4>
 						<FormItem  prop="triglyceride" label="甘油三脂(TC)">
-							<i-input class="triglyceride" style="width: 100px" type="number"  v-model="healthData.triglyceride" placeholder=""  />
+							<input class="triglyceride" style="width: 100px" type="number"  v-model="healthData.triglyceride" placeholder=""  />
 							<span>mmol/1</span>
 						</FormItem>
 						<FormItem  prop="highDensityLipteinCholesterol" label="高密度脂蛋白胆固醇(HDL-C)">
-							<i-input class="highDensityLipteinCholesterol" style="width: 100px" type="number" :maxlength="5" v-model="healthData.highDensityLipteinCholesterol" placeholder=""  />
+							<input class="highDensityLipteinCholesterol" style="width: 100px" type="number" :maxlength="5" v-model="healthData.highDensityLipteinCholesterol" placeholder=""  />
 							<span>mmol/1</span>
 						</FormItem>
 						<FormItem  prop="lowDensityLipteinCholesterol" label="低密度脂蛋白胆固醇(LDL-C)">
-							<i-input class="lowDensityLipteinCholesterol" style="width: 100px" type="number" :maxlength="5" v-model="healthData.lowDensityLipteinCholesterol" placeholder=""  />
+							<input class="lowDensityLipteinCholesterol" style="width: 100px" type="number" :maxlength="5" v-model="healthData.lowDensityLipteinCholesterol" placeholder=""  />
 							<span>mmol/1</span>
 						</FormItem>
 					</FormItem>
@@ -165,11 +160,11 @@
 					<div class="hg">
 						<span class="tip">6</span>
 						<FormItem  prop="height" label=" 身高" style="display:flex;margin-right:0.5rem;border: none">
-							<i-input class="height"  style="width: 70px" type="number" :maxlength="6" v-model="healthData.height" placeholder=""  @on-blur="validateNum('身高')"/>
+							<input class="height"  style="width: 70px" type="number" :maxlength="6" v-model="healthData.height" placeholder=""  @on-blur="validateNum('身高')"/>
 							<span>M</span>
 						</FormItem>
 						<FormItem  prop="weight" label=" 体重" style="display:flex;border: none" >
-							<i-input class="weight"  style="width: 70px" type="number" :maxlength="6" v-model="healthData.weight" placeholder=""  @on-blur="validateNum('体重')"/>
+							<input class="weight"  style="width: 70px" type="number" :maxlength="6" v-model="healthData.weight" placeholder=""  @on-blur="validateNum('体重')"/>
 							<span>kg</span>
 						</FormItem>
 					</div>
@@ -219,12 +214,10 @@
 </template>
 
 <script>
-	// import {getNation, getDistrict, getProvince,getSourceList,getPayList,getResidenceList,addHealthRecord,getHealthRecordList,editHealthRecord} from "@/lib/API/comment";
-	// import {getUserDate} from "@/lib/API/login-enroll";
 	export default {
-
 		data() {
 			return {
+				subordinateAreaList:[],//隶属区域列表
 				showType:null,
 				showA:false,
 				listName:[],
@@ -297,42 +290,42 @@
 				// 用户关系
 				relation:[
 					{
-						relation:'夫妻',
+						itemName:'夫妻',
 						key:1
 					},
 					{
-						relation:'子女',
+						itemName:'子女',
 						key:2
 					},
 					{
-						relation:'亲属',
+						itemName:'亲属',
 						key:3
 					},
 					{
-						relation:'陪人',
+						itemName:'陪人',
 						key:4
 					},
 					{
-						relation:'保姆',
+						itemName:'保姆',
 						key:5
 					},
 				],
 				// 婚姻状况
-				maritalStatus:[
+				maritalStatusList:[
 					{
-						maritalStatus:'未婚',
+						itemName:'未婚',
 						key:0
 					},
 					{
-						maritalStatus:'已婚',
+						itemName:'已婚',
 						key:1
 					},
 					{
-						maritalStatus:'离异',
+						itemName:'离异',
 						key:2
 					},
 					{
-						maritalStatus:'丧偶',
+						itemName:'丧偶',
 						key:3
 					},
 				],
@@ -341,9 +334,9 @@
 				// 现居住地
 				resiList:[],
 				// 籍贯
-				nativePlace:[],
-				// 民族
-				nationality:[],
+				nativePlaceList:[],
+				// 民族列表
+				nationalityList:[],
 				healthData:{
 					birthday:null,
 					name:null,
@@ -379,19 +372,29 @@
 				this.showType =type
 				console.log(this.showType);
 				if(type==='隶属区域'){
-					this.getDistrict()
+					this.listName=this.subordinateAreaList
 				}else if(type==='转介来源'){
-					this.getSourceList()// 转介来源
+					this.listName = this.sourceList
 				}else if(type==='居住方式'){
 					this.listName=this.liveList
 				}else if(type==='文化'){
 					this.listName=this.educationLevelArr
+				}else if(type==='籍贯'){
+					this.listName=	this.nativePlaceList
+				}else if(type==='民族'){
+					this.listName=	this.nationalityList
+				}else if(type==='婚姻状况'){
+					this.listName=	this.maritalStatusList
+				}else if(type==='医疗付款方式'){
+					this.listName=	this.payList
+				}else if(type==='现居住地'){
+					this.listName=	this.resiList
 				}
 				this.showA = true
 			},
 			onConfirm(event) {
-				console.log(event);
 				const { picker, value, index } = event.mp.detail;
+				console.log(value);
 				if(this.showType==='转介来源'){
 				    this.healthData.sourceOfReferral = value.id
 				    this.healthData.zjName = value.itemName
@@ -402,7 +405,19 @@
 				}else if(this.showType==='文化'){
 					this.healthData.whName = value.itemName
 					this.healthData.educationLevel = value.key
-			}
+				}else if(this.showType==='籍贯'){
+					this.healthData.nativePlace = value.name
+				}else if(this.showType==='民族'){
+					this.healthData.nationality = value.name
+				}else if(this.showType==='婚姻状况'){
+					this.healthData.maritalStatus = value.key
+					this.healthData.fyzkName = value.itemName
+				}else if(this.showType==='医疗付款方式'){
+					this.healthData.medicalPaymentMethod = value.id
+					this.healthData.ylfkName = value.itemName
+				}else if(this.showType==='现居住地'){
+					this.healthData.residence = value.itemName
+				}
 				setTimeout(()=>{
 					this.showA = false
 				})
@@ -414,7 +429,7 @@
 			//初始化，获取数据
 			init(){
 				this.getNation() // 民族
-				// this.getDistrict() // 隶属区域
+				this.getDistrict() // 隶属区域
 				this.getProvince()// 籍贯
 				this.getSourceList()// 转介来源
 				this.getPayList()// 医疗付款方式
@@ -462,19 +477,11 @@
 				}
 			},
 			saveData(){
-				this.$refs.healthDataForm.validate(async (valid) => { // 表单校验
-					if (valid) {
-						console.log('验证通过');
-						if(this.isEdit){
-							this.editHealthRecord()
-						}else {
-							this.addHealthRecord()
-						}
-					} else {
-						// this.$Message.error('请正确填写表单')
-						this.$toast('请正确填写表单')
-					}
-				})
+				if(this.isEdit){
+					this.editHealthRecord()
+				}else {
+					this.addHealthRecord()
+				}
 			},
 			//用户健康档案列表
 			async getHealthRecordList(){
@@ -492,13 +499,11 @@
 							this.isEdit = true
 							this.healthData=res.data.list[0]
 							this.sourceList.forEach((item,index)=>{
-								console.log(item);
 								if(item.id===this.healthData.sourceOfReferral){
 									this.healthData.zjName=item.itemName
 								}
 							})
-							this.liveList.forEach((item,index)=>{
-								console.log(item);
+							this.liveList.forEach((item)=>{
 								if(item.key===this.healthData.living){
 									this.healthData.zjfsName=item.itemName
 								}
@@ -742,21 +747,20 @@
 					this.$toast('姓名不能包含特殊符号和空格')
 					return
 				}
-				Indicator.open('保存中...')
-				let res = await editHealthRecord(params)
-				if(res.code === 200){
-					Indicator.close()
-					this.$toast('保存成功')
-					setTimeout(()=>{
-						this.$router.back()
-					},100)
-				}else if(res.code === 500){
-					Indicator.close()
-					this.$toast('服务器内部错误，请联系管理员')
-				} else {
-					Indicator.close()
+				await this.$fly.request({
+					method:'put',
+					url:"userHealthRecord/update",
+					params
+				}).then(res =>{
+					if(res.code === 200) {
+						this.$toast('保存成功')
+						setTimeout(()=>{
+							this.$router.back()
+						},100)
+					}}).catch((req)=>{
+					console.log(req)
 					this.$toast(res.message)
-				}
+				})
 			},
 
 			//新增健康档案
@@ -952,13 +956,22 @@
 			},
 			// 民族
 			async getNation(){
-				let res = await getNation({
-					page:0,
+				let params={
 					size:60
-				})
-				if(res.code === 200){
-					this.nationality=res.data.list
 				}
+				await this.$fly.request({
+					method:'get',
+					url:"nationalityList/list",
+					params
+				}).then(res =>{
+					if(res.code === 200) {
+						this.nationalityList=res.data.list
+						this.nationalityList.forEach((i,index)=>{
+							this.$set(this.nationalityList[index],'itemName',i.name)
+						})
+					}}).catch((req)=>{
+					console.log(req)
+				})
 			},
 			// 隶属区域
 			async getDistrict(){
@@ -971,20 +984,29 @@
 					params
 				}).then(res =>{
 					if(res.code === 200) {
-						this.listName = res.data.list
+						this.subordinateAreaList = res.data.list
 					}}).catch((req)=>{
 					console.log(req)
 				})
 			},
 			// 籍贯
 			async getProvince(){
-				let res =await getProvince({
-					page:0,
+				let params={
 					size:50
-				})
-				if(res.code === 200){
-					this.nativePlace=res.data.list
 				}
+				await this.$fly.request({
+					method:'get',
+					url:"province/list",
+					params
+				}).then(res =>{
+					if(res.code === 200) {
+						this.nativePlaceList=res.data.list
+						this.nativePlaceList.forEach((i,index)=>{
+							this.$set(this.nativePlaceList[index],'itemName',i.name)
+						})
+					}}).catch((req)=>{
+					console.log(req)
+				})
 			},
 			// 转介来源
 			async getSourceList(){
@@ -997,7 +1019,6 @@
 					params
 				}).then(res =>{
 					if(res.code === 200) {
-						this.listName = res.data.list
 						this.sourceList = res.data.list
 					}}).catch((req)=>{
 					console.log(req)
@@ -1005,17 +1026,31 @@
 			},
 			// 医疗付款方式
 			async getPayList(){
-				let res =await getPayList()
-				if(res.code === 200){
-					this.payList = res.data.list
-				}
+				await this.$fly.request({
+					method:'get',
+					url:"medicalPaymentMethodList/list",
+				}).then(res =>{
+					if(res.code === 200) {
+						this.payList = res.data.list
+					}}).catch((req)=>{
+					console.log(req)
+				})
 			},
 			// 现居住地列表
 			async getResidenceList(){
-				let res =await getResidenceList()
-				if(res.code === 200){
-					this.resiList = res.data.list
+				let params={
+					size:15
 				}
+				await this.$fly.request({
+					method:'get',
+					url:"residenceList/list",
+					params
+				}).then(res =>{
+					if(res.code === 200) {
+						this.resiList = res.data.list
+					}}).catch((req)=>{
+					console.log(req)
+				})
 			},
 			goBack(){
 				MessageBox.confirm('是否放弃修改？').then(action => {
@@ -1029,7 +1064,6 @@
 			},
 			showPopFn() {
 				this.show = true;
-				console.log(this.currentDate);
 				this.currentDate = 	this.healthData.birthday?new Date(this.healthData.birthday.replace(/-/g,",")).getTime():new Date(1950,0,1).getTime()
 			},
 			confirmFn(event) { // 确定按钮
@@ -1105,14 +1139,6 @@
 				if(res.code === 200){
 					this.healthData.name = res.data.name?res.data.name:''
 					this.healthData.gender = res.data.gender
-					// if(res.data.birthYear){
-					// 	let birthYear = res.data.birthYear
-					// 	let birthMonth =  res.data.birthMonth
-					// 	let birthDay =  res.data.birthDay
-					// 	this.healthData.birthday = 	birthYear+'-'+birthMonth+'-'+birthDay
-					// }else {
-					// 	this.healthData.birthday = null
-					// }
 					if(!this.healthData.residenceContactPhone||this.healthData.residenceContactPhone==='null'){
 						this.healthData.residenceContactPhone = res.data.username
 					}
@@ -1140,121 +1166,6 @@
 </script>
 
 <style scoped>
-	.content-card >>>.ivu-form-item{
-		display: flex;
-		margin-bottom: 25px;
-	}
-	.content-card >>>.ivu-form-item .ivu-form-item-label{
-		font-size:32px;
-		font-family:PingFangSC;
-		font-weight:400;
-		color:rgba(68,68,68,1);
-	}
-	.content-card >>>.ivu-select-selected-value{
-		font-size:24px;
-		font-family:PingFangSC;
-		font-weight:400;
-		color:rgba(102,102,102,1);
-	}
-	.content-card >>>.ivu-form-item-content{
-		/*width:400px;*/
-		width: 60%;
-	}
-	.head-bar >>> .ivu-icon{
-		font-size: 58px;
-		position: absolute;
-		left: 10px;
-	}
-	.body-two >>> .ivu-checkbox{
-		border-radius: 50%;
-		overflow: hidden;
-		background:rgba(235,235,235,1);
-		width:32px;
-		height:32px;
-	}
-	.body-two >>> .ivu-checkbox-checked{
-		background:rgba(71,189,195,1);
-	}
-	.body-two >>> .ivu-checkbox-inner{
-		border: 0;
-		background: transparent;
-		width:32px;
-		height:32px;
-	}
-	.body-two >>> .ivu-checkbox-inner:after{
-		position: relative;
-		top: 6px;
-		left: 12px;
-	}
-	.body-two >>>.ivu-form-item{
-		text-align: left;
-		padding-top: 40px;
-		border-top:2px solid #DEDEDE;
-	}
-	.body-two >>>.ivu-form-item:first-child{
-		border-top:none;
-	}
-	.main>>>.ivu-form-item-error-tip{
-		padding-top: 0px;
-	}
-	.hg>>>.ivu-form-item-label{
-		font-size:28px;
-		font-family:PingFangSC;
-		font-weight:400;
-		color:rgba(68,68,68,1);
-		padding: 0;
-		display: flex;
-		align-items: center;
-		padding-right: 10px;
-	}
-	.ivu-checkbox-wrapper{
-		font-size:28px;
-		font-family:PingFangSC;
-		font-weight:400;
-		color:rgba(102,102,102,1);
-	}
-	.main>>>.ivu-i-input{
-		font-size:24px;
-		font-family:PingFangSC;
-		font-weight:400;
-		/*color:rgba(102,102,102,1);*/
-	}
-	.main .body-two .mmHg >>>.ivu-form-item-label{
-		font-size:24px;
-		font-family:PingFangSC;
-		font-weight:400;
-		color:rgba(153,153,153,1);
-		padding-right: 5px;
-	}
-	.main .body-two >>>.ivu-radio-wrapper{
-		font-size:28px;
-		font-family:PingFangSC;
-		font-weight:400;
-		color:rgba(102,102,102,1);
-		margin-right: 20px;
-	}
-	.sc>>>.ivu-form-item-label{
-		font-size:24px;
-		font-family:PingFangSC;
-		font-weight:400;
-		color:rgba(153,153,153,1);
-	}
-	.diabetesMellitus>>>.ivu-radio-wrapper{
-		margin-left: 20px;
-		font-size:28px;
-		font-family:PingFangSC;
-		font-weight:400;
-		color:rgba(102,102,102,1);
-	}
-	.body-two>>>.ivu-form-item-content{
-	}
-	.main>>>.ivu-i-input[disabled] {
-		/*background-color: #ffffff;*/
-	}
-	.birthday>>> .ivu-i-input[disabled]{
-		background-color: #ffffff;
-		color: rgba(102,102,102,1);
-	}
 
 </style>
 

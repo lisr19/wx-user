@@ -44,7 +44,7 @@
 </template>
 <script>
 	// 0-订单提交 -1订单拒绝 -2-订单取消 1-订单支付完成 2-订单审核通过 3-订单已接单 4-订单处理中 5-订单完成，待评价 6-再次预约，待评价 7-转院，待评价 8-评价完成
-	// import {getOrderList,cancleOrder} from "@/lib/API/order";
+	import {mapActions} from 'vuex'
 	export default {
 		name: "order",
 		data(){
@@ -111,6 +111,9 @@
 			}
 		},
 		methods:{
+			...mapActions([
+				'setOrderData'
+			]),
 			tabType(index){
 				if(this.currIndex!==index){
 					this.currIndex=index
@@ -236,12 +239,13 @@
 				})
 			},
 			quitOrder(item){
+				let that = this
 				wx.showModal({
 					title:'提示',
 					content: '您确定取消该订单吗?',
 					success (res) {
 						if (res.confirm) {
-							this.cancleOrder(item)
+							that.cancleOrder(item)
 						} else if (res.cancel) {
 							console.log('用户点击取消')
 						}
@@ -249,7 +253,9 @@
 				})
 			},
 			againReserve(item){
-				// this.$router.push({path:'/pages/order/write-order/main',query:{from:'订单列表'}})
+				// console.log(item);
+				// this.$store.dispatch('setOrderData',item)
+				// this.$router.push({path:'/pages/order/write-order/main',query:{from:'订单'}})
 				// console.log(item);
 				// this.$router.push({path:'/pages/order/write-order/main',
 				// 	query:{
