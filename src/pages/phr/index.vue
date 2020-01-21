@@ -47,7 +47,7 @@
 
 						<div class="input-box" >
 							<span> 职业：</span>
-							<input  v-model="healthData.occupation"  placeholder="请输入职业" disabled />
+							<input  v-model="healthData.occupation"  placeholder="请输入职业"  />
 						</div>
 						<div class="input-box" @click="showSelect('婚姻状况')">
 							<span> <em>*</em>婚姻状况：</span>
@@ -462,43 +462,18 @@
 			},
 			//完善个人信息
 			openMyData(type){
-				if(type==='name'&&!this.healthData.name){
-					wx.showModal({
-						title:'提示',
-						content: '您的个人中心尚未完善，是否现在完善？',
-						success (res) {
-							if (res.confirm) {
-								this.$router.push({path:'/pages/my/infor/main'})
-							} else if (res.cancel) {
-								console.log('用户点击取消')
-							}
+				let that = this
+				wx.showModal({
+					title:'提示',
+					content: '您的个人中心尚未完善，是否现在完善？',
+					success (res) {
+						if (res.confirm) {
+							that.$router.push({path:'/pages/my/infor/main'})
+						} else if (res.cancel) {
+							console.log('用户点击取消')
 						}
-					})
-				}else if(type==='birthday'&&!this.healthData.birthday){
-					wx.showModal({
-						title:'提示',
-						content: '您的个人中心尚未完善，是否现在完善？',
-						success (res) {
-							if (res.confirm) {
-								this.$router.push({path:'/pages/my/infor/main'})
-							} else if (res.cancel) {
-								console.log('用户点击取消')
-							}
-						}
-					})
-				}else {
-					wx.showModal({
-						title:'提示',
-						content: '此信息需前往个人中心修改，现在去修改？',
-						success (res) {
-							if (res.confirm) {
-								this.$router.push({path:'/pages/my/infor/main'})
-							} else if (res.cancel) {
-								console.log('用户点击取消')
-							}
-						}
-					})
-				}
+					}
+				})
 			},
 			saveData(){
 				if(this.isEdit){
