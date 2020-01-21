@@ -162,12 +162,12 @@
 						<span class="tip">6	</span><em style="color: red;display: inline-block">*</em>身高、体重
 						<div class="input-box">
 							身高：
-							<input  type="number" :maxlength="6" v-model="healthData.height"   @on-blur="validateNum('身高')"/>
+							<input  type="number" :maxlength="6" v-model="healthData.height"   @blur="validateNum('身高')"/>
 							<strong class="dw">kg</strong>
 						</div>
 						<div class="input-box">
 							体重：
-							<input  v-model="healthData.weight"  type="number" :maxlength="5" @on-blur="validateNum('体重')"/>
+							<input  v-model="healthData.weight"  type="number" :maxlength="5" @blur="validateNum('体重')"/>
 							<strong class="dw">kg</strong>
 						</div>
 					</div>
@@ -557,8 +557,6 @@
 									this.healthData.gxName=item.itemName
 								}
 							})
-
-
 							for(let i in this.healthData){
 								if(this.healthData[i]==='null')
 									this.healthData[i]=null
@@ -605,7 +603,6 @@
 							if(this.healthData.lowDensityLipteinCholesterol===0){
 								this.healthData.lowDensityLipteinCholesterol = ''
 							}
-
 						}else {
 							console.log('无健康档案')
 						}
@@ -622,19 +619,19 @@
 					userId:this.userId,
 					name :this.healthData.name,
 					// gender:this.healthData.gender ,
-					living:this.healthData.living ,
+					living:parseInt(this.healthData.living) ,
 					birthday:this.healthData.birthday ,
-					educationLevel:this.healthData.educationLevel ,
+					educationLevel:parseInt(this.healthData.educationLevel) ,
 					residenceAddress:this.healthData.residenceAddress,
-					sourceOfReferral:this.healthData.sourceOfReferral ,
+					sourceOfReferral:parseInt(this.healthData.sourceOfReferral) ,
 					subordinateArea:this.healthData.subordinateArea  ,
-					maritalStatus:this.healthData.maritalStatus,
-					medicalPaymentMethod:this.healthData.medicalPaymentMethod,
-					smokingStatus:this.healthData.smokingStatus,
-					hereditaryDisease:this.healthData.hereditaryDisease,
+					maritalStatus:parseInt(this.healthData.maritalStatus),
+					medicalPaymentMethod:parseInt(this.healthData.medicalPaymentMethod),
+					smokingStatus:parseInt(this.healthData.smokingStatus),
+					hereditaryDisease:parseInt(this.healthData.hereditaryDisease),
 					takeAntihypertensiveDrugs :parseInt(this.healthData.takeAntihypertensiveDrugs),
-					diabetesMellitus :this.healthData.diabetesMellitus,
-					littlePhysicalExercise:this.healthData.littlePhysicalExercise,
+					diabetesMellitus :parseInt(this.healthData.diabetesMellitus),
+					littlePhysicalExercise:parseInt(this.healthData.littlePhysicalExercise),
 					height:this.healthData.height,
 					weight :this.healthData.weight ,
 				}
@@ -729,7 +726,7 @@
 					params.lowDensityLipteinCholesterol =0
 				}
 				if(this.healthData.heavySmoking!==undefined&&this.healthData.heavySmoking!==null&&this.healthData.heavySmoking!==''){
-					params.heavySmoking = this.healthData.heavySmoking  //重度吸烟
+					params.heavySmoking = parseInt(this.healthData.heavySmoking)  //重度吸烟
 				}
 				// if(this.healthData.hereditaryDisease!==undefined&&this.healthData.hereditaryDisease!==null&&this.healthData.hereditaryDisease!==''){
 				// 	params.hereditaryDisease = this.healthData.hereditaryDisease //心脑血管家族遗传病史
@@ -835,12 +832,12 @@
 					// 必填项
 					userId:this.userId,
 					name :this.healthData.name,
-					// gender:this.healthData.gender,
+					gender:this.healthData.gender,
 					living:this.healthData.living,
 					birthday:this.healthData.birthday,
 					educationLevel:this.healthData.educationLevel ,
 					residenceAddress:this.healthData.residenceAddress,
-					// relation :this.healthData.relation,
+					relation :this.healthData.relation,
 					sourceOfReferral:this.healthData.sourceOfReferral,
 					subordinateArea:this.healthData.subordinateArea,
 					maritalStatus:this.healthData.maritalStatus,
@@ -1004,21 +1001,23 @@
 					return
 				}
 				console.log(params);
-				Indicator.open('添加中...')
-				let res =await addHealthRecord(params)
-				if(res.code === 200){
-					Indicator.close()
-					this.$toast('添加健康档案成功')
-					setTimeout(()=>{
-						this.$router.push({name:'首页'})
-					},300)
-				}else if(res.code === 500){
-					Indicator.close()
-					this.$toast('服务器内部错误，请联系管理员')
-				} else {
-					Indicator.close()
-					this.$toast(res.message)
-				}
+				await this.$fly.request({
+					method:'post',
+					url:"userHealthRecord/add",
+					params
+				}).then(res =>{
+					if(res.code === 200) {
+						this.$toast('添加健康档案成功')
+						setTimeout(()=>{
+							this.$router.push({name:'首页'})
+						},300)
+					}else if(res.code === 500){
+						this.$toast('服务器内部错误，请联系管理员')
+					} else {
+						this.$toast(res.message)
+					}}).catch((req)=>{
+					console.log(req)
+				})
 			},
 			// 民族
 			async getNation(){
@@ -1201,19 +1200,27 @@
 			},
 			//获取个人信息
 			async getUserDate(params){
-				let res = await getUserDate(params)
-				if(res.code === 200){
-					this.healthData.name = res.data.name?res.data.name:''
-					this.healthData.gender = res.data.gender
-
-					if(!this.healthData.residenceContactPhone||this.healthData.residenceContactPhone==='null'){
-						this.healthData.residenceContactPhone = res.data.username
-					}
-				}
+				await this.$fly.request({
+					method:'get',
+					url:"user/findById",
+					params
+				}).then(res =>{
+					if(res.code === 200) {
+						this.healthData.name = res.data.name?res.data.name:''
+						if(res.data.gender===1){
+							this.healthData.gender='男'
+						}else {
+							this.healthData.gender='女'
+						}
+						if(!this.healthData.residenceContactPhone||this.healthData.residenceContactPhone==='null'){
+							this.healthData.residenceContactPhone = res.data.username
+						}
+					}}).catch((req)=>{
+					console.log(req)
+				})
 			},
 
 			validateNum(type){
-				console.log(type);
 				let height = this.healthData.height
 				let weight = this.healthData.weight
 				if(type==='身高'){

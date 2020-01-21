@@ -1,6 +1,6 @@
 {
   "pages": [
-    "pages/phr/main",
+
     "pages/index/main",
     "pages/login/main",
     "pages/register/main",
@@ -22,7 +22,7 @@
     "pages/nurse/main",
     "pages/nurse-detail/main",
     "pages/pay/main",
-
+    "pages/phr/main",
     "pages/pay/pay-success/main"
 
 
