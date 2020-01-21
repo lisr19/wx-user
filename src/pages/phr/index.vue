@@ -29,24 +29,24 @@
 
 							<div class="input-box" @click="showPopFn">
 								<span> <em>*</em>出生年月：</span>
-								<input  v-model="healthData.birthday" placeholder="出生年月" disabled />
-								<span>年龄:{{healthData.age?healthData.age:0}}</span>
+								<input  v-model="healthData.birthday" placeholder="出生年月" disabled style="flex: 1;"/>
+								<span style="text-align: right">年龄:{{healthData.age?healthData.age:0}}</span>
 							</div>
 						<div class="input-box" @click="showSelect('文化')">
 							<span> <em>*</em>文化：</span>
 							<input  v-model="healthData.educationLevel" :value="healthData.whName"  placeholder="请选择文化" disabled />
 						</div>
 						<div class="input-box" @click="showSelect('籍贯')">
-							<span> <em>*</em>籍贯：</span>
+							<span> 籍贯：</span>
 							<input  v-model="healthData.nativePlace"   placeholder="请选择籍贯" disabled />
 						</div>
 						<div class="input-box" @click="showSelect('民族')">
-							<span> <em>*</em>民族：</span>
-							<input  v-model="healthData.nationality" :value="healthData.mzName"  placeholder="请选择民族" disabled />
+							<span> 民族：</span>
+							<input  v-model="healthData.nationality"   placeholder="请选择民族" disabled />
 						</div>
 
 						<div class="input-box" >
-							<span> <em>*</em>职业：</span>
+							<span> 职业：</span>
 							<input  v-model="healthData.occupation"  placeholder="请输入职业" disabled />
 						</div>
 						<div class="input-box" @click="showSelect('婚姻状况')">
@@ -85,9 +85,9 @@
 							<span> 住所联系人：</span>
 							<input  v-model="healthData.residenceContact"   placeholder="住所联系人"  />
 						</div>
-						<div class="input-box">
+						<div class="input-box"  @click="showSelect('关系')">
 							<span> 关系：</span>
-							<input  v-model="healthData.relation"   placeholder="请选择关系"  />
+							<input  v-model="healthData.relation"  :value="healthData.gxName"  placeholder="请选择关系" disabled/>
 						</div>
 						<div class="input-box">
 							<span> 联系人电话：</span>
@@ -98,99 +98,99 @@
 				<div class="line"></div>
 				<div class="body-two">
 					<h2>基本健康状况：</h2>
-					<FormItem  prop="cerebralApoplexyFactor" label="">
+					<div class="card">
 						<h4><span class="tip">1</span>心脑血管疾病风险筛查<span>(多选)</span>：</h4>
-						<CheckboxGroup class="cerebralApoplexyFactor" v-model="healthData.cerebralApoplexyFactor">
-							<Checkbox v-for="(item,index) in cerebralApoplexyFactorList" :key="index" :label="item" >
-								<span>{{item}}</span>
-							</Checkbox>
-						</CheckboxGroup>
-					</FormItem>
-					<div class="xuezhi mmHg">
+						<van-checkbox-group :value="healthData.cerebralApoplexyFactor" @change="onChange" >
+							<van-checkbox :name="item" v-for="(item,index) in cerebralApoplexyFactorList" :key="index" checked-color="#07c160" >{{item}}</van-checkbox>
+						</van-checkbox-group>
+					</div>
+
+					<div class="card">
 						<h4><span class="tip">2</span>当前血压水平(mmHg)</h4>
 						<div style="display: flex;justify-content: space-between">
-							<FormItem  prop="diastolicBloodPressur" label="舒张压(mmHg)" style="display: flex;margin: 0">
+							<div style="display: flex; width: 45%">
+								<span >舒张压<strong class="dw">(mmHg)</strong>
+								</span>
 								<input  class="diastolicBloodPressur" :maxlength="4"  v-model="healthData.diastolicBloodPressur" placeholder=""  />
-							</FormItem>
-							<FormItem  prop="systolicBloodPressur" label="收缩压(mmHg)" style="display: flex;margin: 0">
+							</div>
+							<div style="display: flex;width: 45%" >
+								<span >收缩压<strong class="dw">(mmHg)</strong></span>
 								<input class="systolicBloodPressur"  :maxlength="4" v-model="healthData.systolicBloodPressur" placeholder=""  />
-							</FormItem>
+							</div>
 						</div>
-						<FormItem  prop="takeAntihypertensiveDrugs" label="正在服用降压药：">
-							<Radio-group v-model="healthData.takeAntihypertensiveDrugs">
-								<Radio v-for="item in radio" :label="item.label" :key="item.label">{{item.name}}</Radio>
-							</Radio-group>
-						</FormItem>
+						<div class="tip2">
+							<span><em>*</em>正在服用降压药：</span>
+							<van-radio-group :value="healthData.takeAntihypertensiveDrugs" @change="onChange2"  style="display: flex">
+								<van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
+							</van-radio-group>
+						</div>
 					</div>
-					<FormItem  prop="diabetesMellitus" label=" ">
-						<h4><span class="tip">3</span>糖尿病
-							<RadioGroup class="diabetesMellitus" v-model="healthData.diabetesMellitus">
-								<Radio v-for="item in radio" :label="item.label" :key="item.label">{{item.name}}</Radio>
-							</RadioGroup>
-						</h4>
-					</FormItem>
-
-					<FormItem class="xuezhi sc" label="">
-						<h4><span class="tip">4</span>血脂水平</h4>
-						<FormItem  prop="triglyceride" label="甘油三脂(TC)">
-							<input class="triglyceride" style="width: 100px" type="number"  v-model="healthData.triglyceride" placeholder=""  />
-							<span>mmol/1</span>
-						</FormItem>
-						<FormItem  prop="highDensityLipteinCholesterol" label="高密度脂蛋白胆固醇(HDL-C)">
-							<input class="highDensityLipteinCholesterol" style="width: 100px" type="number" :maxlength="5" v-model="healthData.highDensityLipteinCholesterol" placeholder=""  />
-							<span>mmol/1</span>
-						</FormItem>
-						<FormItem  prop="lowDensityLipteinCholesterol" label="低密度脂蛋白胆固醇(LDL-C)">
-							<input class="lowDensityLipteinCholesterol" style="width: 100px" type="number" :maxlength="5" v-model="healthData.lowDensityLipteinCholesterol" placeholder=""  />
-							<span>mmol/1</span>
-						</FormItem>
-					</FormItem>
-
-					<FormItem class="xuezhi"  prop="littlePhysicalExercise" label=" ">
-						<h4><span class="tip">5</span>体育锻炼很少或轻体力劳动者</h4>
-						<div >
-							<RadioGroup class="littlePhysicalExercise" v-model="healthData.littlePhysicalExercise">
-								<Radio v-for="item in radio" :label="item.label" :key="item.label">{{item.name}}</Radio>
-							</RadioGroup>
-						</div>
-						<div>
-							<p class="explain">{{explain[0]}}</p>
-						</div>
-					</FormItem>
-					<div class="hg">
-						<span class="tip">6</span>
-						<FormItem  prop="height" label=" 身高" style="display:flex;margin-right:0.5rem;border: none">
-							<input class="height"  style="width: 70px" type="number" :maxlength="6" v-model="healthData.height" placeholder=""  @on-blur="validateNum('身高')"/>
-							<span>M</span>
-						</FormItem>
-						<FormItem  prop="weight" label=" 体重" style="display:flex;border: none" >
-							<input class="weight"  style="width: 70px" type="number" :maxlength="6" v-model="healthData.weight" placeholder=""  @on-blur="validateNum('体重')"/>
-							<span>kg</span>
-						</FormItem>
+					<div class="card">
+						<span class="tip">3</span><em style="color: red;display: inline-block">*</em>糖尿病：
+						<van-radio-group :value="healthData.diabetesMellitus" @change="onChange3"  style="display: flex">
+							<van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
+						</van-radio-group>
 					</div>
-					<FormItem  prop="smokingStatus" label=" ">
-						<h4><span class="tip">7</span>现在是否吸烟</h4>
-						<div >
-							<RadioGroup class="smokingStatus" v-model="healthData.smokingStatus">
-								<Radio v-for="item in radio" :label="item.label" :key="item.label">{{item.name}}</Radio>
-							</RadioGroup>
+
+					<div class="card">
+						<span class="tip">4</span>血脂水平：
+						<div class="input-box">
+							<span> 甘油三脂(TC)：</span>
+							<input  v-model="healthData.triglyceride"  />
+							<strong class="dw">mmol/1</strong>
 						</div>
-						<div v-if="healthData.smokingStatus">
-							<span>每天吸烟≥30支</span>
-							<RadioGroup class="heavySmoking" v-model="healthData.heavySmoking">
-								<Radio v-for="item in radio" :label="item.label" :key="item.label">{{item.name}}</Radio>
-							</RadioGroup>
+						<div class="input-box">
+							<span> 高密度脂蛋白胆固醇(HDL-C)：</span>
+							<input  v-model="healthData.highDensityLipteinCholesterol"  type="number" :maxlength="5" />
+							<strong class="dw">mmol/1</strong>
 						</div>
-					</FormItem>
-					<FormItem  prop="hereditaryDisease" label=" ">
-						<h4><span class="tip">8</span>心脑血管疾病家族史</h4>
-						<Radio-group class="hereditaryDisease" v-model="healthData.hereditaryDisease">
-							<Radio v-for="item in radio" :label="item.label" :key="item.label">{{item.name}}</Radio>
-						</Radio-group>
-						<div>
-							<p class="explain">{{explain[2]}}</p>
+						<div class="input-box">
+							<span> 低密度脂蛋白胆固醇(LDL-C)：</span>
+							<input  v-model="healthData.lowDensityLipteinCholesterol" type="number" :maxlength="5"  />
+							<strong class="dw">mmol/1</strong>
 						</div>
-					</FormItem>
+					</div>
+
+					<div class="card">
+						<span class="tip">5</span><em style="color: red;display: inline-block">*</em>体育锻炼很少或轻体力劳动者：
+						<van-radio-group :value="healthData.littlePhysicalExercise" @change="onChange5"  style="display: flex">
+							<van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
+						</van-radio-group>
+						<p class="explain">{{explain[0]}}</p>
+					</div>
+					<div class="card">
+						<span class="tip">6	</span><em style="color: red;display: inline-block">*</em>身高、体重
+						<div class="input-box">
+							身高：
+							<input  type="number" :maxlength="6" v-model="healthData.height"   @on-blur="validateNum('身高')"/>
+							<strong class="dw">kg</strong>
+						</div>
+						<div class="input-box">
+							体重：
+							<input  v-model="healthData.weight"  type="number" :maxlength="5" @on-blur="validateNum('体重')"/>
+							<strong class="dw">kg</strong>
+						</div>
+					</div>
+
+					<div class="card">
+						<span class="tip">7</span><em style="color: red;display: inline-block">*</em>现在是否吸烟：
+						<van-radio-group :value="healthData.smokingStatus" @change="onChange7"  style="display: flex">
+							<van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
+						</van-radio-group>
+						<div v-if="healthData.smokingStatus==='1'">
+							<p class="explain">每天吸烟≥30支</p>
+							<van-radio-group :value="healthData.heavySmoking" @change="onChange8"  style="display: flex">
+								<van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
+							</van-radio-group>
+						</div>
+					</div>
+					<div class="card">
+						<span class="tip">8</span><em style="color: red;display: inline-block">*</em>心脑血管疾病家族史：
+						<van-radio-group :value="healthData.hereditaryDisease" @change="onChange9"  style="display: flex">
+							<van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
+						</van-radio-group>
+						<p class="explain">{{explain[2]}}</p>
+					</div>
 				</div>
 		</div>
 		<div  v-if="isEdit" class="btn" @click="saveData">保存修改</div>
@@ -288,7 +288,7 @@
 					},
 				],
 				// 用户关系
-				relation:[
+				relationList:[
 					{
 						itemName:'夫妻',
 						key:1
@@ -367,6 +367,27 @@
 			},300)
 		},
 		methods: {
+			onChange (event) {
+				this.healthData.cerebralApoplexyFactor = event.mp.detail
+			},
+			onChange2 (event) {
+				this.healthData.takeAntihypertensiveDrugs = event.mp.detail
+			},
+			onChange3 (event) {
+				this.healthData.diabetesMellitus = event.mp.detail
+			},
+			onChange5 (event) {
+				this.healthData.littlePhysicalExercise = event.mp.detail
+			},
+			onChange7 (event) {
+				this.healthData.smokingStatus = event.mp.detail
+			},
+			onChange8 (event) {
+				this.healthData.heavySmoking = event.mp.detail
+			},
+			onChange9 (event) {
+				this.healthData.hereditaryDisease = event.mp.detail
+			},
 			showSelect(type){
 				this.listName = []
 				this.showType =type
@@ -389,6 +410,8 @@
 					this.listName=	this.payList
 				}else if(type==='现居住地'){
 					this.listName=	this.resiList
+				}else if(type==='关系'){
+					this.listName=	this.relationList
 				}
 				this.showA = true
 			},
@@ -408,15 +431,16 @@
 				}else if(this.showType==='籍贯'){
 					this.healthData.nativePlace = value.name
 				}else if(this.showType==='民族'){
-					this.healthData.nationality = value.name
+					this.healthData.nationality = value.itemName
 				}else if(this.showType==='婚姻状况'){
 					this.healthData.maritalStatus = value.key
 					this.healthData.fyzkName = value.itemName
 				}else if(this.showType==='医疗付款方式'){
 					this.healthData.medicalPaymentMethod = value.id
 					this.healthData.ylfkName = value.itemName
-				}else if(this.showType==='现居住地'){
-					this.healthData.residence = value.itemName
+				}else if(this.showType==='关系'){
+					this.healthData.relation = value.key
+					this.healthData.gxName = value.itemName
 				}
 				setTimeout(()=>{
 					this.showA = false
@@ -508,12 +532,33 @@
 									this.healthData.zjfsName=item.itemName
 								}
 							})
-
+							this.maritalStatusList.forEach((item,index)=>{
+								if(item.key===this.healthData.maritalStatus){
+									this.healthData.fyzkName=item.itemName
+								}
+							})
+							this.payList.forEach((item,index)=>{
+								if(item.id===this.healthData.medicalPaymentMethod){
+									this.healthData.ylfkName=item.itemName
+								}
+							})
+							this.payList.forEach((item,index)=>{
+								if(item.id===this.healthData.medicalPaymentMethod){
+									this.healthData.ylfkName=item.itemName
+								}
+							})
 							this.educationLevelArr.forEach((item,index)=>{
 								if(item.key===this.healthData.educationLevel){
 									this.healthData.whName=item.itemName
 								}
 							})
+							this.relationList.forEach((item,index)=>{
+								if(item.key===this.healthData.relation){
+									this.healthData.gxName=item.itemName
+								}
+							})
+
+
 							for(let i in this.healthData){
 								if(this.healthData[i]==='null')
 									this.healthData[i]=null
@@ -524,6 +569,26 @@
 								this.healthData.cerebralApoplexyFactor = this.healthData.cerebralApoplexyFactor.split(',')
 							}else {
 								this.healthData.cerebralApoplexyFactor = []
+							}
+							//是否服用降压药
+							this.healthData.takeAntihypertensiveDrugs =this.healthData.takeAntihypertensiveDrugs.toString()
+							//是否糖尿病
+							this.healthData.diabetesMellitus =this.healthData.diabetesMellitus.toString()
+							//是否经常体育锻炼
+							this.healthData.littlePhysicalExercise =this.healthData.littlePhysicalExercise.toString()
+							//是否吸烟
+							this.healthData.smokingStatus =this.healthData.smokingStatus.toString()
+							//是否重度吸烟
+							if(this.healthData.heavySmoking){
+								this.healthData.heavySmoking =this.healthData.heavySmoking.toString()
+							}
+							//是否脑心血管
+							this.healthData.hereditaryDisease =this.healthData.hereditaryDisease.toString()
+							//男女判断
+							if(this.healthData.gender===1){
+								this.healthData.gender='男'
+							}else {
+								this.healthData.gender='女'
 							}
 							if(this.healthData.systolicBloodPressur===0){
 								this.healthData.systolicBloodPressur = ''
@@ -540,6 +605,7 @@
 							if(this.healthData.lowDensityLipteinCholesterol===0){
 								this.healthData.lowDensityLipteinCholesterol = ''
 							}
+
 						}else {
 							console.log('无健康档案')
 						}
@@ -555,7 +621,7 @@
 					id:this.healthData.id,
 					userId:this.userId,
 					name :this.healthData.name,
-					gender:this.healthData.gender ,
+					// gender:this.healthData.gender ,
 					living:this.healthData.living ,
 					birthday:this.healthData.birthday ,
 					educationLevel:this.healthData.educationLevel ,
@@ -566,7 +632,7 @@
 					medicalPaymentMethod:this.healthData.medicalPaymentMethod,
 					smokingStatus:this.healthData.smokingStatus,
 					hereditaryDisease:this.healthData.hereditaryDisease,
-					takeAntihypertensiveDrugs :this.healthData.takeAntihypertensiveDrugs,
+					takeAntihypertensiveDrugs :parseInt(this.healthData.takeAntihypertensiveDrugs),
 					diabetesMellitus :this.healthData.diabetesMellitus,
 					littlePhysicalExercise:this.healthData.littlePhysicalExercise,
 					height:this.healthData.height,
@@ -769,7 +835,7 @@
 					// 必填项
 					userId:this.userId,
 					name :this.healthData.name,
-					gender:this.healthData.gender,
+					// gender:this.healthData.gender,
 					living:this.healthData.living,
 					birthday:this.healthData.birthday,
 					educationLevel:this.healthData.educationLevel ,
@@ -1139,6 +1205,7 @@
 				if(res.code === 200){
 					this.healthData.name = res.data.name?res.data.name:''
 					this.healthData.gender = res.data.gender
+
 					if(!this.healthData.residenceContactPhone||this.healthData.residenceContactPhone==='null'){
 						this.healthData.residenceContactPhone = res.data.username
 					}
@@ -1166,18 +1233,30 @@
 </script>
 
 <style scoped>
-
+	.content>>>._van-radio-group{
+		margin: 8px 0 5px;
+	}
+	.content>>>._van-radio{
+		margin-right: 40px;
+	}
+	.content>>>._van-checkbox{
+		margin: 20px;
+	}
+	.content>>>._van-checkbox-group{
+		display: flex;
+		flex-wrap: wrap;
+	}
 </style>
 
 <style lang="less" scoped>
 	.main {
-		padding-top: 90px;
+		padding-top: 20px;
 		padding-bottom: 80px;
 		background-color: #F7F7F7;
 		min-height: 100%;
 		input{
 			border: 1px solid #ccc;
-			border-radius: 4px;
+			border-radius: 8px;
 			height: 60px;
 			line-height: 60px;
 			padding-left: 10px;
@@ -1230,6 +1309,7 @@
 				.input-box{
 					display: flex;
 					align-items: center;
+					margin: 30px 0;
 					span{
 						flex: 1;
 						display: flex;
@@ -1240,7 +1320,7 @@
 					input{
 						border: 1px solid #ccc;
 						flex: 2;
-						border-radius: 4px;
+						border-radius: 8px;
 						height: 60px;
 						line-height: 60px;
 						padding-left: 10px;
@@ -1273,17 +1353,30 @@
 			border-radius:10px;
 			transition: all .3s;
 			padding:40px 32px 5px;
-			h2{
-				font-size:40px;
-				font-family:PingFangSC;
-				font-weight:400;
-				color:rgba(51,51,51,1);
-				line-height:56px;
+			.card{
+				margin: 50px 0;
+				.tip{
+					margin: 20px 20px 20px 0;
+				}
+			}
+			.input-box{
+				display: flex;
+				align-items: center;
+				margin: 20px 0;
 				span{
-					font-size:28px;
-					font-family:PingFangSC;
-					font-weight:400;
-					color:rgba(153,153,153,1);
+					flex: 1;
+					display: flex;
+					em{
+						color: red;
+					}
+				}
+				input{
+					border: 1px solid #ccc;
+					flex: 1;
+					border-radius:8px;
+					height: 60px;
+					line-height: 60px;
+					padding-left: 10px;
 				}
 			}
 			h4{
@@ -1291,6 +1384,21 @@
 				font-family:PingFangSC;
 				font-weight:400;
 				color:rgba(68,68,68,1);
+			}
+			.tip2{
+				display: flex;
+				align-items: center;
+				margin-top: 10px;
+				span{
+					display: flex;
+					font-size:24px;
+					font-family:PingFangSC;
+					font-weight:400;
+					color:rgba(153,153,153,1);
+					em{
+						color: red;
+					}
+				}
 			}
 			.tip{
 				width:44px;
@@ -1302,11 +1410,6 @@
 				display: inline-block;
 				text-align: center;
 				margin-right: 20px;
-			}
-			.xuezhi{
-				.ivu-form-item{
-					border-top: none;
-				}
 			}
 			.hg{
 				display:flex;
@@ -1323,6 +1426,7 @@
 				font-family:PingFangSC;
 				font-weight:400;
 				color:rgba(153,153,153,1);
+				margin: 10px 0;
 			}
 			.cerebralApoplexyFactor{
 				margin-top: 20px;
@@ -1330,6 +1434,10 @@
 					margin-right: 30px;
 				}
 			}
+		}
+		.dw{
+			font-size: 26px;
+			color: #969696;
 		}
 	}
 </style>

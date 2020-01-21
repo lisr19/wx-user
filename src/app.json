@@ -1,6 +1,6 @@
 {
   "pages": [
-
+    "pages/phr/main",
     "pages/index/main",
     "pages/login/main",
     "pages/register/main",
@@ -22,7 +22,7 @@
     "pages/nurse/main",
     "pages/nurse-detail/main",
     "pages/pay/main",
-    "pages/phr/main",
+
     "pages/pay/pay-success/main"
 
 
@@ -46,7 +46,9 @@
     "van-action-sheet": "static/vant/action-sheet/index",
     "van-dropdown-menu": "static/vant/dropdown-menu/index",
     "van-dropdown-item": "static/vant/dropdown-item/index",
-    "i-input": "static/iview/input/index"
+    "i-input": "static/iview/input/index",
+    "van-checkbox": "static/vant/checkbox/index",
+    "van-checkbox-group": "static/vant/checkbox-group/index"
   },
   "window": {
     "backgroundTextStyle": "light",
