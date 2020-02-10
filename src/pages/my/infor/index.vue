@@ -1,28 +1,12 @@
 <template>
 	<div class="main">
 		<div class="content">
-			<div class="h-img" @click="showTip">头像
-				<div class="head-box">
-					<Upload
-							ref="upload"
-							:show-upload-list="false"
-							:on-success="handleSuccess"
-							:format="['jpg','jpeg','png']"
-							:max-size="20480"
-							:on-format-error="handleFormatError"
-							:on-exceeded-size="handleMaxSize"
-							type="drag"
-							name="imgFile"
-							:headers="myHeader"
-							:action="imgBaseUrl"
-							style="display: inline-block;">
-						<img class="img-head" v-if="avatar" :src="avatar" alt=" ">
-						<img class="img-head" v-else  src="/static/img/headimg.jpg" alt="">
-					</Upload>
-					<Icon type="ios-arrow-forward"/>
+			<div class="h-img" >头像
+				<div class="head-box" @click="chooseImage">
+          <img class="img-head" v-if="avatar" :src="avatar" alt=" ">
+          <img class="img-head" v-else  src="/static/img/headimg.jpg" alt="">
 				</div>
 			</div>
-
 			<van-cell-group>
 				<van-field
 						size="large"
@@ -82,12 +66,12 @@
 	export default {
 		data() {
 			return {
+        files: [],
 				errorPhone:'',
 				errorEmail:'',
 				errorIdNumber:'',
 				radio: '1',
 				show:false,
-				// myHeader: { authorization: localStorage.getItem('token') },
 				reg:null,
 				myData:{},//我的个人信息
 				imgUrl:{},
@@ -117,6 +101,40 @@
 			// this.uploadList = this.$refs.upload.fileList;
 		},
 		methods: {
+      chooseImage(e) {
+        var _this = this;
+        wx.chooseImage({
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+          success: function (res) {
+            // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+            _this.files = _this.files.concat(res.tempFilePaths)
+            var tempFilePaths = res.tempFilePaths
+            // console.log(tempFilePaths)
+            wx.uploadFile({
+              url: 'http://120.78.215.17:8898/upload/img',    //模拟接口
+              filePath: tempFilePaths[0],
+              name: 'imgFile',
+              header: {
+                "Content-Type": "multipart/form-data",
+                "authorization":wx.getStorageSync('token')
+              },
+              success: function(res){
+                console.log(res);
+                let backData=JSON.parse(res.data).data
+                _this.avatar = backData.url
+              }
+            })
+
+          },
+          fail: function () {
+            console.log('fail');
+          },
+          complete: function () {
+            console.log('commplete');
+          }
+        })
+      },
 			onChange(event) {
 				this.gender =event.mp.detail
 				this.showSexBox =false
@@ -125,9 +143,6 @@
 				const { name } = event.currentTarget.dataset
 				this.gender =name
 				this.showSexBox =false
-			},
-			changeName (event) {
-				this.name = event.mp.detail
 			},
 			changePhone (event) {
 				this.username = event.mp.detail

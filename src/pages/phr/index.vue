@@ -30,7 +30,7 @@
 							<div class="input-box" @click="showPopFn">
 								<span> <em>*</em>出生年月：</span>
 								<input  v-model="healthData.birthday" placeholder="出生年月" disabled style="flex: 1;"/>
-								<span style="text-align: right">年龄:{{healthData.age?healthData.age:0}}</span>
+								<span style="text-align: right;">年龄:{{healthData.age?healthData.age:0}}</span>
 							</div>
 						<div class="input-box" @click="showSelect('文化')">
 							<span> <em>*</em>文化：</span>
@@ -795,7 +795,9 @@
 						setTimeout(()=>{
 							this.$router.back()
 						},100)
-					}}).catch((req)=>{
+					}else if(res.code === 400){
+            this.$toast(res.message)
+          }}).catch((req)=>{
 					console.log(req)
 					this.$toast(res.message)
 				})
@@ -807,21 +809,21 @@
 					// 必填项
 					userId:this.userId,
 					name :this.healthData.name,
-					gender:this.healthData.gender,
-					living:this.healthData.living,
-					birthday:this.healthData.birthday,
-					educationLevel:this.healthData.educationLevel ,
-					residenceAddress:this.healthData.residenceAddress,
+					gender:this.healthData.gender==='男'?1:2,
 					relation :this.healthData.relation,
-					sourceOfReferral:this.healthData.sourceOfReferral,
-					subordinateArea:this.healthData.subordinateArea,
-					maritalStatus:this.healthData.maritalStatus,
-					medicalPaymentMethod:this.healthData.medicalPaymentMethod,
-					smokingStatus:this.healthData.smokingStatus,
-					hereditaryDisease:this.healthData.hereditaryDisease,
-					takeAntihypertensiveDrugs :this.healthData.takeAntihypertensiveDrugs,
-					diabetesMellitus :this.healthData.diabetesMellitus,
-					littlePhysicalExercise:this.healthData.littlePhysicalExercise,
+          living:parseInt(this.healthData.living) ,
+          birthday:this.healthData.birthday ,
+          educationLevel:parseInt(this.healthData.educationLevel) ,
+          residenceAddress:this.healthData.residenceAddress,
+          sourceOfReferral:parseInt(this.healthData.sourceOfReferral) ,
+          subordinateArea:this.healthData.subordinateArea  ,
+          maritalStatus:parseInt(this.healthData.maritalStatus),
+          medicalPaymentMethod:parseInt(this.healthData.medicalPaymentMethod),
+          smokingStatus:parseInt(this.healthData.smokingStatus),
+          hereditaryDisease:parseInt(this.healthData.hereditaryDisease),
+          takeAntihypertensiveDrugs :parseInt(this.healthData.takeAntihypertensiveDrugs),
+          diabetesMellitus :parseInt(this.healthData.diabetesMellitus),
+          littlePhysicalExercise:parseInt(this.healthData.littlePhysicalExercise),
 					height:this.healthData.height,
 					weight :this.healthData.weight,
 				}
@@ -892,7 +894,7 @@
 					params.lowDensityLipteinCholesterol=this.healthData.lowDensityLipteinCholesterol
 				}
 				if(this.healthData.heavySmoking!==undefined&&this.healthData.heavySmoking!==null&&this.healthData.heavySmoking!==''){
-					params.heavySmoking = this.healthData.heavySmoking  //重度吸烟
+          params.heavySmoking = parseInt(this.healthData.heavySmoking)  //重度吸烟
 				}
 				// if(this.healthData.hereditaryDisease!==undefined&&this.healthData.hereditaryDisease!==null&&this.healthData.hereditaryDisease!==''){
 				// 	params.hereditaryDisease = this.healthData.hereditaryDisease //心脑血管家族遗传病史
