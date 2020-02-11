@@ -46,6 +46,7 @@
     "van-action-sheet": "static/vant/action-sheet/index",
     "van-dropdown-menu": "static/vant/dropdown-menu/index",
     "van-dropdown-item": "static/vant/dropdown-item/index",
+    "van-icon": "static/vant//icon/index",
     "i-input": "static/iview/input/index",
     "van-checkbox": "static/vant/checkbox/index",
     "van-checkbox-group": "static/vant/checkbox-group/index"

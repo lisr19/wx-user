@@ -4,9 +4,9 @@
 			<img class="icon" src="/static/img/banner.png" alt="">
 			<p>
 		       <span @click="openMy">
-		          <img class="head-img" v-if="avatar" :src="avatar" alt=" ">
+		         <img class="head-img" v-if="avatar" :src="avatar" alt=" ">
 			       <img class="head-img" v-else  src="/static/img/headimg.jpg" alt="">
-		          <strong class="name">{{username}}</strong>
+		         <strong class="name">{{username}}</strong>
 		       </span>
 			</p>
 		</div>
@@ -73,9 +73,9 @@
 				],
 				editionTxt:'已是最新版本',
 				tipList: [
-					{
-						title: '修改密码'
-					},
+					// {
+					// 	title: '修改密码'
+					// },
 					{
 						title: '意见反馈'
 					},
@@ -86,6 +86,9 @@
 			this.userId = wx.getStorageSync('userId')
 			this.getUserDate({userId:this.userId})
 		},
+    onShow(){
+      this.getUserDate({userId:this.userId})
+    },
 		methods: {
 			//获取个人信息
 			async getUserDate(params) {

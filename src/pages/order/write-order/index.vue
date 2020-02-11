@@ -120,6 +120,28 @@
 				comment:null, //备注
 				noNurse:false,
 				show:false,
+        //格式化时间
+        formatter(type, value) {
+          if (type === 'year') {
+            return `${value}年`;
+          } else if (type === 'month') {
+            return `${value}月`
+          }else if (type === 'day') {
+            return `${value}日`
+          }else if (type === 'hour') {
+            return `${value}时`
+          }else if (type === 'minute') {
+            return `${value}分`
+          }
+          return value;
+        },
+        //过滤时间
+        filter(type, options) {
+          if (type === 'hour') {
+            return options.filter(option => (option >= 8 && option < 20 && option != 12&&option != 13))
+          }
+          return options;
+        },
 			}
 		},
 		computed:{

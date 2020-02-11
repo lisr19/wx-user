@@ -4,11 +4,11 @@
 		<div class="card">
 			<input v-model.lazy="userPhoneNum" placeholder='请输入手机号码' type="number" >
 			<div class="code">
-				<input  v-model="code" type="number" placeholder='输入验证码' style="padding-right: 80px">
+				<input  v-model.lazy="code" type="number" placeholder='输入验证码' style="padding-right: 80px">
 				<span @click.stop="sendCode">{{codeText}}</span>
 			</div>
-			<input  v-model="userPassWord" placeholder='请设置您的密码' type="password">
-			<input  v-model="userPassWord2" placeholder='请重复您的密码' type="password">
+			<input  v-model.lazy="userPassWord" placeholder='请设置您的密码' type="password">
+			<input  v-model.lazy="userPassWord2" placeholder='请重复您的密码' type="password">
 			<div class="btn" @click="registerUser">注册并登陆</div>
 			<div class="tip">
 				<em class="icon" v-if="!isRead" @click="showTip"></em>

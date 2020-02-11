@@ -1,6 +1,9 @@
 <template>
 	<div class="main">
-		<h2>健康档案</h2>
+<!--    <div  class="head" @click="goBack">-->
+<!--      <van-icon name="arrow-left" size="25px" custom-style="margin-right:10px"/>返回-->
+<!--    </div>-->
+		<h2 style="padding: 20px">健康档案</h2>
 		<div class="content">
 				<div class="body-one">
 					<div class="content-card">
@@ -368,8 +371,11 @@
 				this.getUserDate({userId:this.userId})
 			},300)
 		},
+    // onShow() { //返回显示页面状态函数
+    //   this.getHealthRecordList()
+    // },
 		methods: {
-			onChange (event) {
+      onChange (event) {
 				this.healthData.cerebralApoplexyFactor = event.mp.detail
 			},
 			onChange2 (event) {
@@ -1101,14 +1107,17 @@
 				})
 			},
 			goBack(){
-				MessageBox.confirm('是否放弃修改？').then(action => {
-					if(action==='confirm'){
-						this.$router.back();//返回上一层
-					}
-				}).catch(() => {
-					console.log('取消');
-				})
-
+        wx.showModal({
+          title:'提示',
+          content: '是否放弃修改？',
+          success (res) {
+            if (res.confirm) {
+              wx.navigateBack()
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
 			},
 			showPopFn() {
 				this.show = true;
@@ -1240,10 +1249,24 @@
 
 <style lang="less" scoped>
 	.main {
-		padding-top: 20px;
+		padding-top: 10px;
 		padding-bottom: 80px;
 		background-color: #F7F7F7;
 		min-height: 100%;
+    .head{
+      height:90px;
+      line-height:90px;
+      background:rgba(245,245,245,1);
+      font-size: 34px;
+      display: flex;
+      align-items: center;
+      position: fixed;
+      font-family:PingFangSC;
+      font-weight:500;
+      top: 50px;
+      left: 0;
+      width: 100%;
+    }
 		input{
 			border: 1px solid #ccc;
 			border-radius: 8px;

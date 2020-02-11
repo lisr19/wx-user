@@ -11,7 +11,7 @@
 					<img v-else src="../../../static/icon/show-pass.png" alt="">
 				</div>
 			</div>
-			<div class="btn" @click="userLogin()">登录</div>
+			<div class="btn" @click="openLogin()">登录</div>
 			<div class="btn-box">
 				<span class="forget-pass" @click="openForget">忘记密码？</span>
 				<span class="new-enroll" @click="openRe">注册账号</span>
@@ -52,6 +52,11 @@
 
 		},
 		methods:{
+      openLogin(){
+        setTimeout(()=>{
+          this.userLogin()
+        },100)
+      },
 			// 用户登录
 			async userLogin(){
 				if(!this.userPhoneNum){
