@@ -214,23 +214,6 @@
 			//再次预订
 			againReserve(){
 				this.$router.push({path:'/pages/order/write-order/main',query:{from:'订单'}})
-				// this.$router.push({path:'/pages/order/write-order/main',query:{
-				// 		totalPrice:this.order.amount,
-				// 		serviceId:this.order.serviceId,
-				// 		selectName:this.order.serviceName,
-				// 		selectImg:this.order.servicePicUrl,
-				// 		selectContent:this.order.serviceContent,
-				// 		from:'订单列表',
-				// 		contact:this.order.contact,
-				// 		address:this.order.serviceAddress,
-				// 		phone:this.order.contactPhone,
-				// 		subordinateArea:this.order.subordinateArea,
-				// 		hospital:this.order.hospital.name,
-				// 		hospitalId:this.order.hospitalId,
-				// 	},params:{
-				// 		orderMsg:this.order
-				// 	}
-				// })
 			}
 		},
 	}

@@ -65,6 +65,7 @@
 						<div class="input-box">
 							<span> 工作单位：</span>
 							<input  v-model="healthData.workplace"   placeholder="工作单位"  />
+<!--              <textarea class="address"  rows="3" v-model="healthData.workplace"   placeholder="工作单位"></textarea>-->
 						</div>
 						<div class="input-box">
 							<span> 单位联系人：</span>
@@ -80,6 +81,7 @@
 						<div class="input-box">
 							<span> <em>*</em>住所地址：</span>
 							<input  v-model="healthData.residenceAddress"   placeholder="住所地址"  />
+<!--              <textarea class="address"  rows="3" v-model="healthData.residenceAddress"   placeholder="住所地址"></textarea>-->
 						</div>
 						<div class="input-box">
 							<span> 住所联系人：</span>
@@ -463,9 +465,13 @@
 			//完善个人信息
 			openMyData(type){
 				let that = this
+        let msg ='您的个人中心尚未完善，是否现在完善？'
+        if(this.isEdit){
+          msg ='此信息需前往个人中心修改，是否现在去修改？'
+        }
 				wx.showModal({
 					title:'提示',
-					content: '您的个人中心尚未完善，是否现在完善？',
+					content: msg,
 					success (res) {
 						if (res.confirm) {
 							that.$router.push({path:'/pages/my/infor/main'})
@@ -1310,6 +1316,13 @@
 						padding-left: 10px;
 					}
 				}
+        .address{
+          height: 120px;
+          border: 1px solid #ccc;
+          flex: 2;
+          border-radius: 8px;
+          padding: 5px 8px;
+        }
 			}
 		}
 		.line{

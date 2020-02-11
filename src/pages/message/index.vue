@@ -39,18 +39,25 @@
 <script>
 	export default {
 		name: "message",
-		props : ['msgN','msgE'],
+		// props : ['msgN','msgE'],
 		data() {
 			return {
 				msgList:[],
 				page:1,
 				size:20,
 				total:0,
+        msgN:null,
+        msgE:null,
+        msgNum:null,
 			}
 		},
-		created() {
+		beforeMount() {
 			this.userId = wx.getStorageSync('userId')
+      this.checkNew({userId:this.userId})
 		},
+    onShow(){
+      this.checkNew({userId:this.userId})
+    },
 		methods: {
 			openMsg(){
 				this.$router.push({path:'/pages/message/msg-list/main'})
@@ -58,15 +65,21 @@
 			openMsgHealth(){
 				this.$router.push({path:'/pages/message/msg-health-list/main'})
 			},
-			// 获取消息列表
-			// async getMsgList(params){
-			// 	let res = await getMsgList(params)
-			// 	if(res.code===200){
-			// 		this.msgData = res.data.list[0]
-			// 	}else {
-			//
-			// 	}
-			// },
+      // 查询是否存在新消息
+      async checkNew(params){
+        await this.$fly.request({
+          methods:'get',
+          url:"pushMessage/checkNew",
+          params
+        }).then(res =>{
+          if(res.code === 200) {
+            this.msgN = res.data.message?res.data.message:0
+            this.msgE = res.data.education?res.data.education:0
+            this.msgNum =this.msgN + this.msgE
+          }}).catch((req)=>{
+          console.log(req)
+        })
+      },
 		},
 	}
 </script>

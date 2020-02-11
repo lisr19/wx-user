@@ -253,28 +253,9 @@
 				})
 			},
 			againReserve(item){
-				// console.log(item);
-				// this.$store.dispatch('setOrderData',item)
-				// this.$router.push({path:'/pages/order/write-order/main',query:{from:'订单'}})
-				// console.log(item);
-				// this.$router.push({path:'/pages/order/write-order/main',
-				// 	query:{
-				// 		totalPrice:item.amount,
-				// 		serviceId:item.serviceId,
-				// 		selectName:item.serviceName,
-				// 		selectImg:item.servicePicUrl,
-				// 		selectContent:item.serviceContent,
-				// 		hospitalId:item.hospitalId,
-				// 		from:'订单列表',
-				// 		contact:item.contact,
-				// 		address:item.serviceAddress,
-				// 		contactPhone:item.contactPhone,
-				// 		subordinateArea:item.subordinateArea,
-				// 		hospital:item.hospital,
-				// 		nurseName:item.nurseName,
-				// 		nurseId:item.nurseId,
-				// 	},
-				// })
+        // console.log(item);
+        // this.$store.dispatch('setOrderData',item)
+        // this.$router.push({path:'/pages/order/write-order/main',query:{from:'订单'}})
 			}
 		}
 

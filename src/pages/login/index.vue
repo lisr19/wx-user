@@ -20,7 +20,6 @@
 	</div>
 </template>
 <script>
-	// import {newUser,userLogin,SMS,newPass,codeRegister,codeUpdatePwd} from "@/lib/API/login-enroll"
 	export default {
 		data(){
 			return{

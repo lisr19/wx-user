@@ -15,9 +15,9 @@
 					<span>隶属区域：</span>
 					<input type="text" placeholder="请选择隶属区域" v-model="subordinateArea" disabled>
 				</div>
-				<div class="item address-box">
+				<div class="item address-box" style="display: flex;align-items: flex-start">
 					<span>服务地址：</span>
-					<i-input class="address" type="textarea" :rows="2" v-model.trim="address" placeholder="添加服务地址"/>
+          <textarea class="address"  rows="3" v-model.trim="address" placeholder="添加服务地址"></textarea>
 				</div>
 			</div>
 		</div>
@@ -40,7 +40,7 @@
 				</div>
 				<div class="item hospital" @click="showB=true">
 					<span>选择医院</span>
-					<input type="text" placeholder="请选择医院" v-model="hospital">
+					<input type="text" placeholder="请选择医院" v-model="hospital" disabled>
 				</div>
 				<div class="item" @click="selectNurse">
 					<span>指定护士</span>
@@ -166,7 +166,7 @@
 				this.serviceId = oData.serviceId
 				this.hospitalId = oData.hospitalId
 				this.hospital = oData.hospital?oData.hospital.name:null
-				this.nurseId =oData.nurseList[0].id
+				this.nurseId =oData.nurseList?oData.nurseList[0].id:null
 				this.nurseName =oData.nurseList[0].name
 			}else {
 				if(this.selectName!=this.$route.query.selectName){
@@ -226,13 +226,14 @@
 				this.nurseId = null
 			},
 			//医院列表
-			async 	getHospital(params){
+			async getHospital(params){
 				await this.$fly.request({
 					methods:'get',
 					url:"hospital/list",
 					params
 				}).then(res =>{
 					if(res.code === 200) {
+            this.hospListName = []
 						this.hospList = res.data.list
 						this.hospList.forEach((i)=>{
 							this.hospListName.push(i.name)

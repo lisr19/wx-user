@@ -30,10 +30,10 @@
 			</div>
 		</div>
 		<div class="btn" @click="quitUser">退出账号</div>
-		<van-popup v-model="showPassword">
+		<van-popup :show="showPassword">
 			<div class="change-box">
-				<input v-model="newPassword" placeholder='新密码' type="password" oninput="if(value.length>16)value=value.slice(0,16)">
-				<input v-model="repetPassword" placeholder='重复密码' type="password" oninput="if(value.length>16)value=value.slice(0,16)">
+				<input v-model.lazy="newPassword" placeholder='新密码' type="password">
+				<input v-model.lazy="repetPassword" placeholder='重复密码' type="password">
 				<div class="btn2" @click="cancle" style="background-color: #969696">取消</div>
 				<div class="btn2" @click="updatePass">修改密码</div>
 			</div>
@@ -73,9 +73,9 @@
 				],
 				editionTxt:'已是最新版本',
 				tipList: [
-					// {
-					// 	title: '修改密码'
-					// },
+					{
+						title: '修改密码'
+					},
 					{
 						title: '意见反馈'
 					},
@@ -134,7 +134,9 @@
 				this.showPassword = false
 			},
 			async updatePass(){
-				if(this.newPassword===null||this.newPassword===''){
+        console.log(this.newPassword);
+        console.log(this.repetPassword);
+        if(this.newPassword===null||this.newPassword===''){
 					this.$toast('请输入新密码')
 					return
 				}else if(this.repetPassword===null||this.repetPassword===''){
@@ -147,19 +149,25 @@
 					this.$toast('密码只能为字母、数字、或下划线组成的6-20位数')
 					return
 				}
-				Indicator.open('修改密码中')
-				let res = await userUptate({
-					id:this.userId,
-					password:this.newPassword
-				})
-				if(res.code === 200){
-					Indicator.close()
-					this.showPassword = false
-					this.$toast('修改密码成功')
-				}else {
-					Indicator.close()
-					this.$toast('修改密码失败')
-				}
+				let params={
+          id:this.userId,
+          password:this.newPassword
+        }
+        await this.$fly.request({
+          method:'put',
+          url:"user/update",
+          params
+        }).then(res =>{
+          if(res.code === 200) {
+            this.showPassword = false
+            this.$toast('修改密码成功')
+          }else {
+            this.$toast('修改密码失败')
+          }
+        }).catch((req)=>{
+          console.log(req)
+        })
+
 			},
 			showTip(){
 				wx.showToast({title: '已经是最新版本了', icon: 'none'})
@@ -492,6 +500,7 @@
 				font-family:PingFangSC-Regular;
 				font-weight:400;
 				color:#ffffff;
+        text-align: center;
 			}
 		}
 	}
