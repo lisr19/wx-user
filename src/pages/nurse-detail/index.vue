@@ -1,8 +1,8 @@
 <template>
 	<div class="main">
-		<head-bar title="护士详情">
-			<span slot="right" @click="selNurse">选此护士</span>
-		</head-bar>
+<!--		<head-bar title="护士详情">-->
+<!--			<span slot="right" @click="selNurse">选此护士</span>-->
+<!--		</head-bar>-->
 		<div class="card">
 			<img class="head-img" :src="nurseData.avatar" alt=" ">
 			<div class="content">
@@ -17,17 +17,16 @@
 				</p>
 			</div>
 			<div class="score">
-				<van-rate  readonly  v-model="scoreValue" allow-half/>
+				<van-rate readonly v-model="scoreValue" allow-half/>
 				<span>{{scoreValue}} <em>分</em></span>
 			</div>
 		</div>
 		<div class="detail">
-			<!--<div>具备资质 <span>从事中医、中西结合护理工作5年及以上</span></div>-->
 			<div class="desc" >
 				专长简介 <span>{{nurseData.speciality?nurseData.speciality:'暂无'}}</span>
 			</div>
 			<p class="tips">
-				<img src="/static/img/nursedetail.png" alt="">
+				<img src="/static/img/nursedetail.png" alt="" style="height: 25px">
 			</p>
 		</div>
 		<div class="evaluate">
@@ -69,7 +68,8 @@
 		},
 		beforeMount(){
 			this.nurseId = this.$route.query.nurseId
-			this.getNurDetail({id:this.nurseId})
+      console.log(this.nurseId);
+      this.getNurDetail({id:this.nurseId})
 		},
 		mounted(){
 		},
@@ -179,7 +179,7 @@
 			}
 			.score{
 				position: absolute;
-				right: 20px;
+				right: 30px;
 				top: 30px;
 				font-size:36px;
 				font-family:PingFangSC-Regular,PingFang SC;

@@ -217,9 +217,11 @@
 			onConfirmB(event) {
 				const { picker, value, index } = event.mp.detail;
 				this.hospital = value
-				this.hospitalId = index
+				this.hospitalId = index+1
+        this.nurseName = null
+        this.nurseId = null
 				this.showB = false
-			},
+      },
 			onCancel(){
 				this.showA = false
 				this.showB = false
@@ -267,7 +269,8 @@
 
 			//指定护士
 			selectNurse(){
-				if(this.subordinateArea===''|| this.subordinateArea===null ||this.subordinateArea===undefined){
+        console.log(this.hospitalId);
+        if(this.subordinateArea===''|| this.subordinateArea===null ||this.subordinateArea===undefined){
 					this.$toast('请选择隶属区域')
 				}else if(this.date===''|| this.date===null ||this.date===undefined){
 					this.$toast('请选择护理时间')
@@ -276,7 +279,7 @@
 							serviceTime:this.date,
 							subordinateArea:this.subordinateArea,
 							serviceId:this.serviceId,
-							hospitalId:this.hospitalId?this.hospitalId:null
+							hospitalId:this.hospitalId
 						}})
 				}
 			},

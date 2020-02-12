@@ -2,7 +2,7 @@
 	<div class="main">
 		<div class="nurse-list">
 			<ul>
-				<li class="item" v-for="item in nuresList" :key="item.id">
+				<li class="item" v-for="item in nuresList" :key="index">
 					<img :src="item.avatar" alt="">
 					<div class="content">
 						<p class="name">{{item.name}}
@@ -11,7 +11,7 @@
 							<img class="tip2" src="/static/icon/renzheng.png" alt="">
 						</p>
 						<p class="desc"><span v-if="item.workYears">{{item.workYears + '年'}}</span>{{item.department}} <span style="margin-left: 0.2rem">{{item.hospital}}</span></p>
-						<!--<span class="more" @click="openDetail(item)">查看详情 ></span>-->
+						<span class="more" @click="openDetail(item)">查看详情 ></span>
 					</div>
 					<div class="btn" @click="selNurse(item)">选择</div>
 				</li>
@@ -30,17 +30,28 @@
 		data(){
 			return{
 				nuresList:[],
-				hospitalId:null
+				hospitalId:null,
+        isChoice:false
 			}
 		},
 		beforeMount(){
-			if(this.$route.query.hospitalId){
+      this.isChoice = false
+      if(this.$route.query.hospitalId){
 				this.hospitalId =  this.$route.query.hospitalId
-			}
+      }
 			this.getNurList()
 		},
 		mounted(){
 		},
+    onUnload() {//如果页面被卸载时被执行
+		  if(this.isChoice){
+        wx.setStorageSync('nurseId', this.nurseId);
+        wx.setStorageSync('nurseName', this.nurseName);
+      }else {
+        wx.setStorageSync('nurseId', null);
+        wx.setStorageSync('nurseName', null);
+      }
+    },
 		methods: {
 			//护士列表
 			async getNurList(){
@@ -50,7 +61,7 @@
 					serviceArea:this.$route.query.subordinateArea,
 					size:200
 				}
-				if(this.hospitalId){
+        if(this.hospitalId){
 					params.hospitalId =  this.hospitalId
 				}
 				await this.$fly.request({
@@ -67,11 +78,12 @@
 				this.nurseName = item.name
 				wx.setStorageSync('nurseId', this.nurseId);
 				wx.setStorageSync('nurseName', this.nurseName);
+				this.isChoice =true
 				this.$router.back()
 			},
 			//查看详情
 			openDetail(item){
-				this.$router.push({path:'/pages/order-detail/main',query:{nurseId:item.id}})
+        this.$router.push({path:'/pages/nurse-detail/main',query:{nurseId:item.id}})
 			}
 		}
 	}

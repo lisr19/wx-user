@@ -84,10 +84,10 @@
 	}
 </script>
 
-
 <style lang="less" scoped>
 	.msg{
 		background-color: #ffffff;
+    min-height: 100%;
 		.title{
 			position: fixed;
 			top: 0;

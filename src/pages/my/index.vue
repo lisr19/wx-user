@@ -193,6 +193,7 @@
 	}
 </script>
 
+
 <style scoped>
 	.main>>>.van-popup--center{
 		border-radius: 10px;
