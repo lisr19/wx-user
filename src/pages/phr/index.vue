@@ -116,11 +116,11 @@
 							<div style="display: flex; width: 45%">
 								<span >舒张压<strong class="dw">(mmHg)</strong>
 								</span>
-								<input  class="diastolicBloodPressur" :maxlength="4"  v-model="healthData.diastolicBloodPressur" placeholder=""  />
+								<input  class="diastolicBloodPressur" :maxlength="4"  v-model="healthData.diastolicBloodPressur" placeholder=" "  />
 							</div>
 							<div style="display: flex;width: 45%" >
 								<span >收缩压<strong class="dw">(mmHg)</strong></span>
-								<input class="systolicBloodPressur"  :maxlength="4" v-model="healthData.systolicBloodPressur" placeholder=""  />
+								<input class="systolicBloodPressur"  :maxlength="4" v-model="healthData.systolicBloodPressur" placeholder=" "  />
 							</div>
 						</div>
 						<div class="tip2">
@@ -345,6 +345,13 @@
 				healthData:{
 					birthday:null,
 					name:null,
+          cerebralApoplexyFactor:[],
+          takeAntihypertensiveDrugs:null,
+          diabetesMellitus:null,
+          littlePhysicalExercise:null,
+          smokingStatus:null,
+          heavySmoking:null,
+          hereditaryDisease:null,
 				},
 				// 脑卒中因素
 				cerebralApoplexyFactorList:['既往有脑卒中','既往有短暂性脑缺血发作','冠心病'],
@@ -376,11 +383,14 @@
     // },
 		methods: {
       onChange (event) {
-				this.healthData.cerebralApoplexyFactor = event.mp.detail
-			},
+        console.log(event);
+        this.healthData.cerebralApoplexyFactor = event.mp.detail
+        console.log(this.healthData.cerebralApoplexyFactor);
+      },
 			onChange2 (event) {
 				this.healthData.takeAntihypertensiveDrugs = event.mp.detail
-			},
+        console.log(this.healthData.takeAntihypertensiveDrugs);
+      },
 			onChange3 (event) {
 				this.healthData.diabetesMellitus = event.mp.detail
 			},
@@ -432,7 +442,8 @@
 			    }else if(this.showType==='隶属区域'){
 					this.healthData.subordinateArea = value.itemName
 				}else if(this.showType==='居住方式'){
-					this.healthData.living = value.itemName
+          this.healthData.zjfsName = value.itemName
+					this.healthData.living = value.key
 				}else if(this.showType==='文化'){
 					this.healthData.whName = value.itemName
 					this.healthData.educationLevel = value.key
@@ -449,7 +460,9 @@
 				}else if(this.showType==='关系'){
 					this.healthData.relation = value.key
 					this.healthData.gxName = value.itemName
-				}
+				}else if(this.showType==='现居住地'){
+          this.healthData.residence = value.itemName
+        }
 				setTimeout(()=>{
 					this.showA = false
 				})
@@ -575,7 +588,8 @@
 							}else {
 								this.healthData.gender='女'
 							}
-							if(this.healthData.systolicBloodPressur===0){
+
+              if(this.healthData.systolicBloodPressur===0){
 								this.healthData.systolicBloodPressur = ''
 							}
 							if(this.healthData.diastolicBloodPressur===0){
@@ -592,6 +606,7 @@
 							}
 						}else {
 							console.log('无健康档案')
+              console.log(this.healthData.systolicBloodPressur);
 						}
 					}}).catch((req)=>{
 					console.log(req)
@@ -740,7 +755,7 @@
 					return
 				}
 				if(!this.healthData.birthday){
-					this.$toast('请在个人中心完善出生年月')
+					this.$toast('出生年月不能为空')
 					return
 				}
 				if(this.healthData.educationLevel===undefined){
