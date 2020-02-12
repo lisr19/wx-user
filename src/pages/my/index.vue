@@ -182,6 +182,7 @@
 					success (res) {
 						if (res.confirm) {
 							wx.clearStorage()
+              wx.clearStorageSync()
 							wx.reLaunch({url: '../login/main'})
 						} else if (res.cancel) {
 							console.log('用户点击取消')

@@ -383,13 +383,10 @@
     // },
 		methods: {
       onChange (event) {
-        console.log(event);
         this.healthData.cerebralApoplexyFactor = event.mp.detail
-        console.log(this.healthData.cerebralApoplexyFactor);
       },
 			onChange2 (event) {
 				this.healthData.takeAntihypertensiveDrugs = event.mp.detail
-        console.log(this.healthData.takeAntihypertensiveDrugs);
       },
 			onChange3 (event) {
 				this.healthData.diabetesMellitus = event.mp.detail
@@ -606,7 +603,6 @@
 							}
 						}else {
 							console.log('无健康档案')
-              console.log(this.healthData.systolicBloodPressur);
 						}
 					}}).catch((req)=>{
 					console.log(req)

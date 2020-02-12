@@ -35,7 +35,7 @@
 				<span class="more" @click="openEvaList">查看全部 > </span>
 			</p>
 			<div class="item" v-if="evaluateData">
-				<img class="user-img" :src="evaluateData.avatar" alt=" ">
+				<img class="user-img" :src="evaluateData.avatar" alt=" " v-if="evaluateData">
 				<div style="flex: 1">
 					<p class="name">{{evaluateData.name}}</p>
 					<p class="eva-desc">
@@ -95,7 +95,7 @@
 				if(this.evaluateList.length===0){
 					this.$toast('没有更多评价了')
 				}else {
-					this.$router.push({name:'护士评价列表',params:{evaluateList:this.evaluateList}})
+					// this.$router.push({name:'护士评价列表',params:{evaluateList:this.evaluateList}})
 				}
 			},
 			selNurse(){

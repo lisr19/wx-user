@@ -83,9 +83,10 @@
 		beforeMount(){
 			this.userId = wx.getStorageSync('userId')
 			this.getOrderList({userId:Number(this.userId),size:this.size,page:1})
-			this.getDfkList({userId:Number(this.userId),orderStatus:0})
 		},
-
+    // onShow(){
+    //   this.getOrderList({userId:Number(this.userId),size:this.size,page:1})
+    // },
 		// 下拉刷新
 		onPullDownRefresh () {
 			wx.showNavigationBarLoading()
@@ -198,13 +199,6 @@
 				}).catch((req)=>{
 					console.log(req)
 				})
-			},
-			// 获取待付款订单列表
-			async getDfkList(params){
-				let res = await getOrderList(params)
-				if(res.code===200){
-					this.payTotal = res.data.total
-				}
 			},
 			// 打开订单详情
 			openOrderDetail(orderId){
