@@ -1,16 +1,17 @@
 <template>
 	<div class="nursing">
-		<h2>常用护理项目</h2>
-		<div class="banner">
-			<swiper class="swiper items" :display-multiple-items="swiperNum">
-				<block v-for="(item, index) in imgList" :index="index" :key="key">
-					<swiper-item class="item">
-						<img :src="item.picUrl" alt="" @click.stop="openChoice(item)">
-						<p>{{item.name}}</p>
-					</swiper-item>
-				</block>
-			</swiper>
-		</div>
+<!--		<h2 @click="anQue">问卷</h2>-->
+    <img  @click="anQue" src="/static/img/anw.jpg" alt="" style="width: 100%;height: 180px">
+<!--		<div class="banner">-->
+<!--			<swiper class="swiper items" :display-multiple-items="swiperNum">-->
+<!--				<block v-for="(item, index) in imgList" :index="index" :key="key">-->
+<!--					<swiper-item class="item">-->
+<!--						<img :src="item.picUrl" alt="" @click.stop="openChoice(item)">-->
+<!--						<p>{{item.name}}</p>-->
+<!--					</swiper-item>-->
+<!--				</block>-->
+<!--			</swiper>-->
+<!--		</div>-->
 		<div class="main">
 			<ul class="tabs">
 				<li v-for="(item,index) in tabs" :class="{active:index===currIndex}"  :key="index" @click="tabType(index)">
@@ -100,13 +101,17 @@ export default {
 			wx.reLaunch({url: '../login/main'})
 		}
 		this.getNurseList({serviceType:1,size:50})
-		this.getRecentList({userId:this.userId,size:5})
+		// this.getRecentList({userId:this.userId,size:5})
 		this.getHealthList({userId:this.userId})
 	},
 	onShow(){
 		wx.showTabBar()
 	},
 	methods: {
+    anQue(){
+      this.$router.push(
+        {path:'/pages/question/main',query:{}})
+    },
 		//获取健康档案信息
 		async getHealthList(params){
 			await this.$fly.request({

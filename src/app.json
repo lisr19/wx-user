@@ -1,6 +1,5 @@
 {
   "pages": [
-
     "pages/index/main",
     "pages/login/main",
     "pages/register/main",
@@ -23,9 +22,8 @@
     "pages/nurse-detail/main",
     "pages/pay/main",
     "pages/phr/main",
-    "pages/pay/pay-success/main"
-
-
+    "pages/pay/pay-success/main",
+    "pages/question/main"
   ],
   "usingComponents": {
     "van-button": "static/vant/button/index",
