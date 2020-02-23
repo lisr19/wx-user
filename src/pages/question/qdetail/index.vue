@@ -6,6 +6,7 @@
          <div class="body-one">
            <van-cell-group>
              <van-field
+               required
                size="large"
                label="姓名"
                v-model="name"
@@ -13,16 +14,25 @@
                @change="changeName"
                disabled
              />
-             <van-cell title="性别" :value="gender" size="large" />
+             <van-cell required title="性别" :value="gender" size="large"/>
              <van-field
+               required
                size="large"
-               label="年龄"
-               v-model="idNumber"
-               placeholder="请输入年龄"
-               @change="changeAge"
+               label="出生年月"
+               v-model="healthData.birthday"
+               placeholder="请选择出生年月"
                disabled
              />
              <van-field
+               required
+               size="large"
+               label="年龄"
+               v-model="healthData.age"
+               placeholder="年龄自动计算"
+               disabled
+             />
+             <van-field
+               required
                size="large"
                label="身份证号"
                v-model="idNumber"
@@ -31,14 +41,14 @@
                disabled
              />
              <van-field
+               required
                size="large"
                label="现住址"
-               v-model="username"
+               v-model="healthData.residenceAddress"
                placeholder="请输入现住址"
-               @change="changePhone"
-               disabled
              />
              <van-field
+               required
                size="large"
                label="联系电话"
                v-model="username"
@@ -119,6 +129,9 @@
 	export default {
 		data() {
       return {
+        healthData:{
+          birthday:null,
+        },
         currDate:null,
         showSexBox:false,
         answer1:null,
@@ -151,11 +164,45 @@
       this.qId =this.$route.query.id
       this.getUserDate({userId:this.userId})
       this.getDetail({id:this.qId})
+      this.getHealthRecordList()
 		},
     // onShow() { //返回显示页面状态函数
     //   this.getHealthRecordList()
     // },
 		methods: {
+      //用户健康档案列表
+      async getHealthRecordList(){
+        let params = {
+          userId:this.userId
+        }
+        await this.$fly.request({
+          method:'get',
+          url:"userHealthRecord/list",
+          params
+        }).then(res =>{
+          if(res.code === 200){
+            if(res.data.list.length>0){  //有健康档案
+              console.log('有健康档案')
+              this.healthData=res.data.list[0]
+              this.getAge()
+            }else {
+              console.log('无健康档案')
+            }
+          }}).catch((req)=>{
+          console.log(req)
+        })
+        console.log(this.isEdit);
+      },
+      // 判断用户的年龄
+      getAge(){
+        if(this.healthData.birthday){
+          let birthdays = new Date(this.healthData.birthday.replace(/-/g, "/"));
+          let d = new Date()
+          let age = d.getFullYear() - birthdays.getFullYear() - (d.getMonth() < birthdays.getMonth() || (d.getMonth() == birthdays.getMonth() && d.getDate() < birthdays.getDate()) ? 1 : 0)
+          this.healthData.age = age
+        }
+        console.log(this.healthData.age);
+      },
       async getDetail(params){
         await this.$fly.request({
           method:'get',
@@ -313,6 +360,9 @@
   }
   .van-field__error-message{
     text-align: right!important;
+  }
+  .van-radio__icon--disabled.van-radio__icon--checke{
+    background-color: #47BDC3!important;
   }
 </style>
 <style scoped>

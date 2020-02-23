@@ -1,6 +1,6 @@
 <template>
 	<div class="main">
-		<h2 style="padding: 20px;margin: 0 auto">门诊患者新冠肺炎初步筛查登记表</h2>
+		<h2 style="padding: 20px;margin: 0 auto;text-align: center">门诊患者新冠肺炎初步筛查登记表</h2>
 		<div class="content">
          <div class="body-one">
            <van-cell-group>
@@ -9,17 +9,29 @@
                label="姓名"
                v-model="name"
                placeholder="请输入姓名"
+               required
                @change="changeName"
              />
-             <van-cell title="性别" :value="gender" size="large" @click="showSex"/>
+             <van-cell required title="性别" :value="gender" size="large" @click="showSex"/>
              <van-field
+               required
                size="large"
-               label="年龄"
-               v-model="idNumber"
-               placeholder="请输入年龄"
-               @change="changeAge"
+               label="出生年月"
+               v-model="healthData.birthday"
+               placeholder="请选择出生年月"
+               disabled
+               @click="showPopFn"
              />
              <van-field
+               required
+               size="large"
+               label="年龄"
+               v-model="healthData.age"
+               placeholder="年龄自动计算"
+               disabled
+             />
+             <van-field
+               required
                size="large"
                label="身份证号"
                v-model="idNumber"
@@ -27,13 +39,15 @@
                @change="changeIdNumber"
              />
              <van-field
+               required
                size="large"
                label="现住址"
-               v-model="username"
+               v-model="healthData.residenceAddress"
                placeholder="请输入现住址"
-               @change="changePhone"
+               @change="changeAddress"
              />
              <van-field
+               required
                size="large"
                label="联系电话"
                v-model="username"
@@ -108,6 +122,16 @@
         </van-radio-group>
       </div>
     </van-popup>
+    <van-popup :show="show" position="bottom" :style="{ height: '40%' }">
+      <van-datetime-picker
+        v-model="currentDate"
+        type="date"
+        :min-date="minDate"
+        :max-date="maxDate"
+        @confirm="confirmFn"
+        @cancel="cancelFn"
+      />
+    </van-popup>
 	</div>
 </template>
 
@@ -115,6 +139,13 @@
 	export default {
 		data() {
       return {
+        healthData:{
+          birthday:null,
+        },
+        minDate: new Date(1900,0,1).getTime(),
+        maxDate: new Date().getTime(),
+        currentDate: new Date(1950,0,1).getTime(),
+        show:false,
         currDate:null,
         showSexBox:false,
         answer1:null,
@@ -145,6 +176,7 @@
 			this.userId = wx.getStorageSync('userId')
       this.getUserDate({userId:this.userId})
      this.getDay(0, '-'); //获取当前日期
+      this.getHealthRecordList()
 
 		},
 		mounted(){
@@ -153,6 +185,64 @@
     //   this.getHealthRecordList()
     // },
 		methods: {
+      confirmFn(event) { // 确定按钮
+        this.currentDate=event.mp.detail
+        this.healthData.birthday = this.formatDate(new Date(this.currentDate))
+        this.getAge()
+        setTimeout(()=>{
+          this.show = false
+        },100)
+      },
+      cancelFn(){
+        this.show = false;
+      },
+      showPopFn() {
+        this.show = true;
+        this.currentDate = 	this.healthData.birthday?new Date(this.healthData.birthday.replace(/-/g,",")).getTime():new Date(1950,0,1).getTime()
+      },
+      //用户健康档案列表
+      async getHealthRecordList(){
+        let params = {
+          userId:this.userId
+        }
+        await this.$fly.request({
+          method:'get',
+          url:"userHealthRecord/list",
+          params
+        }).then(res =>{
+          if(res.code === 200){
+            if(res.data.list.length>0){  //有健康档案
+              console.log('有健康档案')
+              this.healthData=res.data.list[0]
+              this.getAge()
+            }else {
+              console.log('无健康档案')
+            }
+          }}).catch((req)=>{
+          console.log(req)
+        })
+        console.log(this.isEdit);
+      },
+      //编辑健康档案
+      async editHealthRecord(){
+        let params = {
+          // 必填项
+          id:this.healthData.id,
+          userId:this.userId,
+          residenceAddress:this.healthData.residenceAddress,
+          birthday:this.healthData.birthday
+        }
+        await this.$fly.request({
+          method:'put',
+          url:"userHealthRecord/update",
+          params
+        }).then(res =>{
+          if(res.code === 200) {
+          }}).catch((req)=>{
+          console.log(req)
+
+        })
+      },
       onChange(event) {
         this.gender =event.mp.detail
         this.showSexBox =false
@@ -171,8 +261,8 @@
           this.errorPhone=''
         }
       },
-      changeAge (event) {
-
+      changeAddress (event) {
+        this.healthData.residenceAddress = event.mp.detail
       },
       changeIdNumber (event) {
         this.idNumber = event.mp.detail
@@ -185,6 +275,16 @@
       },
       changeName (event) {
         this.name = event.mp.detail
+      },
+      // 判断用户的年龄
+      getAge(){
+        if(this.healthData.birthday){
+          let birthdays = new Date(this.healthData.birthday.replace(/-/g, "/"));
+          let d = new Date()
+          let age = d.getFullYear() - birthdays.getFullYear() - (d.getMonth() < birthdays.getMonth() || (d.getMonth() == birthdays.getMonth() && d.getDate() < birthdays.getDate()) ? 1 : 0)
+          this.healthData.age = age
+        }
+        console.log(this.healthData.age);
       },
       //性别选择弹窗
       showSex(){
@@ -205,6 +305,37 @@
 			},
       onChange5 (event) {
         this.answer5 = event.mp.detail
+      },
+      // 格式化时间
+      formatter(type, value) {
+        if (type === 'year') {
+          return `${value}年`;
+        } else if (type === 'month') {
+          return `${value}月`
+        }else if (type === 'day') {
+          return `${value}日`
+        }else if (type === 'hour') {
+          return `${value}时`
+        }else if (type === 'minute') {
+          return `${value}分`
+        }
+        return value;
+      },
+      // 格式化获取的时间
+      formatDate(date) {
+        const y = date.getFullYear()
+        let M = date.getMonth() + 1
+        M = M < 10 ? '0' + M : M
+        let d = date.getDate()
+        d = d < 10 ? ('0' + d) : d
+        let h = date.getHours()
+        h = h < 10 ? ('0' + h) : h
+        let m = date.getMinutes()
+        m = m < 10 ? ('0' + m) : m
+        this.birthYear = y
+        this.birthMonth = M
+        this.birthDay = d
+        return y + '-' + M + '-' + d
       },
       async addQue(){
         let params = {
@@ -277,6 +408,7 @@
               console.log(params);
               that.userUptate(params)
               that.addQue()
+              that.editHealthRecord()
             } else if (res.cancel) {
               console.log('用户点击取消')
             }
