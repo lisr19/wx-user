@@ -1,6 +1,7 @@
 <template>
 	<div class="main">
-		<h2 style="padding: 20px;margin: 0 auto">门诊患者新冠肺炎初步筛查登记表</h2>
+		<h2 style="padding: 15px;margin: 0 auto;text-align: center">门诊患者新冠肺炎初步筛查登记表</h2>
+    <p style="padding:0 15px 10px;text-align: right">填表时间：{{qusDetail.addTime}}</p>
 		<div class="content">
          <div class="body-one">
            <van-cell-group>
@@ -10,14 +11,16 @@
                v-model="name"
                placeholder="请输入姓名"
                @change="changeName"
+               disabled
              />
-             <van-cell title="性别" :value="gender" size="large" @click="showSex"/>
+             <van-cell title="性别" :value="gender" size="large" />
              <van-field
                size="large"
                label="年龄"
                v-model="idNumber"
                placeholder="请输入年龄"
                @change="changeAge"
+               disabled
              />
              <van-field
                size="large"
@@ -25,6 +28,7 @@
                v-model="idNumber"
                placeholder="请输入身份证号"
                @change="changeIdNumber"
+               disabled
              />
              <van-field
                size="large"
@@ -32,66 +36,66 @@
                v-model="username"
                placeholder="请输入现住址"
                @change="changePhone"
+               disabled
              />
              <van-field
                size="large"
                label="联系电话"
                v-model="username"
                placeholder="请输入联系电话"
-               @change="changePhone"
+               disabled
              />
            </van-cell-group>
          </div>
 				<div class="body-two">
-          <div class="desc">
-            &nbsp;&nbsp;&nbsp;&nbsp;根据新型冠状病毒肺炎疫情防控要求，请如实填写下面的调查内容，
-            如有隐瞒不报或者填写内容不属实，个人承担相关法律责任。
-            <p>承诺人：{{name}}</p>
-            <p>日期：{{currDate}}</p>
-          </div>
+<!--          <div class="desc">-->
+<!--            &nbsp;&nbsp;&nbsp;&nbsp;根据新型冠状病毒肺炎疫情防控要求，请如实填写下面的调查内容，-->
+<!--            如有隐瞒不报或者填写内容不属实，个人承担相关法律责任。-->
+<!--            <p>承诺人：{{name}}</p>-->
+<!--            <p>日期：{{currDate}}</p>-->
+<!--          </div>-->
 					<div class="card">
             <span class="tip">1</span><em style="color: red;display: inline-block">*</em>
             3日内 (《12岁患儿2日内 )是否有发热、干咳、腹泻、乏力、咽痛等呼吸道症状？
             <van-radio-group :value="answer1" @change="onChange1"  style="display: flex">
-              <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
+              <van-radio   disabled  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
 					</div>
           <div class="card">
             <span class="tip">2</span><em style="color: red;display: inline-block">*</em>
             14天内是否到过武汉及周边地区或接触过来自该地区人员？
             <van-radio-group :value="answer2" @change="onChange2" >
-              <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
+              <van-radio  disabled  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
           </div>
           <div class="card">
             <span class="tip">3</span><em style="color: red;display: inline-block">*</em>
             14天内您居住的社区或身边是否有新冠病毒感染者（核酸检测阳性者）？
             <van-radio-group :value="answer3" @change="onChange3" >
-              <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
+              <van-radio disabled v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
           </div>
           <div class="card">
             <span class="tip">4</span><em style="color: red;display: inline-block">*</em>
             14天内是否接触过有新冠肺炎报告病例社区的发热和呼吸道症状患者？
             <van-radio-group :value="answer4" @change="onChange4" >
-              <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
+              <van-radio disabled v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
           </div>
           <div class="card">
             <span class="tip">5</span><em style="color: red;display: inline-block">*</em>
             身边是否有2人或2人以上存在发热或者干咳、咽痛等呼吸道症状情况？
             <van-radio-group :value="answer5" @change="onChange5" >
-              <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
+              <van-radio disabled v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
           </div>
           <div class="card">
             <span class="tip">6</span>
             本次拟就诊科室
-            <input class="input" v-model.lazy="answer6" />
+            <input class="input" disabled v-model.lazy="answer6" />
           </div>
 				</div>
 		</div>
-		<div class="btn" @click="saveData">提交</div>
     <!--选择性别弹窗-->
     <van-popup :show="showSexBox">
       <div class="box-wrap">
@@ -138,21 +142,45 @@
         imgName: '',
         gender:1, //性别Value
         username:null,
-        myData:{}
+        myData:{},
+        qusDetail:{}
       }
 		},
 		beforeMount(){
 			this.userId = wx.getStorageSync('userId')
+      this.qId =this.$route.query.id
       this.getUserDate({userId:this.userId})
-     this.getDay(0, '-'); //获取当前日期
-
-		},
-		mounted(){
+      this.getDetail({id:this.qId})
 		},
     // onShow() { //返回显示页面状态函数
     //   this.getHealthRecordList()
     // },
 		methods: {
+      async getDetail(params){
+        await this.$fly.request({
+          method:'get',
+          url:"ncpQuestionnaire/detail",
+          params
+        }).then(res =>{
+          if(res.code === 200) {
+            this.qusDetail = res.data
+            this.answer1 = res.data.answer1.toString()
+            this.answer2 = res.data.answer2.toString()
+            this.answer3 = res.data.answer3.toString()
+            this.answer4 = res.data.answer4.toString()
+            this.answer5 = res.data.answer5.toString()
+            this.answer6 = res.data.answer6
+            if(this.answer6==='null'){
+              this.answer6 = ''
+            }else {
+              this.answer6 = res.data.answer6
+            }
+          }else {
+            this.$toast(res.message)
+          }}).catch((req)=>{
+          console.log(req)
+        })
+      },
       onChange(event) {
         this.gender =event.mp.detail
         this.showSexBox =false
@@ -205,83 +233,6 @@
 			},
       onChange5 (event) {
         this.answer5 = event.mp.detail
-      },
-      async addQue(){
-        let params = {
-          userId:this.userId,
-          answer1:parseInt(this.answer1),
-          answer2:parseInt(this.answer2),
-          answer3:parseInt(this.answer3),
-          answer4:parseInt(this.answer4),
-          answer5:parseInt(this.answer5),
-          answer6:this.answer6,
-          result:parseInt(this.result)
-        }
-        console.log(params);
-        await this.$fly.request({
-          method:'post',
-          url:"ncpQuestionnaire/add",
-          params
-        }).then(res =>{
-          if(res.code === 200) {
-            this.$toast('提交成功')
-            setTimeout(()=>{
-              wx.navigateBack()
-            },300)
-          }else {
-            this.$toast(res.message)
-          }}).catch((req)=>{
-          console.log(req)
-        })
-      },
-      saveData(){
-        let params ={
-          id:this.userId,
-          gender:this.gender==='男'?1:2,
-          name:this.name,
-        }
-        if(this.name===undefined||this.name===''){
-          wx.showToast({title: '请填写姓名', icon: 'none'})
-          return
-        }
-        if(this.username){
-          let reg = /^1[0-9]{10}$/
-          if (!reg.test(this.username)) {
-            wx.showToast({title: "请输入正确电话号码", icon: 'none',})
-            return
-          }
-          params.username = this.username
-        }
-        if(this.idNumber){
-          let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-          if (!reg.test(this.idNumber)) {
-            wx.showToast({title: "请输入正确的身份证号码", icon: 'none',})
-          }
-          params.idNumber = this.idNumber
-        }
-        if(this.answer1===null||this.answer2===null||this.answer3===null||this.answer4===null||this.answer5===null){
-          this.$toast('必填项不能为空')
-          return
-        }
-        if(this.answer1==1||this.answer2==1||this.answer3==1||this.answer4==1||this.answer5==1){
-          this.result = 1
-        }else {
-          this.result = 0
-        }
-        let that = this
-        wx.showModal({
-          title:'提示',
-          content: '请再次确认信息，您确定现在提交吗？',
-          success (res) {
-            if (res.confirm) {
-              console.log(params);
-              that.userUptate(params)
-              that.addQue()
-            } else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          }
-        })
       },
 
 			goBack(){

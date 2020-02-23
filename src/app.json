@@ -23,7 +23,9 @@
     "pages/pay/main",
     "pages/phr/main",
     "pages/pay/pay-success/main",
-    "pages/question/main"
+    "pages/question/main",
+    "pages/question/qlist/main",
+    "pages/question/qdetail/main"
   ],
   "usingComponents": {
     "van-button": "static/vant/button/index",

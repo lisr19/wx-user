@@ -73,12 +73,15 @@
 				],
 				editionTxt:'已是最新版本',
 				tipList: [
+          {
+            title: '我的上报'
+          },
 					// {
 					// 	title: '修改密码'
 					// },
 					{
 						title: '意见反馈'
-					},
+					}
 				]
 			}
 		},
@@ -128,7 +131,9 @@
 					this.newPassword = null
 					this.repetPassword = null
 					this.showPassword = true
-				}else {
+				}else if(item.title==='我的上报'){
+          this.$router.push({path: '/pages/question/qlist/main'})
+        } else {
 					wx.showToast({title: '功能尚未开通，敬请期待', icon: 'none'})
 				}
 			},

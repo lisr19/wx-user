@@ -2,7 +2,7 @@
 	<div class="main">
 		<div class="content">
 			<div class="h-img" >头像
-				<div class="head-box" @click="showTip">
+				<div class="head-box" @click="chooseImage">
           <img class="img-head" v-if="avatar" :src="avatar" alt=" ">
           <img class="img-head" v-else  src="/static/img/headimg.jpg" alt="">
 				</div>
