@@ -38,7 +38,12 @@
 				<div class="btn2" @click="updatePass">修改密码</div>
 			</div>
 		</van-popup>
-		<van-dialog id="van-dialog" />
+
+    <van-popup :show="showQrcode" @close="onClose">
+      <div class="change-box change-box2">
+        <img class="qr-code" src="Qrcode" alt="">
+      </div>
+    </van-popup>
 	</div>
 </template>
 
@@ -46,6 +51,8 @@
 	export default {
 		data() {
 			return {
+        Qrcode:null,
+        showQrcode:false,
 				showPassword:false, //修改密码弹窗
 				newPassword:null,
 				repetPassword:null,
@@ -74,11 +81,14 @@
 				editionTxt:'已是最新版本',
 				tipList: [
           {
+            title: '健康码'
+          },
+          {
             title: '我的上报'
           },
-					// {
-					// 	title: '修改密码'
-					// },
+					{
+						title: '修改密码'
+					},
 					{
 						title: '意见反馈'
 					}
@@ -93,22 +103,41 @@
       this.getUserDate({userId:this.userId})
     },
 		methods: {
-			//获取个人信息
-			async getUserDate(params) {
+      onClose(){
+        this.showQrcode =false
+      },
+      async getUserDate(params) {
+        await this.$fly.request({
+          methods:'fetch',
+          url:"user/findById",
+          params
+        }).then(res =>{
+          if(res.code === 200) {
+            this.myData = res.data
+            this.username = this.myData.username
+            if(this.myData.avatar){
+              this.avatar = this.myData.avatar
+            }
+            console.log(this.myData);
+          }else if(res.message==='请先登录') {
+            console.log('请先登录');
+          }}).catch((req)=>{
+          console.log(req)
+        })
+      },
+			async getQrcode() {
+        let params = {
+          userId:this.userId
+        }
 				await this.$fly.request({
-					methods:'fetch',
-					url:"user/findById",
+					methods:'get',
+					url:"ncpQr/list",
 					params
 				}).then(res =>{
 					if(res.code === 200) {
-						this.myData = res.data
-						this.username = this.myData.username
-						if(this.myData.avatar){
-							this.avatar = this.myData.avatar
-						}
-						console.log(this.myData);
-					}else if(res.message==='请先登录') {
-						console.log('请先登录');
+					  if(res.data.list.length>0){
+              this.Qrcode = res.data.list[0].ncpQr
+            }
 					}}).catch((req)=>{
 						console.log(req)
 				})
@@ -133,7 +162,10 @@
 					this.showPassword = true
 				}else if(item.title==='我的上报'){
           this.$router.push({path: '/pages/question/qlist/main'})
-        } else {
+        } else if(item.title==='健康码'){
+            this.showQrcode = true
+            this.getQrcode()
+        }else {
 					wx.showToast({title: '功能尚未开通，敬请期待', icon: 'none'})
 				}
 			},
@@ -142,8 +174,6 @@
 				this.showPassword = false
 			},
 			async updatePass(){
-        console.log(this.newPassword);
-        console.log(this.repetPassword);
         if(this.newPassword===null||this.newPassword===''){
 					this.$toast('请输入新密码')
 					return
@@ -513,5 +543,15 @@
         text-align: center;
 			}
 		}
+    .change-box2{
+      width: 516px;
+      height: 516px;
+      padding:0;
+    }
+    .qr-code{
+      width: 100%;
+      height: 100%;
+      background-color: #47BDC3;
+    }
 	}
 </style>

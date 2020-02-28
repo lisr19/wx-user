@@ -105,7 +105,8 @@
           </div>
 				</div>
 		</div>
-		<div class="btn" @click="saveData">提交</div>
+		<div v-if="!isSubmit" class="btn" @click="saveData">提交</div>
+		<div v-else class="btn" @click="goBackIndex">返回</div>
     <!--选择性别弹窗-->
     <van-popup :show="showSexBox">
       <div class="box-wrap">
@@ -132,13 +133,27 @@
         @cancel="cancelFn"
       />
     </van-popup>
+
+    <van-popup :show="showQrcode" @close="onClose">
+      <div class="change-box">
+        <img class="qr-code" :src="Qrcode" alt="">
+      </div>
+    </van-popup>
 	</div>
 </template>
 
 <script>
+  // import drawQrcode from 'weapp-qrcode'
 	export default {
+    // components:{
+    //   drawQrcode,
+    // },
+
 		data() {
       return {
+        isSubmit:false,
+        Qrcode:null,
+        showQrcode:false,
         healthData:{
           birthday:null,
         },
@@ -175,16 +190,32 @@
 		beforeMount(){
 			this.userId = wx.getStorageSync('userId')
       this.getUserDate({userId:this.userId})
-     this.getDay(0, '-'); //获取当前日期
+      this.getDay(0, '-'); //获取当前日期
       this.getHealthRecordList()
 
 		},
 		mounted(){
+      // drawQrcode({
+      //   width: 10ss0,
+      //   height: 100,
+      //   canvasId: 'myQrcode',
+      //   text: '',
+      //   image: {
+      //     dx: 50,
+      //     dy: 50,
+      //     dWidth: 60,
+      //     dHeight: 60
+      //   }
+      // })
 		},
-    // onShow() { //返回显示页面状态函数
-    //   this.getHealthRecordList()
-    // },
+    onShow() { //返回显示页面状态函数
+      // this.getHealthRecordList()
+      this.isSubmit=false
+    },
 		methods: {
+      onClose(){
+        this.showQrcode =false
+      },
       confirmFn(event) { // 确定按钮
         this.currentDate=event.mp.detail
         this.healthData.birthday = this.formatDate(new Date(this.currentDate))
@@ -356,8 +387,11 @@
         }).then(res =>{
           if(res.code === 200) {
             this.$toast('提交成功')
+            this.isSubmit =true
+            this.Qrcode = res.data
             setTimeout(()=>{
-              wx.navigateBack()
+              this.showQrcode =true
+              // wx.navigateBack()
             },300)
           }else {
             this.$toast(res.message)
@@ -415,7 +449,9 @@
           }
         })
       },
-
+      goBackIndex(){
+        wx.navigateBack()
+      },
 			goBack(){
         wx.showModal({
           title:'提示',
@@ -661,6 +697,20 @@
       button{
         margin: 0 30px;
       }
+    }
+  }
+  .change-box{
+    width: 516px;
+    height: 516px;
+    padding:0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    .qr-code{
+      width: 100%;
+      height: 100%;
+      background-color: #47BDC3;
     }
   }
 </style>
