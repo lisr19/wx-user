@@ -41,7 +41,7 @@
 
     <van-popup :show="showQrcode" @close="onClose">
       <div class="change-box change-box2">
-        <img class="qr-code" src="Qrcode" alt="">
+        <img class="qr-code" :src="Qrcode" alt=" ">
       </div>
     </van-popup>
 	</div>
@@ -78,7 +78,7 @@
 
 					},
 				],
-				editionTxt:'已是最新版本',
+				// editionTxt:'已是最新版本',
 				tipList: [
           {
             title: '健康码'
@@ -127,7 +127,8 @@
       },
 			async getQrcode() {
         let params = {
-          userId:this.userId
+          userId:this.userId,
+          size:5
         }
 				await this.$fly.request({
 					methods:'get',

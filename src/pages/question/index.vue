@@ -54,6 +54,15 @@
                placeholder="请输入联系电话"
                @change="changePhone"
              />
+             <van-field
+               required
+               size="large"
+               label="医院"
+               v-model="hospital"
+               placeholder="请选择医院"
+               disabled
+               @click="showB=true"
+             />
            </van-cell-group>
          </div>
 				<div class="body-two">
@@ -134,6 +143,10 @@
       />
     </van-popup>
 
+    <!--选医院-->
+    <van-popup :show="showB" position="bottom" :style="{ height: '40%' }">
+      <van-picker :columns="hospListName"  @cancel="onCancel" @confirm="onConfirmB"  show-toolbar/>
+    </van-popup>
     <van-popup :show="showQrcode" @close="onClose">
       <div class="change-box">
         <img class="qr-code" :src="Qrcode" alt="">
@@ -151,6 +164,11 @@
 
 		data() {
       return {
+        hospital:null,
+        hospitalId:null, //医院ID
+        hospList:[], //医院列表
+        showB:false,
+        hospListName:[],
         isSubmit:false,
         Qrcode:null,
         showQrcode:false,
@@ -192,6 +210,7 @@
       this.getUserDate({userId:this.userId})
       this.getDay(0, '-'); //获取当前日期
       this.getHealthRecordList()
+      this.getHospital()
 
 		},
 		mounted(){
@@ -213,6 +232,32 @@
       this.isSubmit=false
     },
 		methods: {
+      //医院列表
+      async getHospital(params){
+        await this.$fly.request({
+          methods:'get',
+          url:"hospital/list",
+          params
+        }).then(res =>{
+          if(res.code === 200) {
+            this.hospListName = []
+            this.hospList = res.data.list
+            this.hospList.forEach((i)=>{
+              this.hospListName.push(i.name)
+            })
+          }}).catch((req)=>{
+          console.log(req)
+        })
+      },
+      onCancel(){
+        this.showB = false
+      },
+      onConfirmB(event) {
+        const { picker, value, index } = event.mp.detail;
+        this.hospital = value
+        this.hospitalId = index+1
+        this.showB = false
+      },
       onClose(){
         this.showQrcode =false
       },
@@ -377,6 +422,7 @@
           answer4:parseInt(this.answer4),
           answer5:parseInt(this.answer5),
           answer6:this.answer6,
+          hospital:this.hospitalId,
           result:parseInt(this.result)
         }
         console.log(params);
