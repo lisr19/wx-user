@@ -230,6 +230,7 @@
     onShow() { //返回显示页面状态函数
       // this.getHealthRecordList()
       this.isSubmit=false
+      this.showQrcode =false
     },
 		methods: {
       //医院列表
@@ -455,6 +456,7 @@
           wx.showToast({title: '请填写姓名', icon: 'none'})
           return
         }
+
         if(this.username){
           let reg = /^1[0-9]{10}$/
           if (!reg.test(this.username)) {
@@ -469,6 +471,10 @@
             wx.showToast({title: "请输入正确的身份证号码", icon: 'none',})
           }
           params.idNumber = this.idNumber
+        }
+        if(this.hospital===null){
+          wx.showToast({title: '请选择医院', icon: 'none'})
+          return
         }
         if(this.answer1===null||this.answer2===null||this.answer3===null||this.answer4===null||this.answer5===null){
           this.$toast('必填项不能为空')
@@ -615,11 +621,12 @@
       width: 100%;
     }
 		input{
-			border-bottom: 1px solid #ccc;
+			border: 1px solid #ccc;
 			border-radius: 8px;
 			height: 60px;
 			line-height: 60px;
 			padding-left: 10px;
+      margin-top: 20px;
 		}
 		h2{
 			height:56px;
