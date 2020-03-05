@@ -4,14 +4,14 @@
 			<ul class="items" v-if="msgList.length">
 				<li class="item" v-for="item in msgList" :key="index" @click="openDetail(item)">
 					<div class="info">
-						<div class="header">
-							<span class="name">我的上报</span>
+						<div class="header" :class="{red:item.result===1}" >
+							<span :class="{red:item.result===1}" class="name">我的上报</span>
 							<span>{{item.addTime}}</span>
 						</div>
 					</div>
 				</li>
 			</ul>
-			<div  v-if="msgList.length===0" class="msg-null">
+			<div  v-if="msgList.length===0" class="msg-null" style="margin-top: 50px">
         无上报记录
 <!--				<img  src="/static/icon/null-news.png" alt="">-->
 			</div>
@@ -113,6 +113,9 @@
 								color:rgba(51,51,51,1);
 							}
 						}
+            .red{
+              color: #ff1607!important;
+            }
 						.content{
 							font-size:24px;
 							font-family:PingFangSC;

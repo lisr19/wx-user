@@ -2,6 +2,7 @@
 	<div class="main">
 		<h2 style="padding: 15px;margin: 0 auto;text-align: center">门诊患者新冠肺炎初步筛查登记表</h2>
     <p style="padding:0 15px 10px;text-align: right">填表时间：{{qusDetail.addTime}}</p>
+    <p :class="{red:result==='可疑'}" style="padding:0 15px 10px;text-align: right">初查结果：{{result}}</p>
 		<div class="content">
          <div class="body-one">
            <van-cell-group>
@@ -11,7 +12,6 @@
                label="姓名"
                v-model="name"
                placeholder="请输入姓名"
-               @change="changeName"
                disabled
              />
              <van-cell required title="性别" :value="gender" size="large"/>
@@ -37,7 +37,6 @@
                label="身份证号"
                v-model="idNumber"
                placeholder="请输入身份证号"
-               @change="changeIdNumber"
                disabled
              />
              <van-field
@@ -46,6 +45,7 @@
                label="现住址"
                v-model="healthData.residenceAddress"
                placeholder="请输入现住址"
+               disabled
              />
              <van-field
                required
@@ -55,7 +55,7 @@
                placeholder="请输入联系电话"
                disabled
              />
-<!--             <van-cell required title="医院" :value="healthData.hospital===1?'南部战区总医院':'157医院'" size="large"/>-->
+             <van-cell required title="医院" :value="hospital===1?'南部战区总医院':'157医院'" size="large"/>
            </van-cell-group>
          </div>
 				<div class="body-two">
@@ -68,35 +68,35 @@
 					<div class="card">
             <span class="tip">1</span><em style="color: red;display: inline-block">*</em>
             3日内 (《12岁患儿2日内 )是否有发热、干咳、腹泻、乏力、咽痛等呼吸道症状？
-            <van-radio-group :value="answer1" @change="onChange1"  style="display: flex">
+            <van-radio-group :value="answer1"  style="display: flex">
               <van-radio   disabled  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
 					</div>
           <div class="card">
             <span class="tip">2</span><em style="color: red;display: inline-block">*</em>
             14天内是否到过武汉及周边地区或接触过来自该地区人员？
-            <van-radio-group :value="answer2" @change="onChange2" >
+            <van-radio-group :value="answer2" >
               <van-radio  disabled  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
           </div>
           <div class="card">
             <span class="tip">3</span><em style="color: red;display: inline-block">*</em>
             14天内您居住的社区或身边是否有新冠病毒感染者（核酸检测阳性者）？
-            <van-radio-group :value="answer3" @change="onChange3" >
+            <van-radio-group :value="answer3" >
               <van-radio disabled v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
           </div>
           <div class="card">
             <span class="tip">4</span><em style="color: red;display: inline-block">*</em>
             14天内是否接触过有新冠肺炎报告病例社区的发热和呼吸道症状患者？
-            <van-radio-group :value="answer4" @change="onChange4" >
+            <van-radio-group :value="answer4"  >
               <van-radio disabled v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
           </div>
           <div class="card">
             <span class="tip">5</span><em style="color: red;display: inline-block">*</em>
             身边是否有2人或2人以上存在发热或者干咳、咽痛等呼吸道症状情况？
-            <van-radio-group :value="answer5" @change="onChange5" >
+            <van-radio-group :value="answer5"  >
               <van-radio disabled v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
           </div>
@@ -130,6 +130,7 @@
 	export default {
 		data() {
       return {
+        hospital:null,
         healthData:{
           birthday:null,
         },
@@ -141,6 +142,7 @@
         answer4:null,
         answer5:null,
         answer6:null,
+        result:null,
         radio:[
           {label: 0, name: '否'},
           {label: 1, name: '是'}
@@ -218,6 +220,12 @@
             this.answer4 = res.data.answer4.toString()
             this.answer5 = res.data.answer5.toString()
             this.answer6 = res.data.answer6
+            this.hospital = res.data.hospital
+            if(res.data.result===1){
+              this.result = '可疑'
+            }else {
+              this.result = '正常'
+            }
             if(this.answer6==='null'){
               this.answer6 = ''
             }else {
@@ -238,64 +246,6 @@
         this.gender =name
         this.showSexBox =false
       },
-      changePhone (event) {
-        this.username = event.mp.detail
-        let reg = /^1[0-9]{10}$/
-        if (!reg.test(this.username)) {
-          this.errorPhone='请输入正确电话号码'
-        }else {
-          this.errorPhone=''
-        }
-      },
-      changeAge (event) {
-
-      },
-      changeIdNumber (event) {
-        this.idNumber = event.mp.detail
-        let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-        if (!reg.test(this.idNumber)) {
-          this.errorIdNumber='请输入正确的身份证号'
-        }else {
-          this.errorIdNumber=''
-        }
-      },
-      changeName (event) {
-        this.name = event.mp.detail
-      },
-      //性别选择弹窗
-      showSex(){
-        this.showSexBox = true
-      },
-      onChange1 (event) {
-        this.answer1 =event.mp.detail
-      },
-			onChange2 (event) {
-        console.log(2222);
-				this.answer2 = event.mp.detail
-      },
-			onChange3 (event) {
-				this.answer3 = event.mp.detail
-			},
-			onChange4 (event) {
-				this.answer4 = event.mp.detail
-			},
-      onChange5 (event) {
-        this.answer5 = event.mp.detail
-      },
-
-			goBack(){
-        wx.showModal({
-          title:'提示',
-          content: '是否放弃修改？',
-          success (res) {
-            if (res.confirm) {
-              wx.navigateBack()
-            } else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          }
-        })
-			},
 			//获取当前时间
 			getDay(num, str) {
 				let today = new Date();
@@ -337,7 +287,6 @@
           }
         })
       },
-
       //编辑个人信息
       async userUptate(params){
         await this.$fly.request({
@@ -402,12 +351,13 @@
       left: 0;
       width: 100%;
     }
-		input{
-			border-bottom: 1px solid #ccc;
+		.input{
+			border: 1px solid #ccc;
 			border-radius: 8px;
 			height: 60px;
 			line-height: 60px;
 			padding-left: 10px;
+      margin-top: 20px;
 		}
 		h2{
 			height:56px;
@@ -512,6 +462,9 @@
 			}
 		}
 	}
+  .red{
+    color: #ff1607!important;
+  }
   .box-wrap{
     width:668px;
     background:rgba(255,255,255,1);

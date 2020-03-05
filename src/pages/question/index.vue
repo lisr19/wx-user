@@ -145,7 +145,7 @@
 
     <!--选医院-->
     <van-popup :show="showB" position="bottom" :style="{ height: '40%' }">
-      <van-picker :columns="hospListName"  @cancel="onCancel" @confirm="onConfirmB"  show-toolbar/>
+      <van-picker :columns="hospListName"  @cancel="onCancel" @confirm="onConfirmB" show-toolbar/>
     </van-popup>
     <van-popup :show="showQrcode" @close="onClose">
       <div class="change-box">
@@ -215,18 +215,6 @@
 
 		},
 		mounted(){
-      // drawQrcode({
-      //   width: 10ss0,
-      //   height: 100,
-      //   canvasId: 'myQrcode',
-      //   text: '',
-      //   image: {
-      //     dx: 50,
-      //     dy: 50,
-      //     dWidth: 60,
-      //     dHeight: 60
-      //   }
-      // })
 		},
     onShow() { //返回显示页面状态函数
       // this.getHealthRecordList()
@@ -454,12 +442,33 @@
           id:this.userId,
           gender:this.gender==='男'?1:2,
           name:this.name,
+          username:this.username,
+          idNumber:this.idNumber,
         }
-        if(this.name===undefined||this.name===''){
+        console.log(this.name);
+        if(this.name===null||this.name===''){
           wx.showToast({title: '请填写姓名', icon: 'none'})
           return
         }
-
+        if(this.idNumber===null||this.idNumber===''){
+          wx.showToast({title: '请输入身份证号码', icon: 'none'})
+          return
+        }
+        if(this.username===null||this.username===''){
+          wx.showToast({title: '请填写手机', icon: 'none'})
+          return
+        }
+        if(this.hospital===null){
+          wx.showToast({title: '请选择医院', icon: 'none'})
+          return
+        }
+        if(this.idNumber){
+          let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+          if (!reg.test(this.idNumber)) {
+            wx.showToast({title: "请输入正确的身份证号码", icon: 'none',})
+            return;
+          }
+        }
         if(this.username){
           let reg = /^1[0-9]{10}$/
           if (!reg.test(this.username)) {
@@ -468,18 +477,8 @@
           }
           params.username = this.username
         }
-        if(this.idNumber){
-          let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-          if (!reg.test(this.idNumber)) {
-            wx.showToast({title: "请输入正确的身份证号码", icon: 'none',})
-          }
-          params.idNumber = this.idNumber
-        }
-        if(this.hospital===null){
-          wx.showToast({title: '请选择医院', icon: 'none'})
-          return
-        }
-        if(this.answer1===null||this.answer2===null||this.answer3===null||this.answer4===null||this.answer5===null){
+        if(this.answer1===null||this.answer2===null||this.answer3===null||this.answer4===null||this.answer5===null
+        || this.healthData.residenceAddress===''||this.healthData.birthday===null){
           this.$toast('必填项不能为空')
           return
         }
