@@ -16,6 +16,9 @@
 				<span class="forget-pass" @click="openForget">忘记密码？</span>
 				<span class="new-enroll" @click="openRe">注册账号</span>
 			</div>
+      <p class="tip2" @click="openRe">
+        <van-icon name="warning-o" size="20px" />
+        新用户请先注册</p>
 		</div>
 	</div>
 </template>
@@ -203,7 +206,7 @@
 				}
 			}
 			.btn-box{
-				margin-top: 64px;
+				margin-top: 52px;
 				text-align: right;
 				height:34px;
 				font-size:24px;
@@ -216,6 +219,19 @@
 					margin-right: 24px;
 				}
 			}
+      .tip2{
+        text-align: right;
+        font-size:26px;
+        font-family:PingFangSC-Regular;
+        font-weight:400;
+        color:#8e8e93;
+        line-height:34px;
+        padding-right: 90px;
+        margin-top: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
 		}
 	}
 </style>

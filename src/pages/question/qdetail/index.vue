@@ -55,6 +55,7 @@
                placeholder="请输入联系电话"
                disabled
              />
+<!--             <van-cell required title="医院" :value="healthData.hospital===1?'南部战区总医院':'157医院'" size="large"/>-->
            </van-cell-group>
          </div>
 				<div class="body-two">

@@ -24,10 +24,9 @@
 			<div class="item" v-for="item in tipList" :key="index" @click="openDetail(item)">
 				{{item.title}}
 			</div>
-			<div class="item" @click="showTip">
-		        <span>关于用户端</span>
-				<span class="edition">{{editionTxt}} {{versionCode}}</span>
-			</div>
+<!--			<div class="item" @click="showTip">-->
+<!--		        <span>关于用户端</span>-->
+<!--			</div>-->
 		</div>
 		<div class="btn" @click="quitUser">退出账号</div>
 		<van-popup :show="showPassword">
@@ -164,8 +163,9 @@
 				}else if(item.title==='我的上报'){
           this.$router.push({path: '/pages/question/qlist/main'})
         } else if(item.title==='健康码'){
-            this.showQrcode = true
-            this.getQrcode()
+          this.$router.push({path: '/pages/qrcode/main'})
+            // this.showQrcode = true
+            // this.getQrcode()
         }else {
 					wx.showToast({title: '功能尚未开通，敬请期待', icon: 'none'})
 				}

@@ -114,7 +114,7 @@
           </div>
 				</div>
 		</div>
-		<div v-if="!isSubmit" class="btn" @click="saveData">提交</div>
+		<div v-if="!isSubmit&&!ifCommit" class="btn" @click="saveData">提交</div>
 		<div v-else class="btn" @click="goBackIndex">返回</div>
     <!--选择性别弹窗-->
     <van-popup :show="showSexBox">
@@ -150,20 +150,19 @@
     <van-popup :show="showQrcode" @close="onClose">
       <div class="change-box">
         <img class="qr-code" :src="Qrcode" alt="">
+        <p v-if="isRed">请到发热门诊挂号就诊</p>
+        <p v-else>请到普通门诊挂号就诊</p>
       </div>
     </van-popup>
 	</div>
 </template>
 
 <script>
-  // import drawQrcode from 'weapp-qrcode'
-	export default {
-    // components:{
-    //   drawQrcode,
-    // },
 
+	export default {
 		data() {
       return {
+        isRed:false,
         hospital:null,
         hospitalId:null, //医院ID
         hospList:[], //医院列表
@@ -202,7 +201,8 @@
         imgName: '',
         gender:1, //性别Value
         username:null,
-        myData:{}
+        myData:{},
+        ifCommit:false
       }
 		},
 		beforeMount(){
@@ -211,6 +211,7 @@
       this.getDay(0, '-'); //获取当前日期
       this.getHealthRecordList()
       this.getHospital()
+      this.getIfCommit({userId:this.userId})
 
 		},
 		mounted(){
@@ -230,6 +231,7 @@
     onShow() { //返回显示页面状态函数
       // this.getHealthRecordList()
       this.isSubmit=false
+      this.ifCommit=false
       this.showQrcode =false
     },
 		methods: {
@@ -304,20 +306,21 @@
       async editHealthRecord(){
         let params = {
           // 必填项
-          id:this.healthData.id,
+          // id:this.healthData.id,
           userId:this.userId,
           residenceAddress:this.healthData.residenceAddress,
-          birthday:this.healthData.birthday
+          birthday:this.healthData.birthday,
+          gender:this.gender==='男'?1:2,
+          name:this.name
         }
         await this.$fly.request({
-          method:'put',
-          url:"userHealthRecord/update",
+          method:'post',
+          url:"userHealthRecord/add",
           params
         }).then(res =>{
           if(res.code === 200) {
           }}).catch((req)=>{
           console.log(req)
-
         })
       },
       onChange(event) {
@@ -361,7 +364,6 @@
           let age = d.getFullYear() - birthdays.getFullYear() - (d.getMonth() < birthdays.getMonth() || (d.getMonth() == birthdays.getMonth() && d.getDate() < birthdays.getDate()) ? 1 : 0)
           this.healthData.age = age
         }
-        console.log(this.healthData.age);
       },
       //性别选择弹窗
       showSex(){
@@ -371,7 +373,6 @@
         this.answer1 =event.mp.detail
       },
 			onChange2 (event) {
-        console.log(2222);
 				this.answer2 = event.mp.detail
       },
 			onChange3 (event) {
@@ -414,6 +415,7 @@
         this.birthDay = d
         return y + '-' + M + '-' + d
       },
+
       async addQue(){
         let params = {
           userId:this.userId,
@@ -424,6 +426,7 @@
           answer5:parseInt(this.answer5),
           answer6:this.answer6,
           hospital:this.hospitalId,
+          // ifSend:0,
           result:parseInt(this.result)
         }
         console.log(params);
@@ -482,8 +485,10 @@
         }
         if(this.answer1==1||this.answer2==1||this.answer3==1||this.answer4==1||this.answer5==1){
           this.result = 1
+          this.isRed = true
         }else {
           this.result = 0
+          this.isRed = false
         }
         let that = this
         wx.showModal({
@@ -558,7 +563,6 @@
           }
         })
       },
-
       //编辑个人信息
       async userUptate(params){
         await this.$fly.request({
@@ -571,6 +575,33 @@
           }else {
             // wx.showToast({title: '修改失败', icon: 'none'})
           }})
+      },
+
+      async getIfCommit(params) {
+        await this.$fly.request({
+          method:'get',
+          url:"ncpQuestionnaire/ifCommit",
+          params
+        }).then(res =>{
+          let that =this
+          if(res.code === 200) {
+            if(res.data===true){
+              this.ifCommit =true
+              wx.showModal({
+                title:'提示',
+                content: '今天您已填写登记表，是否查看健康码？',
+                success (res) {
+                  if (res.confirm) {
+                    wx.redirectTo({ url:'../qrcode/main'})
+                  } else if (res.cancel) {
+                    console.log('用户点击取消')
+                    wx.navigateBack()
+                  }
+                }
+              })
+            }
+          }
+        })
       },
 		}
 	}
@@ -664,6 +695,7 @@
         line-height: 1.8;
         font-size: 30px;
         margin: 20px 0;
+        color: #FF1706;
         p{
           text-align: right;
         }

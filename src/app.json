@@ -47,7 +47,6 @@
     "van-dropdown-menu": "static/vant/dropdown-menu/index",
     "van-dropdown-item": "static/vant/dropdown-item/index",
     "van-icon": "static/vant//icon/index",
-    "i-input": "static/iview/input/index",
     "van-checkbox": "static/vant/checkbox/index",
     "van-tabbar": "static/vant/tabbar/index",
     "van-tabbar-item": "static/vant/tabbar-item/index",
