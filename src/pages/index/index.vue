@@ -1,7 +1,10 @@
 <template>
 	<div class="nursing">
-<!--		<h2 @click="anQue">问卷</h2>-->
-    <img  @click="anQue" src="/static/img/anw.jpg" alt="" style="width: 100%;height: 180px">
+    <div  @click="anQue">
+      <img  src="/static/img/anw.jpg" alt="" style="width: 100%;">
+      <p class="tishi">没有登记将无法正常看医生</p>
+      <p class="tishi">(点击上方登记，每天一次)</p>
+    </div>
 <!--		<div class="banner">-->
 <!--			<swiper class="swiper items" :display-multiple-items="swiperNum">-->
 <!--				<block v-for="(item, index) in imgList" :index="index" :key="key">-->
@@ -23,8 +26,6 @@
 				<ul class="items">
 					<li class="item" :title="item.name" v-for="(item,index) in levelOne" :key="index" @click="openChoice(item)">{{item.name}}</li>
 				</ul>
-				<!--<img v-if="levelOne.length===0&&!loading" src="@/assets/icon/null-type.png" alt="" style="margin-top: 40px">-->
-				<!--<img v-if="loading" src="@/assets/img/loading.png" alt="" style="margin-top: 40px;margin-left: 20px">-->
 			</div>
 			<div class="choice-box" >
 				<van-popup :show="popupVisible" @close="closeVisible" position="bottom" :style="{ height: '40%' }">
@@ -88,6 +89,7 @@ export default {
 			levelOne:[],
 			loading:true,
 			noOder:false, //是否有最近护理
+      ifCommit:false,
 		}
 	},
 
@@ -100,17 +102,34 @@ export default {
 		if(!this.userId){
 			wx.reLaunch({url: '../login/main'})
 		}
+    // this.getRecentList({userId:this.userId,size:5})
 		this.getNurseList({serviceType:1,size:50})
-		// this.getRecentList({userId:this.userId,size:5})
 		this.getHealthList({userId:this.userId})
+    // this.getIfCommit({userId:this.userId})
 	},
 	onShow(){
 		wx.showTabBar()
 	},
 	methods: {
+    async getIfCommit(params) {
+      await this.$fly.request({
+        method:'get',
+        url:"ncpQuestionnaire/ifCommit",
+        params
+      }).then(res =>{
+        if(res.code === 200) {
+          if(res.data===true){
+            this.ifCommit =true
+          }else {
+            this.$router.push({path:'/pages/ad/main'})
+           // this.anQue()
+          }
+        }
+      })
+    },
     anQue(){
       this.$router.push(
-        {path:'/pages/question/main',query:{}})
+        {path:'/pages/question/main'})
     },
 		//获取健康档案信息
 		async getHealthList(params){
@@ -295,6 +314,13 @@ export default {
 		padding-top: 34px;
 		margin: 0 30px;
 		color: #2c3e50;
+    .tishi{
+      color: #ff0911;
+      font-size: 56px;
+      text-align: center;
+      margin-top: 15px;
+      font-weight: 700;
+    }
 		h2{
 			height:110px;
 			line-height: 110px;

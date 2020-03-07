@@ -9,9 +9,9 @@
              <van-field
                required
                size="large"
-               label="姓名"
+               label="真实姓名"
                v-model="name"
-               placeholder="请输入姓名"
+               placeholder="请输入真实姓名"
                disabled
              />
              <van-cell required title="性别" :value="gender" size="large"/>
@@ -149,7 +149,7 @@
         ],
         errorPhone:'',
         errorIdNumber:'',
-        name:null, //姓名
+        name:null, //真实姓名
         birthYear:null,
         birthMonth:null,
         birthDay:null,

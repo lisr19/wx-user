@@ -1,14 +1,14 @@
 <template>
 	<div class="main">
-		<h2 style="padding: 20px;margin: 0 auto;text-align: center">门诊患者新冠肺炎初步筛查登记表</h2>
+		<h2 style="padding: 20px;margin: 0 auto;text-align: center;color: #FF1706">门诊患者新冠肺炎初步筛查登记表</h2>
 		<div class="content">
          <div class="body-one">
            <van-cell-group>
              <van-field
                size="large"
-               label="姓名"
+               label="真实姓名"
                v-model="name"
-               placeholder="请输入姓名"
+               placeholder="请输入真实姓名"
                required
                @change="changeName"
              />
@@ -152,6 +152,7 @@
         <img class="qr-code" :src="Qrcode" alt="">
         <p v-if="isRed">请到发热门诊挂号就诊</p>
         <p v-else>请到普通门诊挂号就诊</p>
+        <p style="padding: 4px;font-weight:500;">健康码有效</p>
       </div>
     </van-popup>
 	</div>
@@ -212,7 +213,6 @@
       this.getHealthRecordList()
       this.getHospital()
       this.getIfCommit({userId:this.userId})
-
 		},
 		mounted(){
 		},
@@ -251,6 +251,7 @@
       },
       onClose(){
         this.showQrcode =false
+        wx.switchTab({ url: '../index/main' });
       },
       confirmFn(event) { // 确定按钮
         this.currentDate=event.mp.detail
@@ -447,7 +448,7 @@
         }
         console.log(this.name);
         if(this.name===null||this.name===''){
-          wx.showToast({title: '请填写姓名', icon: 'none'})
+          wx.showToast({title: '请填写真实姓名', icon: 'none'})
           return
         }
         if(this.idNumber===null||this.idNumber===''){
@@ -785,7 +786,6 @@
   }
   .change-box{
     width: 516px;
-    height: 516px;
     padding:0;
     display: flex;
     flex-direction: column;
@@ -793,8 +793,15 @@
     align-items: center;
     .qr-code{
       width: 100%;
-      height: 100%;
+      height: 516px;
       background-color: #47BDC3;
+    }
+    .tishi{
+      color: #ff0911;
+      font-size: 56px;
+      text-align: center;
+      margin-top: 15px;
+      font-weight: 700;
     }
   }
 </style>

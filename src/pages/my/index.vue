@@ -91,12 +91,13 @@
 					{
 						title: '意见反馈'
 					}
-				]
+				],
 			}
 		},
 		beforeMount() {
 			this.userId = wx.getStorageSync('userId')
 			this.getUserDate({userId:this.userId})
+      this.getQrcode()
 		},
     onShow(){
       this.getUserDate({userId:this.userId})
@@ -137,6 +138,8 @@
 					if(res.code === 200) {
 					  if(res.data.list.length>0){
               this.Qrcode = res.data.list[0].ncpQr
+            }else {
+              this.Qrcode=null
             }
 					}}).catch((req)=>{
 						console.log(req)
@@ -155,7 +158,7 @@
 				}
 			},
 			openDetail(item){
-				console.log(item.title);
+        console.log(this.Qrcode);
 				if(item.title==='修改密码'){
 					this.newPassword = null
 					this.repetPassword = null
@@ -163,9 +166,11 @@
 				}else if(item.title==='我的上报'){
           this.$router.push({path: '/pages/question/qlist/main'})
         } else if(item.title==='健康码'){
-          this.$router.push({path: '/pages/qrcode/main'})
-            // this.showQrcode = true
-            // this.getQrcode()
+				  if(this.Qrcode===null){
+            this.$toast('您尚未填写预检登记表')
+          }else {
+            this.$router.push({path: '/pages/qrcode/main'})
+          }
         }else {
 					wx.showToast({title: '功能尚未开通，敬请期待', icon: 'none'})
 				}

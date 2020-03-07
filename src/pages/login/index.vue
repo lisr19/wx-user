@@ -17,7 +17,7 @@
 				<span class="new-enroll" @click="openRe">注册账号</span>
 			</div>
       <p class="tip2" @click="openRe">
-        <van-icon name="warning-o" size="20px" />
+        <van-icon name="warning-o" size="24px" />
         新用户请先注册</p>
 		</div>
 	</div>
@@ -109,7 +109,10 @@
 					}else if(res.message==='密码错误'){
 						wx.showToast({title: '密码错误', icon: 'none',})
 					} else if(res.message==='此用户不存在'){
-						wx.showToast({title: '此用户不存在', icon: 'none',})
+						wx.showToast({title: '用户不存在,请先注册', icon: 'none',})
+            setTimeout(()=>{
+              this.openRe()
+            },1000)
 					}else {
 						wx.showToast({title: '输入的账号或密码有误，请重新输入',icon: 'none'});
 					}
@@ -150,7 +153,7 @@
 		.logo{
 			width: 142px;
 			height: 142px;
-			margin: 80px auto 50px;
+			margin: 100px auto 50px;
 		}
 		.login-box{
 			width:670px;
@@ -206,10 +209,10 @@
 				}
 			}
 			.btn-box{
-				margin-top: 52px;
+				margin-top: 50px;
 				text-align: right;
 				height:34px;
-				font-size:24px;
+				font-size:26px;
 				font-family:PingFangSC-Regular;
 				font-weight:400;
 				color:rgba(153,153,153,1);
@@ -221,13 +224,13 @@
 			}
       .tip2{
         text-align: right;
-        font-size:26px;
+        font-size:38px;
         font-family:PingFangSC-Regular;
-        font-weight:400;
-        color:#8e8e93;
+        font-weight:600;
+        color: #FF1706;
         line-height:34px;
         padding-right: 90px;
-        margin-top: 22px;
+        margin-top: 20px;
         display: flex;
         align-items: center;
         justify-content: flex-end;
