@@ -51,22 +51,8 @@
 
 		},
 		mounted(){
-			// window.addEventListener('scroll', this.handleScroll)
 		},
 		methods: {
-			handleScroll () {
-				let scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
-				//变量windowHeight是可视区的高度
-				let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
-				//变量scrollHeight是滚动条的总高度
-				let scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
-				if(scrollTop<50){
-					this.opacity = 0
-				}else {
-					this.opacity = 1-(Math.abs(Math.round(scrollHeight-scrollTop-windowHeight)))*0.001;
-				}
-				this.style = {opacity:`${this.opacity}`}
-			},
 			agreeBtn(){
 				wx.setStorageSync('isRead',true)
 				wx.redirectTo({url:'../../register/main'})
@@ -84,7 +70,7 @@
 		position: relative;
 		h2{
 			height:42px;
-			font-size:30px;
+			font-size:38px;
 			font-family:PingFangSC;
 			font-weight:500;
 			color:rgba(72,72,72,1);
@@ -97,7 +83,7 @@
 		}
 		.txt{
 			text-align: left;
-			font-size:24px;
+			font-size:32px;
 			font-family:PingFangSC;
 			font-weight:400;
 			color:rgba(72,72,72,1);

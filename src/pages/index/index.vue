@@ -1,9 +1,11 @@
 <template>
 	<div class="nursing">
     <div  @click="anQue">
-      <img  src="/static/img/anw.jpg" alt="" style="width: 100%;">
-      <p class="tishi">没有登记将无法正常看医生</p>
-      <p class="tishi">(点击上方登记，每天一次)</p>
+      <p class="tishi">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;疫情期间进入门诊楼，必须先初筛登记。
+        请点击下方登记入口， 实行无接触问询，凭分诊码到相关诊室就医，提高就诊效率。</p>
+      <img  src="/static/img/anw.png" alt="" style="width: 100%;margin: 10px 0">
+      <p>请大家填写真实信息，每天可更新一次健康状况</p>
     </div>
 <!--		<div class="banner">-->
 <!--			<swiper class="swiper items" :display-multiple-items="swiperNum">-->
@@ -312,14 +314,17 @@ export default {
 <style lang="less" scoped>
 	.nursing{
 		padding-top: 34px;
-		margin: 0 30px;
+		margin: 0 22px;
 		color: #2c3e50;
-    .tishi{
-      color: #ff0911;
-      font-size: 56px;
+    p{
       text-align: center;
-      margin-top: 15px;
-      font-weight: 700;
+      font-size:32px;
+    }
+    .tishi{
+      /*color: #ff0911;*/
+      font-size: 36px;
+      text-align: left;
+      font-weight: 500;
     }
 		h2{
 			height:110px;

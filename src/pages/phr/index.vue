@@ -168,7 +168,7 @@
 						<div class="input-box">
 							身高：
 							<input  type="number" :maxlength="6" v-model="healthData.height"   @blur="validateNum('身高')"/>
-							<strong class="dw">kg</strong>
+							<strong class="dw">m</strong>
 						</div>
 						<div class="input-box">
 							体重：
@@ -792,8 +792,8 @@
 				if(!this.healthData.weight ){
 					this.$toast('体重不能为空')
 					return
-				}else if(this.healthData.weight<10||this.healthData.weight>300){
-					this.$toast('请输入正确的体重（10~300）kg')
+				}else if(this.healthData.weight<2||this.healthData.weight>300){
+					this.$toast('请输入正确的体重（2~300）kg')
 					return
 				}
 				if(this.healthData.smokingStatus===undefined){
@@ -984,8 +984,8 @@
 				if(!this.healthData.weight ){
 					this.$toast('体重不能为空')
 					return
-				}else if(this.healthData.weight<10||this.healthData.weight>300){
-					this.$toast('请输入正确的体重（10~300）kg')
+				}else if(this.healthData.weight<2||this.healthData.weight>300){
+					this.$toast('请输入正确的体重（2~300）kg')
 					return
 				}
 				if(this.healthData.smokingStatus===undefined){

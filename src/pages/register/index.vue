@@ -198,7 +198,7 @@
 			margin: 80px auto 50px;
 		}
 		.card{
-			width:670px;
+			width:690px;
 			background:rgba(255,255,255,1);
 			border-radius:10px;
 			margin: 0 auto;
@@ -226,7 +226,7 @@
 				bottom: 10px;
 				left: 0;
 				height: auto;
-				font-size: 20px;
+				font-size: 32px;
 				margin-top: 14px;
 				color: #999;
 				display: flex;
@@ -236,16 +236,16 @@
 					color: #47BDC3;
 				}
 				.icon{
-					width:26px;
-					height:26px;
+          width:32px;
+          height:32px;
 					border-radius: 50%;
 					border: solid #d6d6d6 1px;
 					display: inline-block;
 					margin-right: 8px;
 				}
 				.icon-select{
-					width:26px;
-					height:26px;
+					width:32px;
+					height:32px;
 					color: #628CFD;
 					display: inline-block;
 					margin-right: 8px;

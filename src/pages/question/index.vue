@@ -565,6 +565,10 @@
       },
       //编辑个人信息
       async userUptate(params){
+        console.log(params);
+        // params.birthYear = this.myData.birthYear
+        // params.birthMonth =this.myData.birthMonth
+        // params.birthDay =this.myData.birthDay
         await this.$fly.request({
           method:'put',
           url:"user/update",
@@ -613,6 +617,9 @@
   }
   .van-field__error-message{
     text-align: right!important;
+  }
+  .van-hairline--top-bottom:after{
+    border-width: 5px 0!important;
   }
 </style>
 <style scoped>
