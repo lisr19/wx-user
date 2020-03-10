@@ -55,7 +55,6 @@
 						}})
 			},
 			openDetail(item){
-				// wx.navigateTo({ url:'../../message/msg-detail/main',query:{id:item.id,msg:item}})
 				this.$router.push({path:'/pages/question/qdetail/main',query:{id:item.id}})
 			}
 		},

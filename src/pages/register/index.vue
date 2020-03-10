@@ -10,10 +10,10 @@
 			<input  v-model.lazy="userPassWord" placeholder='请设置您的密码' type="password">
 			<input  v-model.lazy="userPassWord2" placeholder='请重复您的密码' type="password">
 			<div class="btn" @click="registerUser">注册并登陆</div>
-			<div class="tip">
-				<em class="icon" v-if="!isRead" @click="showTip"></em>
+			<div class="tip"  @click="openUserProt">
+				<em class="icon" v-if="!isRead"></em>
 				<img class="icon-select" v-else src="../../../static/icon/yes.png" alt="">
-				我已阅读且同意<span @click="openUserProt">《用户服务协议》</span></div>
+				我已阅读且同意<span>《用户服务协议》</span></div>
 		</div>
 	</div>
 </template>

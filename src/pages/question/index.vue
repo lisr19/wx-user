@@ -145,7 +145,7 @@
 
     <!--选医院-->
     <van-popup :show="showB" position="bottom" :style="{ height: '40%' }">
-      <van-picker :columns="hospListName"  @cancel="onCancel" @confirm="onConfirmB" show-toolbar/>
+      <van-picker :columns="hospListName"  @cancel="onCancel" @change="onConfirmB" @confirm="onConfirmB" show-toolbar/>
     </van-popup>
     <van-popup :show="showQrcode" @close="onClose">
       <div class="change-box">
@@ -546,6 +546,15 @@
         }).then(res =>{
           if(res.code === 200) {
             this.myData = res.data
+            if(this.myData.gender===1){
+              this.gender = '男'
+            }else {
+              this.gender = '女'
+            }
+            if(!res.data.name){
+              console.log('刷新');
+              this.onLoad()
+            }
             this.name = this.myData.name
             this.username = this.myData.username?this.myData.username:'u'+this.myData.phone
             this.email = this.myData.email
@@ -555,11 +564,6 @@
             this.birthMonth=this.myData.birthMonth
             this.birthDay=this.myData.birthDay
             this.avatar = this.myData.avatar
-            if(this.myData.gender===1){
-              this.gender = '男'
-            }else {
-              this.gender = '女'
-            }
           }
         })
       },
@@ -619,7 +623,7 @@
     text-align: right!important;
   }
   .van-hairline--top-bottom:after{
-    border-width: 5px 0!important;
+    border-width: 10px 0!important;
   }
 </style>
 <style scoped>

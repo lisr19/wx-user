@@ -190,7 +190,7 @@
 					this.$toast('两次密码不一致')
 					return
 				} else if(!(/^(\w){6,16}$/.test(this.newPassword))){
-					this.$toast('密码只能为字母、数字、或下划线组成的6-20位数')
+					this.$toast('密码只能为字母、数字、或下划线组成的6-16位数')
 					return
 				}
 				let params={
