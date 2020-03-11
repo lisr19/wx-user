@@ -29,6 +29,16 @@
                v-model="healthData.age"
                placeholder="年龄自动计算"
                disabled
+               v-if="!baby"
+             />
+             <van-field
+               v-else
+               required
+               size="large"
+               label="月龄"
+               v-model="healthData.age2"
+               placeholder="年龄自动计算"
+               disabled
              />
              <van-field
                required
@@ -37,6 +47,7 @@
                v-model="idNumber"
                placeholder="请输入身份证号"
                @change="changeIdNumber"
+               type="idcard"
              />
              <van-field
                required
@@ -88,27 +99,34 @@
           </div>
           <div class="card">
             <span class="tip">3</span><em style="color: red;display: inline-block">*</em>
+            14天内您是否有意大利、日本、韩国、伊朗等国外疫情高发地区旅居史？
+            <van-radio-group :value="answer7" @change="onChange7" >
+              <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
+            </van-radio-group>
+          </div>
+          <div class="card">
+            <span class="tip">4</span><em style="color: red;display: inline-block">*</em>
             14天内您居住的社区或身边是否有新冠病毒感染者（核酸检测阳性者）？
             <van-radio-group :value="answer3" @change="onChange3" >
               <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
           </div>
           <div class="card">
-            <span class="tip">4</span><em style="color: red;display: inline-block">*</em>
+            <span class="tip">5</span><em style="color: red;display: inline-block">*</em>
             14天内是否接触过有新冠肺炎报告病例社区的发热和呼吸道症状患者？
             <van-radio-group :value="answer4" @change="onChange4" >
               <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
           </div>
           <div class="card">
-            <span class="tip">5</span><em style="color: red;display: inline-block">*</em>
+            <span class="tip">6</span><em style="color: red;display: inline-block">*</em>
             身边是否有2人或2人以上存在发热或者干咳、咽痛等呼吸道症状情况？
             <van-radio-group :value="answer5" @change="onChange5" >
               <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
           </div>
           <div class="card">
-            <span class="tip">6</span>
+            <span class="tip">7</span>
             本次拟就诊科室
             <input class="input" v-model.lazy="answer6" />
           </div>
@@ -187,9 +205,10 @@
         answer4:null,
         answer5:null,
         answer6:null,
+        answer7:null,
         radio:[
-          {label: 0, name: '否'},
-          {label: 1, name: '是'}
+          {label: 1, name: '是'},
+          {label: 0, name: '否'}
         ],
         errorPhone:'',
         errorIdNumber:'',
@@ -203,7 +222,8 @@
         gender:1, //性别Value
         username:null,
         myData:{},
-        ifCommit:false
+        ifCommit:false,
+        baby:false
       }
 		},
 		beforeMount(){
@@ -347,12 +367,34 @@
       },
       // 判断用户的年龄
       getAge(){
+        this.baby =false
         if(this.healthData.birthday){
           let birthdays = new Date(this.healthData.birthday.replace(/-/g, "/"));
           let d = new Date()
-          let age = d.getFullYear() - birthdays.getFullYear() - (d.getMonth() < birthdays.getMonth() || (d.getMonth() == birthdays.getMonth() && d.getDate() < birthdays.getDate()) ? 1 : 0)
+          let age = d.getFullYear() - birthdays.getFullYear() - (d.getMonth() < birthdays.getMonth()
+          || (d.getMonth() == birthdays.getMonth() && d.getDate() < birthdays.getDate()) ? 1 : 0)
           this.healthData.age = age
+          if( this.healthData.age==0){
+            this.baby =true
+            this.getBirthSlot()
+          }
         }
+      },
+      getBirthSlot (){
+        let birthDay = new Date(this.healthData.birthday.replace(/-/g, "/"));
+        let nowDate = new Date()
+        let date1 = Date.parse(birthDay)
+        let date2 = Date.parse(nowDate)
+        let day = Math.ceil((date2 - date1) / (60 * 60 * 1000 * 24))
+        let age = ''
+        let year = Math.floor(day / 365)
+        let y = day % 365
+        let month = Math.floor(y / 30)
+        let d = Math.floor(day % 365 % 30)
+        // age += year + '岁' + month + '月' +  d + '天'
+        age += month + '个月'
+        this.healthData.age2 =age
+        return age
       },
       //性别选择弹窗
       showSex(){
@@ -372,6 +414,9 @@
 			},
       onChange5 (event) {
         this.answer5 = event.mp.detail
+      },
+      onChange7 (event) {
+        this.answer7 = event.mp.detail
       },
       // 格式化时间
       formatter(type, value) {
@@ -413,6 +458,7 @@
           answer3:parseInt(this.answer3),
           answer4:parseInt(this.answer4),
           answer5:parseInt(this.answer5),
+          answer7:parseInt(this.answer7),
           answer6:this.answer6,
           hospital:this.hospitalId,
           // ifSend:0,
@@ -478,12 +524,12 @@
           }
           params.username = this.username
         }
-        if(this.answer1===null||this.answer2===null||this.answer3===null||this.answer4===null||this.answer5===null
+        if(this.answer1===null||this.answer2===null||this.answer3===null||this.answer4===null||this.answer5===null||this.answer7===null
         || this.healthData.residenceAddress===''||this.healthData.birthday===null){
           this.$toast('必填项不能为空')
           return
         }
-        if(this.answer1==1||this.answer2==1||this.answer3==1||this.answer4==1||this.answer5==1){
+        if(this.answer1==1||this.answer2==1||this.answer3==1||this.answer4==1||this.answer5==1||this.answer7==1){
           this.result = 1
           this.isRed = true
         }else {
@@ -623,7 +669,10 @@
     text-align: right!important;
   }
   .van-hairline--top-bottom:after{
-    border-width: 10px 0!important;
+    border-width: 8px 0!important;
+  }
+  .van-picker-column__item--selected{
+    color: red!important;
   }
 </style>
 <style scoped>

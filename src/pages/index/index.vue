@@ -92,6 +92,7 @@ export default {
 			loading:true,
 			noOder:false, //是否有最近护理
       ifCommit:false,
+      code:null,
 		}
 	},
 
@@ -104,15 +105,27 @@ export default {
 		if(!this.userId){
 			wx.reLaunch({url: '../login/main'})
 		}
-    // this.getRecentList({userId:this.userId,size:5})
 		this.getNurseList({serviceType:1,size:50})
 		this.getHealthList({userId:this.userId})
     // this.getIfCommit({userId:this.userId})
 	},
+  mounted(){
+    // this.wxlogin()
+  },
 	onShow(){
 		wx.showTabBar()
 	},
 	methods: {
+    wxlogin() {
+      let that = this
+      if (!wx.getStorageSync("nickname")) {
+        wx.login({
+          success(res) {
+            that.code=res.code
+          }
+        })
+      }
+    },
     async getIfCommit(params) {
       await this.$fly.request({
         method:'get',

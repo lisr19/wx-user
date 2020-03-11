@@ -59,12 +59,6 @@
            </van-cell-group>
          </div>
 				<div class="body-two">
-<!--          <div class="desc">-->
-<!--            &nbsp;&nbsp;&nbsp;&nbsp;根据新型冠状病毒肺炎疫情防控要求，请如实填写下面的调查内容，-->
-<!--            如有隐瞒不报或者填写内容不属实，个人承担相关法律责任。-->
-<!--            <p>承诺人：{{name}}</p>-->
-<!--            <p>日期：{{currDate}}</p>-->
-<!--          </div>-->
 					<div class="card">
             <span class="tip">1</span><em style="color: red;display: inline-block">*</em>
             3日内 (《12岁患儿2日内 )是否有发热、干咳、腹泻、乏力、咽痛等呼吸道症状？
@@ -81,27 +75,34 @@
           </div>
           <div class="card">
             <span class="tip">3</span><em style="color: red;display: inline-block">*</em>
+            14天内您是否有意大利、日本、韩国、伊朗等国外疫情高发地区旅居史？
+            <van-radio-group :value="answer7">
+              <van-radio disabled v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
+            </van-radio-group>
+          </div>
+          <div class="card">
+            <span class="tip">4</span><em style="color: red;display: inline-block">*</em>
             14天内您居住的社区或身边是否有新冠病毒感染者（核酸检测阳性者）？
             <van-radio-group :value="answer3" >
               <van-radio disabled v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
           </div>
           <div class="card">
-            <span class="tip">4</span><em style="color: red;display: inline-block">*</em>
+            <span class="tip">5</span><em style="color: red;display: inline-block">*</em>
             14天内是否接触过有新冠肺炎报告病例社区的发热和呼吸道症状患者？
             <van-radio-group :value="answer4"  >
               <van-radio disabled v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
           </div>
           <div class="card">
-            <span class="tip">5</span><em style="color: red;display: inline-block">*</em>
+            <span class="tip">6</span><em style="color: red;display: inline-block">*</em>
             身边是否有2人或2人以上存在发热或者干咳、咽痛等呼吸道症状情况？
             <van-radio-group :value="answer5"  >
               <van-radio disabled v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
             </van-radio-group>
           </div>
           <div class="card">
-            <span class="tip">6</span>
+            <span class="tip">7</span>
             本次拟就诊科室
             <input class="input" disabled v-model.lazy="answer6" />
           </div>
@@ -142,6 +143,7 @@
         answer4:null,
         answer5:null,
         answer6:null,
+        answer7:null,
         result:null,
         radio:[
           {label: 0, name: '否'},
@@ -219,6 +221,7 @@
             this.answer3 = res.data.answer3.toString()
             this.answer4 = res.data.answer4.toString()
             this.answer5 = res.data.answer5.toString()
+            this.answer7 = res.data.answer7.toString()
             this.answer6 = res.data.answer6
             this.hospital = res.data.hospital
             if(res.data.result===1){
