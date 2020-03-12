@@ -7,6 +7,7 @@
         <p v-else>请到普通门诊挂号就诊</p>
         <p v-if="ifCommit" style="padding: 4px;font-weight:500;">健康码有效</p>
         <p v-else style="color: red;font-weight: 500;font-size: 16px;padding: 4px">健康码无效,请重新填写登记表</p>
+        <p  style="padding:2px 0 5px;color: red;font-size: 14px">有效期：{{addTime}}</p>
       </div>
     </van-popup>
   </div>
@@ -18,6 +19,7 @@
 		data() {
 			return {
         Qrcode:null,
+        addTime:null,
         showQrcode:true,
         isRed:false,
         ifCommit:false
@@ -64,6 +66,8 @@
           if(res.code === 200) {
             if(res.data.list.length>0){
               this.Qrcode = res.data.list[0].ncpQr
+              this.addTime = res.data.list[0].addTime.substring(0,10)
+              console.log(this.addTime);
               if(res.data.list[0].result===1){
                 this.isRed = true
               }else {

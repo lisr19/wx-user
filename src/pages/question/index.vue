@@ -171,6 +171,7 @@
         <p v-if="isRed">请到发热门诊挂号就诊</p>
         <p v-else>请到普通门诊挂号就诊</p>
         <p style="padding: 4px;font-weight:500;">健康码有效</p>
+        <p  style="padding:2px 0 5px;color: red;font-size: 14px">有效期：{{currDate}}</p>
       </div>
     </van-popup>
 	</div>
