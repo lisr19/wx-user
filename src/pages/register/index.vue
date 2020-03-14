@@ -49,28 +49,35 @@
 				}else if(!this.code){
 					wx.showToast({title: '请输入验证码', icon: 'none',})
 					return
-				}else if(!this.userPassWord){
-					wx.showToast({title: '请输入密码', icon: 'none',})
-					return
-				}else if(!(/^1[3-9]\d{9}$/.test(this.userPhoneNum))){
+				}
+				// else if(!this.userPassWord){
+				// 	wx.showToast({title: '请输入密码', icon: 'none',})
+				// 	return
+				// }
+				else if(!(/^1[3-9]\d{9}$/.test(this.userPhoneNum))){
 					wx.showToast({title: '电话号码格式错误', icon: 'none',})
 					return
-				}else if(this.userPassWord!==this.userPassWord2){
-					wx.showToast({title: '两次密码不一致', icon: 'none',})
-					return
-				}else if(!(/^(\w){6,16}$/.test(this.userPassWord))){
-					wx.showToast({title: '密码只能输入6-20个字母、数字、下划线', icon: 'none',})
-					return
-				}else if(!this.isSend){
+				} else if(!this.isSend){
 					wx.showToast({title: '请获取验证码', icon: 'none',})
 					return
 				} else if(!this.isRead){
 					wx.showToast({title: '您尚未阅读并同意用户协议', icon: 'none',})
 					return
 				}
+				if(this.userPassWord){
+          if(!(/^(\w){6,16}$/.test(this.userPassWord))){
+            wx.showToast({title: '密码只能输入6-20个字母、数字、下划线', icon: 'none',})
+            return
+          } else if(this.userPassWord!==this.userPassWord2){
+            wx.showToast({title: '两次密码不一致', icon: 'none',})
+            return
+          }
+        }else {
+          // this.userPassWord='123456'
+        }
 				let params = {
 					username:this.userPhoneNum,
-					password:this.userPassWord,
+          password :this.userPassWord?this.userPassWord:'123456',
 					code:this.code
 				}
 				await this.$fly.request({
@@ -141,7 +148,7 @@
 			async userLogin(){
 				let params = {
 					username:this.userPhoneNum,
-					password :this.userPassWord,
+					password :this.userPassWord?this.userPassWord:'123456',
 				}
 				await this.$fly.request({
 					method:"post",

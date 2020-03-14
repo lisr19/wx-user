@@ -18,10 +18,19 @@
                size="large"
                label="出生年月"
                v-model="healthData.birthday"
-               placeholder="请选择出生年月"
-               disabled
-               @click="showPopFn"
+               placeholder="请填写出生年月(1980-01-01)"
+               @change="changeBirthday"
+               :error-message=errorBirthday
              />
+<!--             <van-field-->
+<!--               required-->
+<!--               size="large"-->
+<!--               label="出生年月"-->
+<!--               v-model="healthData.birthday"-->
+<!--               placeholder="请选择出生年月"-->
+<!--               disabled-->
+<!--               @click="showPopFn"-->
+<!--             />-->
              <van-field
                required
                size="large"
@@ -182,6 +191,7 @@
 	export default {
 		data() {
       return {
+        errorBirthday:'',
         isRed:false,
         hospital:null,
         hospitalId:null, //医院ID
@@ -238,7 +248,6 @@
 		mounted(){
 		},
     onShow() { //返回显示页面状态函数
-      // this.getHealthRecordList()
       this.isSubmit=false
       this.ifCommit=false
       this.showQrcode =false
@@ -354,11 +363,24 @@
       changeAddress (event) {
         this.healthData.residenceAddress = event.mp.detail
       },
+      changeBirthday(event){
+        console.log(event.mp.detail);
+        this.healthData.birthday = event.mp.detail
+        let reg = /((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
+        if (!reg.test(this.healthData.birthday)) {
+          this.errorBirthday='请输入合法的出生年月(1980-01-01)'
+        }else {
+          this.errorBirthday=''
+          setTimeout(()=>{
+            this.getAge()
+          },100)
+        }
+      },
       changeIdNumber (event) {
         this.idNumber = event.mp.detail
         let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
         if (!reg.test(this.idNumber)) {
-          this.errorIdNumber='请输入正确的身份证号'
+
         }else {
           this.errorIdNumber=''
         }
@@ -374,7 +396,9 @@
           let d = new Date()
           let age = d.getFullYear() - birthdays.getFullYear() - (d.getMonth() < birthdays.getMonth()
           || (d.getMonth() == birthdays.getMonth() && d.getDate() < birthdays.getDate()) ? 1 : 0)
-          this.healthData.age = age
+          this.$set(this.healthData,'age',age)
+          // this.healthData.age = age
+          console.log(this.healthData.age);
           if( this.healthData.age==0){
             this.baby =true
             this.getBirthSlot()
@@ -476,6 +500,7 @@
             this.isSubmit =true
             this.Qrcode = res.data
             setTimeout(()=>{
+              // wx.navigateBack()
               this.showQrcode =true
               // wx.navigateBack()
             },300)
@@ -493,7 +518,6 @@
           username:this.username,
           idNumber:this.idNumber,
         }
-        console.log(this.name);
         if(this.name===null||this.name===''){
           wx.showToast({title: '请填写真实姓名', icon: 'none'})
           return
@@ -524,6 +548,16 @@
             return
           }
           params.username = this.username
+        }
+        if(this.healthData.birthday){
+          let reg = /((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
+          if (!reg.test(this.healthData.birthday)) {
+            wx.showToast({title: "请输入合法的出生年月(1980-01-01)", icon: 'none',})
+            return
+          }
+        }else if(this.healthData.birthday===''){
+          wx.showToast({title: "出生年月不能为空", icon: 'none',})
+          return;
         }
         if(this.answer1===null||this.answer2===null||this.answer3===null||this.answer4===null||this.answer5===null||this.answer7===null
         || this.healthData.residenceAddress===''||this.healthData.birthday===null){

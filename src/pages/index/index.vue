@@ -110,18 +110,46 @@ export default {
     // this.getIfCommit({userId:this.userId})
 	},
   mounted(){
-    // this.wxlogin()
+    this.wxlogin()
+    // this.getUserInfo()
   },
 	onShow(){
 		wx.showTabBar()
 	},
 	methods: {
+    getUserInfo(e) {
+      let id=null
+      id=wx.getStorageSync('openid')
+      if (!id) {
+        wx.request({
+          url: getOpenId, //set in config .js  //2.后台API
+          method: "POST",
+          data: {
+
+          }, success(res) {
+            var openId = res.data.openid
+            var sessionKey = res.data.session_key
+            console.log(res)
+            wx.setStorageSync("openid", openId)
+            app.globalData.openId = openId
+            if (!!openId) {      //3.获取到openid后的处理，可以依照自己的逻辑写
+              app.globalData.openId = openId
+              wxlogin(openId)
+            }
+          }
+        })
+      }
+
+
+    },
     wxlogin() {
       let that = this
       if (!wx.getStorageSync("nickname")) {
         wx.login({
           success(res) {
             that.code=res.code
+            console.log(that.code);
+            wx.setStorageSync('wxcode', that.code)
           }
         })
       }
