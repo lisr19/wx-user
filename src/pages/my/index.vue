@@ -24,9 +24,9 @@
 			<div class="item" v-for="item in tipList" :key="index" @click="openDetail(item)">
 				{{item.title}}
 			</div>
-<!--			<div class="item" @click="showTip">-->
-<!--		        <span>关于用户端</span>-->
-<!--			</div>-->
+			<div class="item" @click="showTip">
+      <span>解除手机绑定</span>
+    </div>
 		</div>
 		<div class="btn" @click="quitUser">退出账号</div>
 		<van-popup :show="showPassword">
@@ -214,7 +214,34 @@
 
 			},
 			showTip(){
-				wx.showToast({title: '已经是最新版本了', icon: 'none'})
+        let that =this
+        wx.showModal({
+          title:'提示',
+          content: '您确定解除该手机号的绑定吗？',
+          success (res) {
+            if (res.confirm) {
+              let params ={
+                openId:wx.getStorageSync('openId'),
+              }
+              that.$fly.request({
+                method:'post',
+                url:"user/unbindWx",
+                params
+              }).then(res =>{
+                if(res.code === 200) {
+                  wx.clearStorage()
+                  wx.clearStorageSync()
+                  that.$toast('解除绑定成功，请重新登录绑定')
+                  wx.switchTab({ url: '../index/main' });
+                }else {
+                  that.$toast(res.message)
+                }
+              })
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
 			},
 			quitUser(){
 				wx.showModal({

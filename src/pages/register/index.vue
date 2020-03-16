@@ -7,8 +7,11 @@
 				<input  v-model.lazy="code" type="number" placeholder='输入验证码' style="padding-right: 80px">
 				<span @click.stop="sendCode">{{codeText}}</span>
 			</div>
-			<input  v-model.lazy="userPassWord" placeholder='请设置您的密码' type="password">
-			<input  v-model.lazy="userPassWord2" placeholder='请重复您的密码' type="password">
+      <p class="tip2">
+        <span style="display: flex;align-items: center;justify-content: flex-end"> <van-icon name="warning-o" size="20px" />新注册默认密码:123456</span><br>
+        登录后请到'我的'修改密码</p>
+<!--			<input  v-model.lazy="userPassWord" placeholder='请设置您的密码' type="password">-->
+<!--			<input  v-model.lazy="userPassWord2" placeholder='请重复您的密码' type="password">-->
 			<div class="btn" @click="registerUser">注册并登陆</div>
 			<div class="tip"  @click="openUserProt">
 				<em class="icon" v-if="!isRead"></em>
@@ -209,7 +212,7 @@
 			background:rgba(255,255,255,1);
 			border-radius:10px;
 			margin: 0 auto;
-			padding-bottom: 15px;
+			padding-bottom: 35px;
 			.code{
 				position: relative;
 				span{
@@ -275,7 +278,7 @@
 				box-sizing: border-box;
 			}
 			.btn{
-				margin: 55px auto 10px;
+				margin: 40px auto 20px;
 				text-align: center;
 				border:none;
 				width: 80%;
@@ -307,6 +310,16 @@
 				}
 			}
 		}
+    .tip2{
+      text-align: right;
+      font-size:34px;
+      font-weight: 600;
+      font-family:PingFangSC-Regular;
+      color: #FF1706;
+      line-height:50px;
+      padding-right:50px;
+      margin-top: 30px;
+    }
 	}
 
 </style>

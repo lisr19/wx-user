@@ -632,19 +632,13 @@
             }else {
               this.gender = '女'
             }
+            this.username = this.myData.username
             if(!res.data.name){
               console.log('刷新');
               this.onLoad()
             }
             this.name = this.myData.name
-            this.username = this.myData.username?this.myData.username:'u'+this.myData.phone
-            this.email = this.myData.email
-            this.phone = this.myData.phone
             this.idNumber = this.myData.idNumber
-            this.birthYear = this.myData.birthYear
-            this.birthMonth=this.myData.birthMonth
-            this.birthDay=this.myData.birthDay
-            this.avatar = this.myData.avatar
           }
         })
       },

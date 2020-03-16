@@ -49,6 +49,13 @@
 				</van-popup>
 			</div>
 			<van-dialog id="van-dialog" />
+      <van-popup  :show="showPhone">
+        <div class="valid-box">
+<!--          <p>您尚未绑定手机号，请先进行绑定</p>-->
+          <input v-model.lazy="phone"  type="number" placeholder='绑定手机号码'>
+          <div class="btn" @click="newUserValid">确定</div>
+        </div>
+      </van-popup>
 		</div>
 	</div>
 
@@ -59,6 +66,8 @@ import Dialog from '../../../static/vant/dialog/dialog';
 export default {
 	data() {
 		return {
+      phone:'',
+      showPhone:false,
 			swiperNum:3.5,
 			curIndex: 0,
 			hasHealth:false, //健康档案ID
@@ -93,66 +102,77 @@ export default {
 			noOder:false, //是否有最近护理
       ifCommit:false,
       code:null,
+      userInfo:{}
 		}
 	},
 
   components: {
-
+    Dialog
   },
+  watch:{
+	  showPhone(n,o){
+	    if(n){
+        setTimeout(()=>{
+          wx.hideTabBar()
+        },50)
+      }else {
+        setTimeout(()=>{
+          wx.showTabBar()
+        },50)
+      }
 
+    }
+  },
 	beforeMount(){
-		this.userId = wx.getStorageSync('userId')
-		if(!this.userId){
-			wx.reLaunch({url: '../login/main'})
-		}
-		this.getNurseList({serviceType:1,size:50})
-		this.getHealthList({userId:this.userId})
-    // this.getIfCommit({userId:this.userId})
-	},
-  mounted(){
+    this.userId = wx.getStorageSync('userId')
     this.wxlogin()
-    // this.getUserInfo()
+  },
+  mounted(){
   },
 	onShow(){
 		wx.showTabBar()
+    this.userId = wx.getStorageSync('userId')
+    if(!this.userId){
+      this.wxlogin()
+    }else {
+      this.getHealthList({userId:this.userId})
+    }
 	},
 	methods: {
-    getUserInfo(e) {
-      let id=null
-      id=wx.getStorageSync('openid')
-      if (!id) {
-        wx.request({
-          url: getOpenId, //set in config .js  //2.后台API
-          method: "POST",
-          data: {
-
-          }, success(res) {
-            var openId = res.data.openid
-            var sessionKey = res.data.session_key
-            console.log(res)
-            wx.setStorageSync("openid", openId)
-            app.globalData.openId = openId
-            if (!!openId) {      //3.获取到openid后的处理，可以依照自己的逻辑写
-              app.globalData.openId = openId
-              wxlogin(openId)
-            }
-          }
-        })
-      }
-
-
-    },
     wxlogin() {
       let that = this
-      if (!wx.getStorageSync("nickname")) {
-        wx.login({
-          success(res) {
-            that.code=res.code
-            console.log(that.code);
-            wx.setStorageSync('wxcode', that.code)
-          }
-        })
-      }
+      wx.login({
+        success(res) {
+          that.code=res.code
+          console.log(that.code);
+          wx.setStorageSync('wxcode', that.code)
+          that.getOpenId({code:that.code})
+        }
+      })
+    },
+    async getOpenId(params) {
+      await this.$fly.request({
+        method:'get',
+        url:"user/miniLogin",
+        params
+      }).then(res =>{
+        if(res.code === 200) {
+            this.openId = res.data.openId
+            this.userInfo = res.data.userInfo? res.data.userInfo:''
+            let token = res.data.token
+            wx.setStorageSync('token',token);
+            wx.setStorageSync('openId',this.openId);
+            if(this.userInfo){
+              wx.setStorageSync('userInfo', this.userInfo);
+              wx.setStorageSync('userId', this.userInfo.id);
+              wx.setStorageSync('phone', this.userInfo.username);
+              this.getNurseList({serviceType:1,size:50})
+              this.getHealthList({userId:this.userInfo.id})
+            }else {
+                this.showPhone =true
+            }
+        }
+      })
     },
     async getIfCommit(params) {
       await this.$fly.request({
@@ -165,7 +185,55 @@ export default {
             this.ifCommit =true
           }else {
             this.$router.push({path:'/pages/ad/main'})
-           // this.anQue()
+            // this.anQue()
+          }
+        }
+      })
+    },
+    async newUserValid() {
+      if(!this.phone){
+        this.$toast('请输入手机号码')
+        return
+      }else {
+        if(!(/^1[3-9]\d{9}$/.test(this.phone))){
+          wx.showToast({
+            title: '电话号码格式错误',
+            icon: 'none',
+          })
+          return
+        }
+      }
+      let that = this
+      wx.showModal({
+        title:'确认提示',
+        content: '请再次确认您的手机号码',
+        success (res) {
+          if (res.confirm) {
+            let params ={
+              openId:that.openId,
+              phone:that.phone
+            }
+             that.$fly.request({
+              method:'post',
+              url:"user/valid",
+              params
+            }).then(res =>{
+              if(res.code === 200) {
+                that.userInfo = res.data.userInfo
+                let token = res.data.token
+                wx.setStorageSync('token',token);
+                wx.setStorageSync('userInfo', that.userInfo);
+                wx.setStorageSync('userId', that.userInfo.id);
+                wx.setStorageSync('phone', that.userInfo.username);
+                that.getNurseList({serviceType:1,size:50})
+                that.getHealthList({userId:that.userInfo.id})
+                that.showPhone =false
+              }else {
+                that.$toast(res.message)
+              }
+            })
+          } else if (res.cancel) {
+            console.log('用户点击取消')
           }
         }
       })
@@ -350,6 +418,9 @@ export default {
 	.van-popup--bottom{
 		border-radius:20px 20px 0 0!important;
 	}
+  .van-popup{
+    border-radius:20px;
+  }
 </style>
 
 <style lang="less" scoped>
@@ -587,5 +658,41 @@ export default {
 			text-align: center;
 		}
 	}
+  .valid-box{
+    width:650px;
+    background:rgba(255,255,255,1);
+    border-radius:10px;
+    height: 220px;
+    overflow: hidden;
+    input{
+      height: 120px;
+      line-height: 120px;
+      padding-left: 15px;
+      width:100%;
+      border: 1px solid #C7C7C7;
+      background: #fff ;
+      font-size:38px;
+      font-family:PingFangSC-Regular;
+      font-weight:400;
+      border-radius: 8px;
+      overflow: hidden;
+      color: #000000;
+    }
+    .btn{
+      text-align: center;
+      border:none;
+      width: 100%;
+      height:100px;
+      line-height: 100px;
+      background:#47BDC3;
+      box-shadow:0px 4px 8px 4px rgba(80,113,203,0.12);
+      border-radius:10px;
+      outline: none;
+      font-size:36px;
+      font-family:PingFangSC-Medium;
+      font-weight:500;
+      color:rgba(255,255,255,1);
+    }
+  }
 </style>
 
