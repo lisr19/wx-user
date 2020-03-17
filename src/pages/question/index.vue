@@ -12,6 +12,16 @@
                required
                @change="changeName"
              />
+             <van-field
+               required
+               size="large"
+               label="身份证号"
+               v-model="idNumber"
+               placeholder="请输入身份证号"
+               @change="changeIdNumber"
+               type="idcard"
+               :error-message=errorIdNumber
+             />
              <van-cell required title="性别" :value="gender" size="large" @click="showSex"/>
              <van-field
                required
@@ -48,15 +58,6 @@
                v-model="healthData.age2"
                placeholder="年龄自动计算"
                disabled
-             />
-             <van-field
-               required
-               size="large"
-               label="身份证号"
-               v-model="idNumber"
-               placeholder="请输入身份证号"
-               @change="changeIdNumber"
-               type="idcard"
              />
              <van-field
                required
@@ -189,6 +190,23 @@
 <script>
 
 	export default {
+	  watch:{
+      idNumber(newValue,oldValue){
+        if (newValue.length==18){
+          this.getIdCard()
+          setTimeout(()=>{
+            if(this.healthData.birthday){
+              let reg = /^((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
+              if (!reg.test(this.healthData.birthday)) {
+                this.errorBirthday='请输入合法的出生年月(1980-01-01)'
+              }else {
+                this.errorBirthday=''
+              }
+            }
+          },1000)
+        }
+      }
+    },
 		data() {
       return {
         errorBirthday:'',
@@ -230,7 +248,7 @@
         phone:null, //电话
         idNumber:null,//身份证
         imgName: '',
-        gender:1, //性别Value
+        gender:'男', //性别Value
         username:null,
         myData:{},
         ifCommit:false,
@@ -239,11 +257,13 @@
 		},
 		beforeMount(){
 			this.userId = wx.getStorageSync('userId')
-      this.getUserDate({userId:this.userId})
+      if(this.userId){
+        this.getIfCommit({userId:this.userId})
+        this.getUserDate({userId:this.userId})
+        this.getHealthRecordList()
+      }
       this.getDay(0, '-'); //获取当前日期
-      this.getHealthRecordList()
       this.getHospital()
-      this.getIfCommit({userId:this.userId})
 		},
 		mounted(){
 		},
@@ -253,6 +273,26 @@
       this.showQrcode =false
     },
 		methods: {
+		  //根据身份证获取出生年月和性别
+      getIdCard(){
+        if (this.idNumber.length == 18) {
+          let IdCard = this.idNumber
+          this.healthData.birthday = IdCard.substring(6, 10) + "-" + IdCard.substring(10, 12) + "-" + IdCard.substring(12, 14);
+          //获取性别
+          if (parseInt(IdCard.substr(16, 1)) % 2 == 1) {
+            console.log('男');
+            //男
+            this.gender='男'
+          } else {
+            //女
+            console.log('女');
+            this.gender='女'
+          }
+          setTimeout(()=>{
+            this.getAge()
+          })
+        }
+      },
       //医院列表
       async getHospital(params){
         await this.$fly.request({
@@ -319,7 +359,6 @@
           }}).catch((req)=>{
           console.log(req)
         })
-        console.log(this.isEdit);
       },
       //编辑健康档案
       async editHealthRecord(){
@@ -364,9 +403,8 @@
         this.healthData.residenceAddress = event.mp.detail
       },
       changeBirthday(event){
-        console.log(event.mp.detail);
         this.healthData.birthday = event.mp.detail
-        let reg = /((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
+        let reg = /^((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
         if (!reg.test(this.healthData.birthday)) {
           this.errorBirthday='请输入合法的出生年月(1980-01-01)'
         }else {
@@ -380,7 +418,7 @@
         this.idNumber = event.mp.detail
         let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
         if (!reg.test(this.idNumber)) {
-
+          this.errorIdNumber='请输入正确的身份证号码'
         }else {
           this.errorIdNumber=''
         }
@@ -397,11 +435,11 @@
           let age = d.getFullYear() - birthdays.getFullYear() - (d.getMonth() < birthdays.getMonth()
           || (d.getMonth() == birthdays.getMonth() && d.getDate() < birthdays.getDate()) ? 1 : 0)
           this.$set(this.healthData,'age',age)
-          // this.healthData.age = age
-          console.log(this.healthData.age);
-          if( this.healthData.age==0){
+          if(this.healthData.age==0){
             this.baby =true
-            this.getBirthSlot()
+            setTimeout(()=>{
+              this.getBirthSlot()
+            },500)
           }
         }
       },
@@ -411,15 +449,15 @@
         let date1 = Date.parse(birthDay)
         let date2 = Date.parse(nowDate)
         let day = Math.ceil((date2 - date1) / (60 * 60 * 1000 * 24))
-        let age = ''
+        let age2 = ''
         let year = Math.floor(day / 365)
         let y = day % 365
         let month = Math.floor(y / 30)
         let d = Math.floor(day % 365 % 30)
         // age += year + '岁' + month + '月' +  d + '天'
-        age += month + '个月'
-        this.healthData.age2 =age
-        return age
+        age2 += month + '个月'
+        console.log(age2);
+        this.$set(this.healthData,'age2',age2)
       },
       //性别选择弹窗
       showSex(){
@@ -550,7 +588,7 @@
           params.username = this.username
         }
         if(this.healthData.birthday){
-          let reg = /((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
+          let reg = /^((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
           if (!reg.test(this.healthData.birthday)) {
             wx.showToast({title: "请输入合法的出生年月(1980-01-01)", icon: 'none',})
             return

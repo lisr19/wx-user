@@ -125,7 +125,11 @@ export default {
   },
 	beforeMount(){
     this.userId = wx.getStorageSync('userId')
-    this.wxlogin()
+    if(this.userId){
+      console.log('已登录');
+      this.getNurseList({serviceType:1,size:50})
+      this.getHealthList({userId:this.userInfo.id})
+    }
   },
   mounted(){
   },
@@ -561,6 +565,7 @@ export default {
 			.classify{
 				display: flex;
 				padding:50px 30px 40px;
+        text-align: left;
 				img{
 					width:162px;
 					height:162px;
@@ -584,6 +589,7 @@ export default {
 					overflow: hidden;
 					white-space: nowrap;
 					text-overflow: ellipsis;
+          text-align: left;
 				}
 				.desc{
 					font-size:22px;
@@ -595,7 +601,8 @@ export default {
 				.price{
 					height:56px;
 					font-size:40px;
-					font-family:PingFangSC-Medium;
+          text-align: left;
+          font-family:PingFangSC-Medium;
 					font-weight:500;
 					color:rgba(71,189,195,1);
 					line-height:56px;

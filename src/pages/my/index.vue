@@ -96,8 +96,10 @@
 		},
 		beforeMount() {
 			this.userId = wx.getStorageSync('userId')
-			this.getUserDate({userId:this.userId})
-      this.getQrcode()
+      if(this.userId){
+        this.getUserDate({userId:this.userId})
+        this.getQrcode()
+      }
 		},
     onShow(){
       this.getUserDate({userId:this.userId})
