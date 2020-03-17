@@ -196,8 +196,9 @@
           this.getIdCard()
           setTimeout(()=>{
             if(this.healthData.birthday){
+              console.log(this.healthData.birthday.substring(0, 4));
               let reg = /^((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
-              if (!reg.test(this.healthData.birthday)) {
+              if (!reg.test(this.healthData.birthday) ||this.healthData.birthday.substring(0, 4)>2020) {
                 this.errorBirthday='请输入合法的出生年月(1980-01-01)'
               }else {
                 this.errorBirthday=''
@@ -434,6 +435,11 @@
           let d = new Date()
           let age = d.getFullYear() - birthdays.getFullYear() - (d.getMonth() < birthdays.getMonth()
           || (d.getMonth() == birthdays.getMonth() && d.getDate() < birthdays.getDate()) ? 1 : 0)
+          if(birthdays.getFullYear()>2020){
+            this.errorBirthday='请输入合法的出生年月(1980-01-01)'
+          }else {
+            this.errorBirthday=''
+          }
           this.$set(this.healthData,'age',age)
           if(this.healthData.age==0){
             this.baby =true
@@ -609,6 +615,10 @@
           this.result = 0
           this.isRed = false
         }
+        // if(this.errorBirthday){
+        //   this.$toast('请填写合法的出生年月')
+        //   return
+        // }
         let that = this
         wx.showModal({
           title:'提示',

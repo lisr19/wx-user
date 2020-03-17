@@ -2,7 +2,7 @@
 	<div class="main">
 		<div class="content">
 			<div class="h-img" >头像
-				<div class="head-box" @click="chooseImage">
+				<div class="head-box">
           <img class="img-head" v-if="avatar" :src="avatar" alt=" ">
           <img class="img-head" v-else  src="/static/img/headimg.jpg" alt="">
 				</div>
@@ -101,40 +101,6 @@
 			// this.uploadList = this.$refs.upload.fileList;
 		},
 		methods: {
-      chooseImage(e) {
-        var _this = this;
-        wx.chooseImage({
-          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-          success: function (res) {
-            // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-            _this.files = _this.files.concat(res.tempFilePaths)
-            var tempFilePaths = res.tempFilePaths
-            // console.log(tempFilePaths)
-            wx.uploadFile({
-              url: 'http://120.78.215.17:8898/upload/img',    //模拟接口
-              filePath: tempFilePaths[0],
-              name: 'imgFile',
-              header: {
-                "Content-Type": "multipart/form-data",
-                "authorization":wx.getStorageSync('token')
-              },
-              success: function(res){
-                console.log(res);
-                let backData=JSON.parse(res.data).data
-                _this.avatar = backData.url
-              }
-            })
-
-          },
-          fail: function () {
-            console.log('fail');
-          },
-          complete: function () {
-            console.log('commplete');
-          }
-        })
-      },
 			onChange(event) {
 				this.gender =event.mp.detail
 				this.showSexBox =false
@@ -208,6 +174,10 @@
 						this.birthMonth=this.myData.birthMonth
 						this.birthDay=this.myData.birthDay
 						this.avatar = this.myData.avatar
+            if(this.avatar==="undefined"){
+              console.log(12);
+              this.avatar=require('../../../../static/img/headimg.jpg')
+            }
 						if(this.myData.gender===1){
 							this.gender = '男'
 						}else {

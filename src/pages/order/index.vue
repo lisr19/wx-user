@@ -84,9 +84,10 @@
 			this.userId = wx.getStorageSync('userId')
 			this.getOrderList({userId:Number(this.userId),size:this.size,page:1})
 		},
-    // onShow(){
-    //   this.getOrderList({userId:Number(this.userId),size:this.size,page:1})
-    // },
+    onShow(){
+      this.userId = wx.getStorageSync('userId')
+      // this.getOrderList({userId:Number(this.userId),size:this.size,page:1})
+    },
 		// 下拉刷新
 		onPullDownRefresh () {
 			wx.showNavigationBarLoading()
@@ -112,7 +113,7 @@
 			}
 		},
 		methods:{
-		 
+
 			...mapActions([
 				'setOrderData'
 			]),

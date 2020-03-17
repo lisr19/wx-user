@@ -102,6 +102,7 @@
       }
 		},
     onShow(){
+      this.userId = wx.getStorageSync('userId')
       this.getUserDate({userId:this.userId})
     },
 		methods: {
@@ -117,8 +118,11 @@
           if(res.code === 200) {
             this.myData = res.data
             this.username = this.myData.username
-            if(this.myData.avatar){
+            if(res.data.avatar){
               this.avatar = this.myData.avatar
+              if(this.avatar==="undefined"){
+                this.avatar=require('../../../static/img/headimg.jpg')
+              }
             }
             console.log(this.myData);
           }else if(res.message==='请先登录') {

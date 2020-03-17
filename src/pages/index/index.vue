@@ -128,7 +128,7 @@ export default {
     if(this.userId){
       console.log('已登录');
       this.getNurseList({serviceType:1,size:50})
-      this.getHealthList({userId:this.userInfo.id})
+      this.getHealthList({userId:this.userId})
     }
   },
   mounted(){
@@ -136,6 +136,7 @@ export default {
 	onShow(){
 		wx.showTabBar()
     this.userId = wx.getStorageSync('userId')
+    // this.openId = wx.getStorageSync('openId')
     if(!this.userId){
       this.wxlogin()
     }else {

@@ -29,7 +29,7 @@
 	"projectname": "mpvue-user",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
-	"libVersion": "2.10.2",
+	"libVersion": "2.10.3",
 	"condition": {
 		"search": {
 			"current": -1,
