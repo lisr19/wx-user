@@ -249,21 +249,21 @@
           }
         })
 			},
-			quitUser(){
-				wx.showModal({
-					title:'提示',
-					content: '您确定退出账户吗',
-					success (res) {
-						if (res.confirm) {
-							wx.clearStorage()
+      quitUser(){
+        wx.showModal({
+          title:'提示',
+          content: '您确定退出账户吗',
+          success (res) {
+            if (res.confirm) {
+              wx.clearStorage()
               wx.clearStorageSync()
-							wx.reLaunch({url: '../login/main'})
-						} else if (res.cancel) {
-							console.log('用户点击取消')
-						}
-					}
-				})
-			},
+              wx.reLaunch({url: '../login/main'})
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      },
 		}
 	}
 </script>

@@ -13,8 +13,8 @@
 		<div class="pay-type">
 			<div class="item">
 				<div>
-					<img src="/static/icon/zfb.png" alt="">
-					<span>支付宝</span>
+					<img src="/static/icon/wx.png" alt="">
+					<span>微信</span>
 				</div>
 			</div>
 		</div>
