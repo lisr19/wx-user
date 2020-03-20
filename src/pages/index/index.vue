@@ -49,11 +49,14 @@
 				</van-popup>
 			</div>
 			<van-dialog id="van-dialog" />
-      <van-popup  :show="showPhone">
+      <van-popup  :show="showPhone" style="margin-top: -200px">
         <div class="valid-box">
-<!--          <p>您尚未绑定手机号，请先进行绑定</p>-->
+          <div class="tip">就诊病人及家属请绑定手机号码并点击确定，以方便你进行初筛登记</div>
           <input v-model.lazy="phone"  type="number" placeholder='绑定手机号码'>
-          <div class="btn" @click="newUserValid">确定</div>
+          <div style="display:flex;">
+            <span style="background-color: #f1f1f1;color: #000" class="btn2" @click="showPhone=false">取消</span>
+            <span class="btn2" @click="newUserValid">确定</span>
+          </div>
         </div>
       </van-popup>
 		</div>
@@ -127,9 +130,9 @@ export default {
     this.userId = wx.getStorageSync('userId')
     if(this.userId){
       console.log('已登录');
-      this.getNurseList({serviceType:1,size:50})
       this.getHealthList({userId:this.userId})
     }
+    this.getNurseList({serviceType:1,size:50})
   },
   mounted(){
   },
@@ -233,6 +236,9 @@ export default {
                 that.getNurseList({serviceType:1,size:50})
                 that.getHealthList({userId:that.userInfo.id})
                 that.showPhone =false
+                setTimeout(()=>{
+                  that.$toast('手机号已绑定成功')
+                },500)
               }else {
                 that.$toast(res.message)
               }
@@ -244,8 +250,13 @@ export default {
       })
     },
     anQue(){
-      this.$router.push(
-        {path:'/pages/question/main'})
+      if(wx.getStorageSync('userId')){
+        this.$router.push(
+          {path:'/pages/question/main'})
+      } else {
+        // this.$toast('请先绑定手机号码')
+        this.showPhone =true
+      }
     },
 		//获取健康档案信息
 		async getHealthList(params){
@@ -425,6 +436,9 @@ export default {
 	}
   .van-popup{
     border-radius:20px;
+  }
+  .van-popup--center{
+    top:35%!important;
   }
 </style>
 
@@ -668,14 +682,22 @@ export default {
 	}
   .valid-box{
     width:650px;
+    height: 400px;
     background:rgba(255,255,255,1);
     border-radius:10px;
-    height: 220px;
+    color: #333;
+    font-size: 35px;
     overflow: hidden;
+    .tip{
+      padding: 25px 60px;
+      height: 170px;
+      box-sizing: border-box;
+      line-height: 60px;
+    }
     input{
       height: 120px;
       line-height: 120px;
-      padding-left: 15px;
+      padding-left: 30px;
       width:100%;
       border: 1px solid #C7C7C7;
       background: #fff ;
@@ -686,17 +708,15 @@ export default {
       overflow: hidden;
       color: #000000;
     }
-    .btn{
+    .btn2{
       text-align: center;
       border:none;
       width: 100%;
-      height:100px;
-      line-height: 100px;
+      height:110px;
+      line-height: 110px;
       background:#47BDC3;
-      box-shadow:0px 4px 8px 4px rgba(80,113,203,0.12);
-      border-radius:10px;
       outline: none;
-      font-size:36px;
+      font-size:38px;
       font-family:PingFangSC-Medium;
       font-weight:500;
       color:rgba(255,255,255,1);

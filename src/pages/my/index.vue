@@ -126,7 +126,7 @@
             }
             console.log(this.myData);
           }else if(res.message==='请先登录') {
-            console.log('请先登录');
+              this.$toast('请先绑定手机号码')
           }}).catch((req)=>{
           console.log(req)
         })
