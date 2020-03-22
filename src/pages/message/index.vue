@@ -52,11 +52,26 @@
 			}
 		},
 		beforeMount() {
-			this.userId = wx.getStorageSync('userId')
-      this.checkNew({userId:this.userId})
+			// this.userId = wx.getStorageSync('userId')
+      // this.checkNew({userId:this.userId})
 		},
     onShow(){
-      this.checkNew({userId:this.userId})
+      this.userId = wx.getStorageSync('userId')
+      if(this.userId){
+        this.checkNew({userId:this.userId})
+      }else {
+        wx.showModal({
+          title:'提示',
+          content: '请先绑定手机号码',
+          success (res) {
+            if (res.confirm) {
+              wx.switchTab({url: '../index/main'})
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
     },
 		methods: {
 			openMsg(){

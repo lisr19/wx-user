@@ -354,20 +354,20 @@ export default {
 				this.$toast('此项服务暂不提供外派服务')
 				return
 			}
-			if(this.hasHealth===false){
-				wx.showModal({
-					title:'提示',
-					content: '您尚未完善健康档案，现在去完善吗？',
-					success (res) {
-						if (res.confirm) {
-							wx.navigateTo({ url:'../phr/main'})
-						} else if (res.cancel) {
-							console.log('用户点击取消')
-						}
-					}
-				})
-				return
-			}
+			// if(this.hasHealth===false){
+			// 	wx.showModal({
+			// 		title:'提示',
+			// 		content: '您尚未完善健康档案，现在去完善吗？',
+			// 		success (res) {
+			// 			if (res.confirm) {
+			// 				wx.navigateTo({ url:'../phr/main'})
+			// 			} else if (res.cancel) {
+			// 				console.log('用户点击取消')
+			// 			}
+			// 		}
+			// 	})
+			// 	return
+			// }
 			wx.hideTabBar()
 			this.popupVisible=true
 			this.modelList= []
@@ -438,7 +438,7 @@ export default {
     border-radius:20px;
   }
   .van-popup--center{
-    top:35%!important;
+    top:38%!important;
   }
 </style>
 

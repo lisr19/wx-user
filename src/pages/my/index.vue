@@ -95,15 +95,26 @@
 			}
 		},
 		beforeMount() {
-			this.userId = wx.getStorageSync('userId')
-      if(this.userId){
-        this.getUserDate({userId:this.userId})
-        this.getQrcode()
-      }
 		},
     onShow(){
       this.userId = wx.getStorageSync('userId')
-      this.getUserDate({userId:this.userId})
+      if(this.userId){
+        this.getUserDate({userId:this.userId})
+        this.getQrcode()
+      }else {
+        wx.showModal({
+          title:'提示',
+          content: '请先绑定手机号码',
+          success (res) {
+            if (res.confirm) {
+              wx.switchTab({url: '../index/main'})
+            } else if (res.cancel) {
+              wx.switchTab({url: '../index/main'})
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
     },
 		methods: {
       onClose(){
@@ -126,7 +137,18 @@
             }
             console.log(this.myData);
           }else if(res.message==='请先登录') {
-              this.$toast('请先绑定手机号码')
+            wx.showModal({
+              title:'提示',
+              content: '请先绑定手机号码',
+              success (res) {
+                if (res.confirm) {
+                  wx.switchTab({url: '../index/main'})
+                } else if (res.cancel) {
+                  wx.switchTab({url: '../index/main'})
+                  console.log('用户点击取消')
+                }
+              }
+            })
           }}).catch((req)=>{
           console.log(req)
         })

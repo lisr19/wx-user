@@ -87,6 +87,7 @@
 	export default {
 		data(){
 			return{
+        hasHealth:false, //健康档案ID
 				areaListName:[],
 				hospListName:[],
 				showA:false,
@@ -167,11 +168,12 @@
 			this.minDate = new Date(this.tomorrow).getTime()
 			this.maxDate =new Date(new Date(this.nextWeek).getTime() +10*3600*1000).getTime()
 			this.currentDate = new Date(this.tomorrow).getTime()
-			if(this.$route.query&&this.$route.query.from==='选项目'){
+			if(this.userId&&this.$route.query&&this.$route.query.from==='选项目'){
 				this.getHealthList({userId:this.userId})
 			}
 		},
 		onShow(){
+      this.userId = wx.getStorageSync('userId')
 			this.nurseId = wx.getStorageSync('nurseId')
 			this.nurseName = wx.getStorageSync('nurseName')
 			if(this.$route.query&&this.$route.query.from==='订单'){
@@ -206,6 +208,22 @@
 				if(this.selectContent!=this.$route.query.selectContent){
 					this.selectContent = this.$route.query.selectContent
 				}
+        if(this.userId){
+          this.getHealthList({userId:this.userId})
+        }else {
+          wx.showModal({
+            title:'提示',
+            content: '请先绑定手机号码',
+            success (res) {
+              if (res.confirm) {
+                wx.switchTab({url: '../../index/main'})
+              } else if (res.cancel) {
+                wx.switchTab({url: '../../index/main'})
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
 			}
 		},
 		methods: {
@@ -395,7 +413,39 @@
 					console.log(req)
 				})
 			},
+      //获取健康档案信息
+      async getHealthList(params){
+        await this.$fly.request({
+          method:'get',
+          url:"userHealthRecord/list",
+          params
+        }).then(res =>{
+          if(res.code === 200) {
+            if(res.data.list.length>0){
+              console.log('有个人健康档案');
+              this.hasHealth = true
+            }else {
+              this.hasHealth = false
+            }
+          }}).catch((req)=>{
+          console.log(req)
+        })
+      },
 			openPay(){
+        if(this.hasHealth===false){
+        	wx.showModal({
+        		title:'提示',
+        		content: '您尚未完善健康档案，现在去完善吗？',
+        		success (res) {
+        			if (res.confirm) {
+        				wx.navigateTo({ url:'../../phr/main'})
+        			} else if (res.cancel) {
+        				console.log('用户点击取消')
+        			}
+        		}
+        	})
+        	return
+        }
 				if(this.contact===''||this.contact===null||this.contact===undefined){
 					this.$toast('请填写联系人')
 					return
