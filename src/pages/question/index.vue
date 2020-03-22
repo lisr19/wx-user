@@ -173,7 +173,7 @@
 
     <!--选医院-->
     <van-popup :show="showB" position="bottom" :style="{ height: '40%' }">
-      <van-picker :columns="hospListName"  @cancel="onCancel" @change="onConfirmB" @confirm="onConfirmB" show-toolbar/>
+      <van-picker :columns="hospListName"  @cancel="onCancel"  @confirm="onConfirmB" show-toolbar/>
     </van-popup>
     <van-popup :show="showQrcode" @close="onClose">
       <div class="change-box">
@@ -192,11 +192,10 @@
 	export default {
 	  watch:{
       idNumber(newValue,oldValue){
-        if (newValue.length==18){
+        if (newValue&&newValue.length==18){
           this.getIdCard()
           setTimeout(()=>{
             if(this.healthData.birthday){
-              console.log(this.healthData.birthday.substring(0, 4));
               let reg = /^((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
               if (!reg.test(this.healthData.birthday) ||this.healthData.birthday.substring(0, 4)>2020) {
                 this.errorBirthday='请输入合法的出生年月(1980-01-01)'
@@ -259,19 +258,26 @@
 		beforeMount(){
 			this.userId = wx.getStorageSync('userId')
       if(this.userId){
-        this.getIfCommit({userId:this.userId})
         this.getUserDate({userId:this.userId})
         this.getHealthRecordList()
       }
-      this.getDay(0, '-'); //获取当前日期
-      this.getHospital()
 		},
 		mounted(){
 		},
     onShow() { //返回显示页面状态函数
+      this.userId = wx.getStorageSync('userId')
       this.isSubmit=false
       this.ifCommit=false
       this.showQrcode =false
+      this.getDay(0, '-'); //获取当前日期
+      this.getHospital()
+      if(this.userId){
+        this.getIfCommit({userId:this.userId})
+      }
+    },
+    onLoad() {
+      // 解决页面返回后，数据没重置的问题
+      // Object.assign(this, this.$options.data());
     },
 		methods: {
 		  //根据身份证获取出生年月和性别
@@ -307,8 +313,11 @@
             this.hospList.forEach((i)=>{
               this.hospListName.push(i.name)
             })
-          }}).catch((req)=>{
-          console.log(req)
+          }else {
+            this.$toast(res.message)
+          }
+        }).catch((req)=>{
+          this.$toast(req)
         })
       },
       onCancel(){
@@ -546,11 +555,24 @@
             setTimeout(()=>{
               // wx.navigateBack()
               this.showQrcode =true
-              // wx.navigateBack()
-            },300)
-          }else {
+            },100)
+          }else if(res.message==='重复提交'){
+            wx.showModal({
+              title:'提示',
+              content: '今天您已填写登记表，是否查看健康码？',
+              success (res) {
+                if (res.confirm) {
+                  wx.redirectTo({ url:'../qrcode/main'})
+                } else if (res.cancel) {
+                  console.log('用户点击取消')
+                  wx.navigateBack()
+                }
+              }
+            })
+          } else {
             this.$toast(res.message)
           }}).catch((req)=>{
+          this.$toast(req)
           console.log(req)
         })
       },
@@ -683,6 +705,9 @@
             this.username = this.myData.username
             if(!res.data.name){
               console.log('刷新');
+              // this.name =null
+              // this.idNumber =null
+              // this.healthData ={}
               this.onLoad()
             }
             this.name = this.myData.name
@@ -693,9 +718,6 @@
       //编辑个人信息
       async userUptate(params){
         console.log(params);
-        // params.birthYear = this.myData.birthYear
-        // params.birthMonth =this.myData.birthMonth
-        // params.birthDay =this.myData.birthDay
         await this.$fly.request({
           method:'put',
           url:"user/update",
