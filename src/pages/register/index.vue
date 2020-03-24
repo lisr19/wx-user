@@ -37,7 +37,7 @@
 				isSend:false,
 			}
 		},
-		beforeMount(){
+    onShow(){
 			this.isRead = 	wx.getStorageSync('isRead')?wx.getStorageSync('isRead'):false
 		},
 		methods:{

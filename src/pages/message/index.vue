@@ -67,6 +67,7 @@
             if (res.confirm) {
               wx.switchTab({url: '../index/main'})
             } else if (res.cancel) {
+              wx.switchTab({url: '../index/main'})
               console.log('用户点击取消')
             }
           }

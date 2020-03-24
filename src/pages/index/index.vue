@@ -49,9 +49,12 @@
 				</van-popup>
 			</div>
 			<van-dialog id="van-dialog" />
-      <van-popup  :show="showPhone" style="margin-top: -200px">
+      <van-popup  :show="showPhone">
         <div class="valid-box">
-          <div class="tip">就诊病人及家属请绑定手机号码并点击确定，以方便你进行初筛登记</div>
+          <div class="tip">
+           <p>就诊病人及家属请仔细阅读</p>
+            <span @click="openUserProt">《用户服务协议及隐私保护政策》</span><br>
+            绑定手机号码并点击确定代表您完全同意本协议的全部内容。</div>
           <input v-model.lazy="phone"  type="number" placeholder='绑定手机号码'>
           <div style="display:flex;">
             <span style="background-color: #f1f1f1;color: #000" class="btn2" @click="showPhone=false">取消</span>
@@ -114,7 +117,7 @@ export default {
   },
   watch:{
 	  showPhone(n,o){
-	    if(n){
+      if(n){
         setTimeout(()=>{
           wx.hideTabBar()
         },50)
@@ -147,6 +150,9 @@ export default {
     }
 	},
 	methods: {
+    openUserProt(){
+      wx.navigateTo({url:'../register/user-prot/main',query:{from:'index'}})
+    },
     wxlogin() {
       let that = this
       wx.login({
@@ -682,17 +688,24 @@ export default {
 	}
   .valid-box{
     width:650px;
-    height: 400px;
+    /*height: 500px;*/
     background:rgba(255,255,255,1);
     border-radius:10px;
     color: #333;
-    font-size: 35px;
+    font-size: 38px;
     overflow: hidden;
     .tip{
-      padding: 25px 60px;
-      height: 170px;
+      padding: 25px 40px;
+      /*height: 170px;*/
       box-sizing: border-box;
       line-height: 60px;
+      p{
+        padding-left: 25px;
+        font-size: 38px;
+      }
+      span{
+        color: #47BDC3;
+      }
     }
     input{
       height: 120px;

@@ -1,7 +1,7 @@
 <template>
 	<div class="main">
 		<!--<head-bar title="用户协议"></head-bar>-->
-		<h2>互联网+护理服务协议</h2>
+		<h2>用户服务协议及隐私保护政策</h2>
 		<div class="txt">
 			上门护理服务具有一定的危险性，为确保安全，如病情迫切需要在家中治疗护理，请签订互联网＋护理服务协议书，以确保双方权益。由于因违反此协议而造成的后果，由各自承担相应的责任。<br>
 			<h3>第一条    甲方基本权利和义务</h3>
@@ -55,8 +55,8 @@
 		methods: {
 			agreeBtn(){
 				wx.setStorageSync('isRead',true)
-				wx.redirectTo({url:'../../register/main'})
-				// wx.navigateBack()
+				// wx.redirectTo({url:'../../register/main'})
+				wx.navigateBack()
 			}
 		}
 	}

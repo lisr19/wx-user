@@ -592,6 +592,14 @@
           wx.showToast({title: '请输入身份证号码', icon: 'none'})
           return
         }
+        if(this.healthData.residenceAddress===null||this.healthData.residenceAddress===''){
+          wx.showToast({title: '请输入现住址', icon: 'none'})
+          return
+        }
+        if(this.healthData.birthday===null||this.healthData.birthday===''){
+          wx.showToast({title: '请输入出生年月', icon: 'none'})
+          return
+        }
         if(this.username===null||this.username===''){
           wx.showToast({title: '请填写手机', icon: 'none'})
           return
