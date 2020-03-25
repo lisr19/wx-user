@@ -1,11 +1,13 @@
 <template>
 	<div class="nursing">
-    <div  @click="anQue">
+    <div class="box1"  @click="anQue">
       <p class="tishi">
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;疫情期间进入门诊楼，必须先初筛登记。
-        请点击下方登记入口， 实行无接触问询，凭分诊码到相关诊室就医，提高就诊效率。</p>
-      <img  src="/static/img/anw.png" alt="" style="width: 100%;margin: 10px 0">
-      <p>请大家填写真实信息，每天可更新一次健康状况</p>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;疫情期间进入门诊楼，必须先初筛登记。
+        <span style="color: #e52412">请点击下方登记入口</span>， 实行无接触问询，凭分诊码到相关诊室就医，提高就诊效率。</p>
+      <img  src="/static/img/anw.png" alt="" style="width: 100%;">
+    </div>
+    <div  @click="anQue2">
+      <img  src="/static/img/anw2.png" alt="" style="width: 100%">
     </div>
 <!--		<div class="banner">-->
 <!--			<swiper class="swiper items" :display-multiple-items="swiperNum">-->
@@ -264,6 +266,14 @@ export default {
         this.showPhone =true
       }
     },
+    anQue2(){
+      if(wx.getStorageSync('userId')){
+        this.$router.push(
+          {path:'/pages/on-hospital/main'})
+      } else {
+        this.showPhone =true
+      }
+    },
 		//获取健康档案信息
 		async getHealthList(params){
 			await this.$fly.request({
@@ -451,17 +461,23 @@ export default {
 <style lang="less" scoped>
 	.nursing{
 		padding-top: 34px;
-		margin: 0 22px;
+		margin: 0 15px;
 		color: #2c3e50;
+    .box1{
+
+    }
     p{
       text-align: center;
       font-size:32px;
     }
     .tishi{
       /*color: #ff0911;*/
-      font-size: 36px;
+      font-size: 34px;
       text-align: left;
       font-weight: 500;
+      border-radius:20px 20px 0 0;
+      padding: 20px 15px 5px;
+      background-color: #fff;
     }
 		h2{
 			height:110px;
@@ -524,7 +540,7 @@ export default {
 			min-height:684px;
 			background:rgba(255,255,255,1);
 			border-radius:20px;
-			margin-top: 44px;
+			margin-top:24px;
 			.tabs{
 				display: flex;
 				justify-content: space-around;

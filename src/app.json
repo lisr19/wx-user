@@ -26,7 +26,8 @@
     "pages/question/main",
     "pages/question/qlist/main",
     "pages/question/qdetail/main",
-    "pages/ad/main"
+    "pages/ad/main",
+    "pages/on-hospital/main"
   ],
   "usingComponents": {
     "van-button": "static/vant/button/index",
