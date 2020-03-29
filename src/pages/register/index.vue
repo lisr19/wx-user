@@ -2,6 +2,16 @@
 	<div class="page">
 		<img class="logo" src="../../../static/icon/logo.png" alt="">
 		<div class="card">
+<!--      <van-field-->
+<!--        required-->
+<!--        size="large"-->
+<!--        label="联系电话"-->
+<!--        v-model="userPhoneNum"-->
+<!--        placeholder="请输入手机号码"-->
+<!--        @change="changePhone"-->
+<!--        error-message="手机号格式错误"-->
+<!--        :error-message=errorPhone-->
+<!--      />-->
 			<input v-model.lazy="userPhoneNum" placeholder='请输入手机号码' type="number" >
 			<div class="code">
 				<input  v-model.lazy="code" type="number" placeholder='输入验证码' style="padding-right: 80px">
@@ -24,6 +34,7 @@
 	export default {
 		data(){
 			return{
+        errorPhone:'',
 				isRead:false, //是否阅读用户协议
 				showPass: false,
 				//新账号的 账号 验证码 密码
@@ -41,6 +52,19 @@
 			this.isRead = 	wx.getStorageSync('isRead')?wx.getStorageSync('isRead'):false
 		},
 		methods:{
+      changePhone (event) {
+        this.userPhoneNum = event.mp.detail
+        let reg = /^1[0-9]{10}$/
+        if (!reg.test(this.userPhoneNum)) {
+          this.errorPhone='请输入正确手机号码'
+        }else {
+          this.errorPhone=''
+        }
+        console.log(this.userPhoneNum.length);
+        if(this.userPhoneNum.length==11){
+          this.registerUser()
+        }
+      },
 			showTip(){
 				wx.showToast({title: '请先阅读《用户服务协议》并同意', icon: 'none'})
 			},
@@ -49,7 +73,8 @@
 				if(!this.userPhoneNum){
 					wx.showToast({title: '请输入手机号', icon: 'none',})
 					return
-				}else if(!this.code){
+				}
+				else if(!this.code){
 					wx.showToast({title: '请输入验证码', icon: 'none',})
 					return
 				}
@@ -60,10 +85,12 @@
 				else if(!(/^1[3-9]\d{9}$/.test(this.userPhoneNum))){
 					wx.showToast({title: '电话号码格式错误', icon: 'none',})
 					return
-				} else if(!this.isSend){
+				}
+				else if(!this.isSend){
 					wx.showToast({title: '请获取验证码', icon: 'none',})
 					return
-				} else if(!this.isRead){
+				}
+				else if(!this.isRead){
 					wx.showToast({title: '您尚未阅读并同意用户协议', icon: 'none',})
 					return
 				}
@@ -93,6 +120,11 @@
 							this.userLogin()
 						},300)
 					}else if(res.code === 400){
+					  // if(res.message==='手机号已经注册'){
+					  //   this.errorPhone='手机号已注册,请返回登录页'
+            // }else {
+            //   this.errorPhone=''
+            // }
 						wx.showToast({title: res.message, icon: 'none',})
 					}else {
 						wx.showToast({title: '验证码错误', icon: 'none',})

@@ -24,11 +24,12 @@
 			<div class="item" v-for="item in tipList" :key="index" @click="openDetail(item)">
 				{{item.title}}
 			</div>
-			<div class="item" @click="showTip">
-      <span>解除手机绑定</span>
-    </div>
+<!--			<div class="item" @click="showTip">-->
+<!--      <span>解除手机绑定</span>-->
+<!--    </div>-->
 		</div>
-		<div class="btn" @click="quitUser">退出账号</div>
+<!--		<div class="btn" @click="quitUser">退出账号</div>-->
+		<div class="btn" @click="showTip">解除手机绑定</div>
 		<van-popup :show="showPassword">
 			<div class="change-box">
 				<input v-model.lazy="newPassword" placeholder='新密码' type="password">
@@ -85,9 +86,9 @@
           {
             title: '我的上报'
           },
-					{
-						title: '修改密码'
-					},
+					// {
+					// 	title: '修改密码'
+					// },
 					{
 						title: '意见反馈'
 					}
