@@ -1,5 +1,6 @@
 {
   "pages": [
+
     "pages/index/main",
     "pages/login/main",
     "pages/register/main",
@@ -26,8 +27,9 @@
     "pages/question/main",
     "pages/question/qlist/main",
     "pages/question/qdetail/main",
-    "pages/ad/main",
-    "pages/on-hospital/main"
+    "pages/on-hospital/main",
+    "pages/ad/main"
+
   ],
   "usingComponents": {
     "van-button": "static/vant/button/index",

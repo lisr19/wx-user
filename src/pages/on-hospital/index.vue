@@ -13,35 +13,11 @@
            <van-cell-group>
              <van-field
                size="large"
-               label="科室"
-               v-model="department"
-               placeholder="请填写科室"
-               required
-               @change="changeKs"
-             />
-             <van-field
-               size="large"
-               label="床号"
-               v-model="bedNo"
-               placeholder="请填写床号"
-               required
-               @change="changeBed"
-             />
-             <van-field
-               size="large"
                label="姓名"
                v-model="name"
                placeholder="请填写真实姓名"
                required
                @change="changeName"
-             />
-             <van-field
-               size="large"
-               label="ID"
-               v-model="userCode"
-               placeholder="请填写编号"
-               required
-               @change="changeCode"
              />
              <van-field
                required
@@ -51,6 +27,28 @@
                placeholder="请选择医院"
                disabled
                @click="showB=true"
+             />
+             <van-field
+               size="large"
+               label="科室"
+               v-model="department"
+               placeholder="请填写科室"
+               @change="changeKs"
+             />
+             <van-field
+               size="large"
+               label="床号"
+               v-model="bedNo"
+               placeholder="请填写床号"
+               @change="changeBed"
+             />
+
+             <van-field
+               size="large"
+               label="ID"
+               v-model="userCode"
+               placeholder="请填写编号"
+               @change="changeCode"
              />
            </van-cell-group>
          </div>
@@ -138,7 +136,7 @@
       <van-picker :columns="hospListName"  @cancel="onCancel"  @confirm="onConfirmB" show-toolbar/>
     </van-popup>
 
-    <van-popup :show="showA" position="bottom" :style="{ height: '80%' }"   @close="onClose" >
+    <van-popup  :show="showA" position="bottom" :style="{ height: '80%' }"   @close="onClose" >
       <div class="p-main">
         <h2>给住院患者的一封信</h2>
         <div class="txt">
@@ -255,6 +253,7 @@
       }
 		},
 		mounted(){
+
 		},
     onShow() { //返回显示页面状态函数
       this.userId = wx.getStorageSync('userId')
@@ -266,6 +265,13 @@
       Object.assign(this, this.$options.data());
     },
 		methods: {
+      // getSystemInfo(){
+      //   wx.getSystemInfo({
+      //     success: function(res) {
+      //       console.log(res.windowHeight);
+      //     },
+      //   })
+      // },
       //医院列表
       async getHospital(params){
         await this.$fly.request({
@@ -737,6 +743,7 @@
     overflow: auto;
     font-size: 34px;
     line-height: 48px;
+    /*height: 1080px;*/
     h2{
       text-align: center;
       font-size: 40px;
