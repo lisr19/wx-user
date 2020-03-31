@@ -182,6 +182,13 @@
     <van-popup :show="showC" position="bottom" :style="{ height: '40%' }">
       <van-picker :columns="relationList"  @cancel="onCancel" @confirm="onConfirmC"   value-key="itemName"  default-index="id" show-toolbar/>
     </van-popup>
+    <van-popup :show="showQrcode" @close="onCloseQr">
+      <div class="change-box">
+        <img class="qr-code" :src="Qrcode" alt="">
+        <p style="margin: 6px 0;font-size: 18px">入院病人健康码</p>
+        <p style="padding:2px 0 5px;color: red;font-size: 18px">申报日期：{{currDate}}</p>
+      </div>
+    </van-popup>
 	</div>
 </template>
 
@@ -191,6 +198,7 @@
 
 		data() {
       return {
+        currDate:null,
         // 用户关系
         relationList:[
           {
@@ -243,6 +251,8 @@
         name:null, //姓名
         username:null,
         myData:{},
+        Qrcode:null,
+        showQrcode:false,
       }
 		},
 		beforeMount(){
@@ -258,7 +268,7 @@
     onShow() { //返回显示页面状态函数
       this.userId = wx.getStorageSync('userId')
       this.getHospital()
-
+      this.getDay(0, '-'); //获取当前日期
     },
     onLoad() {
       // 解决页面返回后，数据没重置的问题
@@ -272,6 +282,23 @@
       //     },
       //   })
       // },
+
+
+      //获取当前时间
+      getDay(num, str) {
+        let today = new Date();
+        let nowTime = today.getTime();
+        let ms = 24*3600*1000*num;
+        today.setTime(parseInt(nowTime + ms));
+        let oYear = today.getFullYear();
+        let oMoth = (today.getMonth() + 1).toString();
+        if (oMoth.length <= 1) oMoth = '0' + oMoth;
+        let oDay = today.getDate().toString();
+        if (oDay.length <= 1) oDay = '0' + oDay;
+        this.currDate = oYear + str + oMoth + str + oDay
+        console.log(this.currDate);
+        // return oYear + str + oMoth + str + oDay;
+      },
       //医院列表
       async getHospital(params){
         await this.$fly.request({
@@ -376,10 +403,25 @@
         }).then(res =>{
           if(res.code === 200) {
             this.$toast('提交成功')
+            this.Qrcode = res.data
             setTimeout(()=>{
-              wx.navigateBack()
-            },1000)
-          }else {
+              // wx.navigateBack()
+              this.showQrcode =true
+            },100)
+          }else if(res.message==='重复提交'){
+            wx.showModal({
+              title:'提示',
+              content: '重复提交，是否查看入院健康码？',
+              success (res) {
+                if (res.confirm) {
+                  wx.redirectTo({ url:'../qrcode2/main'})
+                } else if (res.cancel) {
+                  console.log('用户点击取消')
+                  // wx.navigateBack()
+                }
+              }
+            })
+          } else {
             this.$toast(res.message)
           }}).catch((req)=>{
           this.$toast(req)
@@ -407,6 +449,10 @@
       },
       onClose(){
         this.showA =false
+      },
+      onCloseQr(){
+        this.showQrcode =false
+        wx.switchTab({ url: '../index/main' });
       },
       cancelFn(){
         this.show = false;

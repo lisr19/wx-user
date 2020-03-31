@@ -24,9 +24,6 @@
 			<div class="item" v-for="item in tipList" :key="index" @click="openDetail(item)">
 				{{item.title}}
 			</div>
-<!--			<div class="item" @click="showTip">-->
-<!--      <span>解除手机绑定</span>-->
-<!--    </div>-->
 		</div>
 <!--		<div class="btn" @click="quitUser">退出账号</div>-->
 		<div class="btn" @click="showTip">解除手机绑定</div>
@@ -81,7 +78,10 @@
 				// editionTxt:'已是最新版本',
 				tipList: [
           {
-            title: '健康码'
+            title: '门诊健康码'
+          },
+          {
+            title: '入院健康码'
           },
           {
             title: '我的上报'
@@ -174,6 +174,7 @@
 						console.log(req)
 				})
 			},
+
 			openMy() {
 				this.$router.push({path: '/pages/my/infor/main'})
 			},
@@ -194,13 +195,16 @@
 					this.showPassword = true
 				}else if(item.title==='我的上报'){
           this.$router.push({path: '/pages/question/qlist/main'})
-        } else if(item.title==='健康码'){
+        } else if(item.title==='门诊健康码'){
 				  if(this.Qrcode===null){
             this.$toast('您尚未填写预检登记表')
           }else {
             this.$router.push({path: '/pages/qrcode/main'})
           }
-        }else {
+        }else if(item.title==='入院健康码'){
+          this.$router.push({path: '/pages/qrcode2/main'})
+        }
+				else {
 					wx.showToast({title: '功能尚未开通，敬请期待', icon: 'none'})
 				}
 			},

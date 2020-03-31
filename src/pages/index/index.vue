@@ -110,7 +110,8 @@ export default {
 			noOder:false, //是否有最近护理
       ifCommit:false,
       code:null,
-      userInfo:{}
+      userInfo:{},
+      openId:null
 		}
 	},
 
@@ -144,7 +145,7 @@ export default {
 	onShow(){
 		wx.showTabBar()
     this.userId = wx.getStorageSync('userId')
-    // this.openId = wx.getStorageSync('openId')
+    this.openId = wx.getStorageSync('openId')
     if(!this.userId){
       this.wxlogin()
     }else {
@@ -220,6 +221,10 @@ export default {
         }
       }
       let that = this
+      if(!this.openId){
+        this.$toast('openId为空，请重新登录')
+        return
+      }
       wx.showModal({
         title:'确认提示',
         content: '请再次确认您的手机号码',
@@ -229,7 +234,8 @@ export default {
               openId:that.openId,
               phone:that.phone
             }
-             that.$fly.request({
+            console.log(params);
+            that.$fly.request({
               method:'post',
               url:"user/valid",
               params

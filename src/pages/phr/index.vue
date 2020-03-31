@@ -1,8 +1,5 @@
 <template>
 	<div class="main">
-<!--    <div  class="head" @click="goBack">-->
-<!--      <van-icon name="arrow-left" size="25px" custom-style="margin-right:10px"/>返回-->
-<!--    </div>-->
 		<h2 style="padding: 20px">健康档案</h2>
 		<div class="content">
 				<div class="body-one">
@@ -833,7 +830,6 @@
 					userId:this.userId,
 					name :this.healthData.name,
 					gender:this.healthData.gender==='男'?1:2,
-					relation :this.healthData.relation,
           living:parseInt(this.healthData.living) ,
           birthday:this.healthData.birthday ,
           educationLevel:parseInt(this.healthData.educationLevel) ,
@@ -1009,7 +1005,7 @@
 					if(res.code === 200) {
 						this.$toast('添加健康档案成功')
 						setTimeout(()=>{
-							this.$router.push({name:'首页'})
+              wx.navigateBack()
 						},300)
 					}else if(res.code === 500){
 						this.$toast('服务器内部错误，请联系管理员')
