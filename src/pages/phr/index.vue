@@ -138,17 +138,17 @@
 						<span class="tip">4</span>血脂水平：
 						<div class="input-box">
 							<span> 甘油三脂(TC)：</span>
-							<input  v-model="healthData.triglyceride"  />
+							<input  v-model="healthData.triglyceride"  type="digit"/>
 							<strong class="dw">mmol/1</strong>
 						</div>
 						<div class="input-box">
 							<span> 高密度脂蛋白胆固醇(HDL-C)：</span>
-							<input  v-model="healthData.highDensityLipteinCholesterol"  type="number" :maxlength="5" />
+							<input  v-model="healthData.highDensityLipteinCholesterol"  type="digit" :maxlength="5" />
 							<strong class="dw">mmol/1</strong>
 						</div>
 						<div class="input-box">
 							<span> 低密度脂蛋白胆固醇(LDL-C)：</span>
-							<input  v-model="healthData.lowDensityLipteinCholesterol" type="number" :maxlength="5"  />
+							<input  v-model="healthData.lowDensityLipteinCholesterol" type="digit" :maxlength="5"  />
 							<strong class="dw">mmol/1</strong>
 						</div>
 					</div>
@@ -164,12 +164,12 @@
 						<span class="tip">6	</span><em style="color: red;display: inline-block">*</em>身高、体重
 						<div class="input-box">
 							身高：
-							<input  type="number" :maxlength="6" v-model="healthData.height"   @blur="validateNum('身高')"/>
+							<input  type="digit" :maxlength="6" v-model="healthData.height"   @blur="validateNum('身高')"/>
 							<strong class="dw">m</strong>
 						</div>
 						<div class="input-box">
 							体重：
-							<input  v-model="healthData.weight"  type="number" :maxlength="5" @blur="validateNum('体重')"/>
+							<input  v-model="healthData.weight"  type="digit" :maxlength="5" @blur="validateNum('体重')"/>
 							<strong class="dw">kg</strong>
 						</div>
 					</div>

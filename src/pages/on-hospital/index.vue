@@ -224,7 +224,7 @@
         ],
         hospListName:[],
         relationName:null,
-        showA:true,
+        showA:false,
         showC:false,
         hospital:null,
         hospitalId:null, //医院ID
@@ -253,6 +253,7 @@
         myData:{},
         Qrcode:null,
         showQrcode:false,
+        ifCommit:false,
       }
 		},
 		beforeMount(){
@@ -269,19 +270,44 @@
       this.userId = wx.getStorageSync('userId')
       this.getHospital()
       this.getDay(0, '-'); //获取当前日期
+      if(this.userId){
+        this.getIfCommit1({userId:this.userId})
+      }
     },
     onLoad() {
       // 解决页面返回后，数据没重置的问题
       Object.assign(this, this.$options.data());
     },
 		methods: {
-      // getSystemInfo(){
-      //   wx.getSystemInfo({
-      //     success: function(res) {
-      //       console.log(res.windowHeight);
-      //     },
-      //   })
-      // },
+      async getIfCommit1(params) {
+        await this.$fly.request({
+          method:'get',
+          url:"ncpQuestionnaire1/ifCommit",
+          params
+        }).then(res =>{
+          let that =this
+          if(res.code === 200) {
+            if(res.data===true){
+              this.ifCommit =true
+              this.showA=false
+              wx.showModal({
+                title:'提示',
+                content: '您已填写住院承诺书，是否查看入院健康码？',
+                success (res) {
+                  if (res.confirm) {
+                    wx.redirectTo({ url:'../qrcode2/main'})
+                  } else if (res.cancel) {
+                    console.log('用户点击取消')
+                    wx.navigateBack()
+                  }
+                }
+              })
+            }else {
+              this.showA=true
+            }
+          }
+        })
+      },
 
 
       //获取当前时间

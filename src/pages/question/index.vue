@@ -378,6 +378,7 @@
           userId:this.userId,
           residenceAddress:this.healthData.residenceAddress,
           birthday:this.healthData.birthday,
+          residenceContactPhone:this.username,
           gender:this.gender==='男'?1:2,
           name:this.name
         }

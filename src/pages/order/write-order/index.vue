@@ -169,7 +169,8 @@
 			this.maxDate =new Date(new Date(this.nextWeek).getTime() +10*3600*1000).getTime()
 			this.currentDate = new Date(this.tomorrow).getTime()
 			if(this.userId&&this.$route.query&&this.$route.query.from==='选项目'){
-				this.getHealthList({userId:this.userId})
+        console.log(88888);
+        this.getHealthList({userId:this.userId})
 			}
 		},
 		onShow(){
@@ -339,12 +340,14 @@
 					params
 				}).then(res =>{
 					if(res.code === 200) {
-						if(res.data.list.length>0){
-							console.log('有个人健康档案')
-							this.maData = res.data.list[0]
-							this.contact = this.maData.name
+            console.log(5555);
+            if(res.data.list.length>0){
+							console.log('有个人健康档案222')
+              console.log(res);
+              this.maData = res.data.list[0]
+              this.contact = this.maData.name
 							this.address = this.maData.residenceAddress
-							if(this.maData.residenceContactPhone==='null'||!this.maData.residenceContactPhone){
+              if(this.maData.residenceContactPhone==='null'||!this.maData.residenceContactPhone){
 								this.getUserDate({userId:this.userId})
 							}else {
 								this.phone =  this.maData.residenceContactPhone
@@ -413,24 +416,7 @@
 					console.log(req)
 				})
 			},
-      //获取健康档案信息
-      async getHealthList(params){
-        await this.$fly.request({
-          method:'get',
-          url:"userHealthRecord/list",
-          params
-        }).then(res =>{
-          if(res.code === 200) {
-            if(res.data.list.length>0){
-              console.log('有个人健康档案');
-              this.hasHealth = true
-            }else {
-              this.hasHealth = false
-            }
-          }}).catch((req)=>{
-          console.log(req)
-        })
-      },
+
 			openPay(){
         if(this.hasHealth===false){
         	wx.showModal({
