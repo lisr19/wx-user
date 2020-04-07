@@ -13,7 +13,7 @@
     </van-popup>
   </div>
 
-</template>`
+</template>
 
 <script>
 	export default {
@@ -23,20 +23,20 @@
         addTime:null,
         showQrcode:true,
         isRed:false,
-        nullQr:false
+        nullQr:false,
+        userId:wx.getStorageSync('userId')
 			}
 		},
-    beforeMount() {
-      this.userId = wx.getStorageSync('userId')
-      this.getQrcode()
-    },
 		onShow() {
-      this.getQrcode()
+      this.userId = wx.getStorageSync('userId')
+      if(this.userId){
+        this.getQrcode()
+      }
+
 		},
 		methods: {
 
       onClose(){
-        // this.showQrcode =false
         wx.navigateBack()
       },
       async getQrcode() {

@@ -1,7 +1,7 @@
 {
 	"description": "项目配置文件。",
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": true,
 		"enhance": true,
 		"postcss": true,
@@ -11,7 +11,7 @@
 		"nodeModules": true,
 		"autoAudits": true,
 		"showShadowRootInWxmlPanel": true,
-		"scopeDataCheck": false,
+		"scopeDataCheck": true,
 		"uglifyFileName": true,
 		"checkInvalidKey": true,
 		"checkSiteMap": true,
@@ -29,7 +29,7 @@
 	"projectname": "mpvue-user",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
-	"libVersion": "2.10.3",
+	"libVersion": "2.10.4",
 	"condition": {
 		"search": {
 			"current": -1,
@@ -39,13 +39,36 @@
 			"current": -1,
 			"list": []
 		},
+		"plugin": {
+			"current": -1,
+			"list": [
+				{
+					"id": 0,
+					"name": "11",
+					"pathName": "pages/index/main",
+					"scene": null
+				}
+			]
+		},
 		"game": {
 			"currentL": -1,
 			"list": []
 		},
-		"miniprogram": {
+		"gamePlugin": {
 			"current": -1,
 			"list": []
+		},
+		"miniprogram": {
+			"current": -1,
+			"list": [
+				{
+					"id": 0,
+					"name": "11",
+					"pathName": "pages/index/main",
+					"query": "",
+					"scene": null
+				}
+			]
 		}
 	}
 }
