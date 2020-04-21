@@ -133,19 +133,12 @@ export default {
     }
   },
 
-	beforeMount(){
-    this.userId = wx.getStorageSync('userId')
-    if(this.userId){
-      console.log('已登录');
-      this.getHealthList({userId:this.userId})
-    }
-    this.getNurseList({serviceType:1,size:50})
-  },
+  beforeMount(){
 
+  },
   mounted () {
     if (wx.canIUse('getUpdateManager')) {
       const updateManager = wx.getUpdateManager()
-      console.log(updateManager);
       updateManager.onCheckForUpdate(function (res) {
         if (res.hasUpdate) {
           updateManager.onUpdateReady(function () {
@@ -178,10 +171,13 @@ export default {
 		wx.showTabBar()
     this.userId = wx.getStorageSync('userId')
     this.openId = wx.getStorageSync('openId')
-    if(!this.userId){
+    if(!this.userId||!this.openId){
       this.wxlogin()
+      console.log('1——wx登录')
     }else {
+      console.log('2——用户已登录')
       this.getHealthList({userId:this.userId})
+      this.getNurseList({serviceType:1,size:50})
     }
 	},
 	methods: {
@@ -200,6 +196,7 @@ export default {
       })
     },
     async getOpenId(params) {
+      console.log('获取openId');
       await this.$fly.request({
         method:'get',
         url:"user/miniLogin",
@@ -212,12 +209,14 @@ export default {
             wx.setStorageSync('token',token);
             wx.setStorageSync('openId',this.openId);
             if(this.userInfo){
+              console.log('3——有用户信息');
               wx.setStorageSync('userInfo', this.userInfo);
               wx.setStorageSync('userId', this.userInfo.id);
               wx.setStorageSync('phone', this.userInfo.username);
               this.getNurseList({serviceType:1,size:50})
               this.getHealthList({userId:this.userInfo.id})
             }else {
+                console.log('4——无用户信息');
                 this.showPhone =true
             }
         }
@@ -234,7 +233,6 @@ export default {
             this.ifCommit =true
           }else {
             this.$router.push({path:'/pages/ad/main'})
-            // this.anQue()
           }
         }
       })
@@ -300,7 +298,6 @@ export default {
         this.$router.push(
           {path:'/pages/question/main'})
       } else {
-        // this.$toast('请先绑定手机号码')
         this.showPhone =true
       }
     },
@@ -314,6 +311,9 @@ export default {
     },
 		//获取健康档案信息
 		async getHealthList(params){
+      if(!this.userId){
+        this.showPhone=true
+      }
 			await this.$fly.request({
 				method:'get',
 				url:"userHealthRecord/list",
@@ -408,20 +408,6 @@ export default {
 				this.$toast('此项服务暂不提供外派服务')
 				return
 			}
-			// if(this.hasHealth===false){
-			// 	wx.showModal({
-			// 		title:'提示',
-			// 		content: '您尚未完善健康档案，现在去完善吗？',
-			// 		success (res) {
-			// 			if (res.confirm) {
-			// 				wx.navigateTo({ url:'../phr/main'})
-			// 			} else if (res.cancel) {
-			// 				console.log('用户点击取消')
-			// 			}
-			// 		}
-			// 	})
-			// 	return
-			// }
 			wx.hideTabBar()
 			this.popupVisible=true
 			this.modelList= []

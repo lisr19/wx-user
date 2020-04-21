@@ -256,11 +256,6 @@
       }
 		},
 		beforeMount(){
-			this.userId = wx.getStorageSync('userId')
-      if(this.userId){
-        this.getUserDate({userId:this.userId})
-        this.getHealthRecordList()
-      }
 		},
 		mounted(){
 		},
@@ -273,6 +268,9 @@
       this.getHospital()
       if(this.userId){
         this.getIfCommit({userId:this.userId})
+        // this.getQueList({userId :this.userId,size:2,page:1})
+        this.getUserDate({userId:this.userId})
+        this.getHealthRecordList({userId:this.userId})
       }
     },
     onLoad() {
@@ -349,10 +347,7 @@
         this.currentDate = 	this.healthData.birthday?new Date(this.healthData.birthday.replace(/-/g,",")).getTime():new Date(1950,0,1).getTime()
       },
       //用户健康档案列表
-      async getHealthRecordList(){
-        let params = {
-          userId:this.userId
-        }
+      async getHealthRecordList(params){
         await this.$fly.request({
           method:'get',
           url:"userHealthRecord/list",
@@ -578,6 +573,10 @@
         })
       },
       saveData(){
+        if(!this.userId){
+          this.$toast('用户信息过期，请重新登录')
+          return;
+        }
         let params ={
           id:this.userId,
           gender:this.gender==='男'?1:2,
@@ -669,19 +668,6 @@
       goBackIndex(){
         wx.navigateBack()
       },
-			goBack(){
-        wx.showModal({
-          title:'提示',
-          content: '是否放弃修改？',
-          success (res) {
-            if (res.confirm) {
-              wx.navigateBack()
-            } else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          }
-        })
-			},
 			//获取当前时间
 			getDay(num, str) {
 				let today = new Date();
@@ -764,6 +750,37 @@
             }
           }
         })
+      },
+
+      // 获取列表
+      async getQueList(params){
+        await this.$fly.request({
+          methods:'get',
+          url:"ncpQuestionnaire/list",
+          params })
+          .then(res => {
+            if(res.code === 200) {
+              if(res.data.list.length>0){
+                this.answer1 =  res.data.list[0].answer1.toString()
+                this.answer2 =  res.data.list[0].answer2.toString()
+                this.answer3 =  res.data.list[0].answer3.toString()
+                this.answer4 =  res.data.list[0].answer4.toString()
+                this.answer5 =  res.data.list[0].answer5.toString()
+                this.answer7 =  res.data.list[0].answer7.toString()
+                this.answer6 =  res.data.list[0].answer6
+                this.hospitalId = res.data.list[0].hospital
+                if(this.hospitalId===1){
+                  this.hospital = '南部战区总医院'
+                }else {
+                  this.hospital = '157医院'
+                }
+                if(this.answer6==='null'){
+                  this.answer6 = ''
+                }else {
+                  this.answer6 = res.data.answer6
+                }
+              }
+            }})
       },
 		}
 	}
