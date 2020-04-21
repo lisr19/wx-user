@@ -268,14 +268,14 @@
       this.getHospital()
       if(this.userId){
         this.getIfCommit({userId:this.userId})
-        // this.getQueList({userId :this.userId,size:2,page:1})
+        this.getQueList({userId :this.userId,size:2,page:1})
         this.getUserDate({userId:this.userId})
         this.getHealthRecordList({userId:this.userId})
       }
     },
     onLoad() {
       // 解决页面返回后，数据没重置的问题
-      // Object.assign(this, this.$options.data());
+      Object.assign(this, this.$options.data())
     },
 		methods: {
 		  //根据身份证获取出生年月和性别
@@ -362,8 +362,8 @@
               console.log('无健康档案')
             }
           }}).catch((req)=>{
-          console.log(req)
-        })
+            console.log(req)
+          })
       },
       //编辑健康档案
       async editHealthRecord(){
@@ -526,7 +526,7 @@
 
       async addQue(){
         let params = {
-          userId:this.userId,
+          userId:wx.getStorageSync('userId'),
           answer1:parseInt(this.answer1),
           answer2:parseInt(this.answer2),
           answer3:parseInt(this.answer3),

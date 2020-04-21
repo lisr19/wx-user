@@ -33,6 +33,10 @@ fly.interceptors.response.use(
 		console.log(err);
 		wx.hideLoading();
 		if(err){
+      wx.showModal({
+        title:'提示',
+        content: '请求失败，请稍后再试'
+      })
 			return "请求失败";
 		}
 	}

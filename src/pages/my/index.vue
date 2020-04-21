@@ -24,8 +24,8 @@
 			<div class="item" v-for="item in tipList" :key="index" @click="openDetail(item)">
 				{{item.title}}
 			</div>
+      <div class="item">{{edition}}</div>
 		</div>
-<!--		<div class="btn" @click="quitUser">退出账号</div>-->
 		<div class="btn" @click="showTip">解除手机绑定</div>
 		<van-popup :show="showPassword">
 			<div class="change-box">
@@ -48,6 +48,7 @@
 	export default {
 		data() {
 			return {
+        edition:'当前版本：3.1.0',
         Qrcode:null,
         showQrcode:false,
 				showPassword:false, //修改密码弹窗
@@ -56,10 +57,6 @@
 				versionCode:'', //版本号
 				avatar: require('../../../static/img/headimg.jpg'),//头像
 				username: null,
-				isApply: false,
-				updatedVersionLock:false,
-				updateVersion:false, //是否更新版本
-				downloadUrl:'', //下载地址
 				typeList: [
 					{
 						name: '健康档案',
@@ -75,7 +72,6 @@
 
 					},
 				],
-				// editionTxt:'已是最新版本',
 				tipList: [
           {
             title: '门诊健康码'
@@ -89,9 +85,9 @@
 					// {
 					// 	title: '修改密码'
 					// },
-					{
-						title: '意见反馈'
-					}
+					// {
+					// 	title: '意见反馈'
+					// }
 				],
 			}
 		},
@@ -105,7 +101,7 @@
       }else {
         wx.showModal({
           title:'提示',
-          content: '请先绑定手机号码',
+          content: '请绑定手机号码',
           success (res) {
             if (res.confirm) {
               wx.switchTab({url: '../index/main'})
@@ -203,8 +199,7 @@
           }
         }else if(item.title==='入院健康码'){
           this.$router.push({path: '/pages/qrcode2/main'})
-        }
-				else {
+        } else {
 					wx.showToast({title: '功能尚未开通，敬请期待', icon: 'none'})
 				}
 			},

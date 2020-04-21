@@ -9,16 +9,6 @@
     <div  @click="anQue2">
       <img  src="/static/img/anw2.png" alt="" style="width: 100%">
     </div>
-<!--		<div class="banner">-->
-<!--			<swiper class="swiper items" :display-multiple-items="swiperNum">-->
-<!--				<block v-for="(item, index) in imgList" :index="index" :key="key">-->
-<!--					<swiper-item class="item">-->
-<!--						<img :src="item.picUrl" alt="" @click.stop="openChoice(item)">-->
-<!--						<p>{{item.name}}</p>-->
-<!--					</swiper-item>-->
-<!--				</block>-->
-<!--			</swiper>-->
-<!--		</div>-->
 		<div class="main">
 			<ul class="tabs">
 				<li v-for="(item,index) in tabs" :class="{active:index===currIndex}"  :key="index" @click="tabType(index)">
