@@ -48,7 +48,7 @@
 	export default {
 		data() {
 			return {
-        edition:'当前版本：3.1.0',
+        edition:'当前版本：3.2.0',
         Qrcode:null,
         showQrcode:false,
 				showPassword:false, //修改密码弹窗
