@@ -41,6 +41,19 @@
         <img class="qr-code" :src="Qrcode" alt=" ">
       </div>
     </van-popup>
+    <van-popup  :show="showPhone">
+      <div class="valid-box">
+        <div class="tip">
+          <p>就诊病人及家属请仔细阅读</p>
+          <span @click="openUserProt">《用户服务协议及隐私保护政策》</span><br>
+          绑定手机号码并点击确定代表您完全同意本协议的全部内容。</div>
+        <input v-model.lazy="phone"  type="number" placeholder='绑定手机号码'>
+        <div style="display:flex;">
+          <span style="background-color: #f1f1f1;color: #000" class="btn2" @click="showPhone=false">取消</span>
+          <span class="btn2" @click="newUserValid">确定</span>
+        </div>
+      </div>
+    </van-popup>
 	</div>
 </template>
 
@@ -48,6 +61,8 @@
 	export default {
 		data() {
 			return {
+        phone:'',
+        showPhone:false,
         edition:'当前版本：3.2.0',
         Qrcode:null,
         showQrcode:false,
@@ -56,7 +71,7 @@
 				repetPassword:null,
 				versionCode:'', //版本号
 				avatar: require('../../../static/img/headimg.jpg'),//头像
-				username: null,
+				username: '未登录',
 				typeList: [
 					{
 						name: '健康档案',
@@ -95,25 +110,68 @@
 		},
     onShow(){
       this.userId = wx.getStorageSync('userId')
-      if(this.userId){
+      this.openId = wx.getStorageSync('openId')
+      if(this.userId&&this.openId){
         this.getUserDate({userId:this.userId})
         this.getQrcode()
       }else {
+        this.showPhone =true
+      }
+    },
+		methods: {
+      openUserProt(){
+        wx.navigateTo({url:'../register/user-prot/main',query:{from:'index'}})
+      },
+      async newUserValid() {
+        if(!this.phone){
+          this.$toast('请输入手机号码')
+          return
+        }else {
+          if(!(/^1[3-9]\d{9}$/.test(this.phone))){
+            wx.showToast({
+              title: '电话号码格式错误',
+              icon: 'none',
+            })
+            return
+          }
+        }
+        let that = this
         wx.showModal({
-          title:'提示',
-          content: '请绑定手机号码',
+          title:'确认提示',
+          content: '请再次确认您的手机号码',
           success (res) {
             if (res.confirm) {
-              wx.switchTab({url: '../index/main'})
+              let params ={
+                openId:that.openId,
+                phone:that.phone
+              }
+              console.log(params);
+              that.$fly.request({
+                method:'post',
+                url:"user/valid",
+                params
+              }).then(res =>{
+                if(res.code === 200) {
+                  that.userInfo = res.data.userInfo
+                  let token = res.data.token
+                  wx.setStorageSync('token',token);
+                  wx.setStorageSync('userInfo', that.userInfo);
+                  wx.setStorageSync('userId', that.userInfo.id);
+                  wx.setStorageSync('phone', that.userInfo.username);
+                  that.showPhone =false
+                  setTimeout(()=>{
+                    that.$toast('手机号已绑定成功')
+                  },500)
+                }else {
+                  that.$toast(res.message)
+                }
+              })
             } else if (res.cancel) {
-              wx.switchTab({url: '../index/main'})
               console.log('用户点击取消')
             }
           }
         })
-      }
-    },
-		methods: {
+      },
       onClose(){
         this.showQrcode =false
       },
@@ -134,14 +192,17 @@
             }
             console.log(this.myData);
           }else if(res.message==='请先登录') {
+            let that = this
             wx.showModal({
               title:'提示',
               content: '请先绑定手机号码',
               success (res) {
                 if (res.confirm) {
-                  wx.switchTab({url: '../index/main'})
+                  that.showPhone =true
+                  // wx.switchTab({url: '../index/main'})
                 } else if (res.cancel) {
-                  wx.switchTab({url: '../index/main'})
+                  that.showPhone =true
+                  // wx.switchTab({url: '../index/main'})
                   console.log('用户点击取消')
                 }
               }
@@ -613,6 +674,55 @@
       width: 100%;
       height: 100%;
       background-color: #47BDC3;
+    }
+    .valid-box{
+      width:650px;
+      /*height: 500px;*/
+      background:rgba(255,255,255,1);
+      border-radius:10px;
+      color: #333;
+      font-size: 38px;
+      overflow: hidden;
+      .tip{
+        padding: 25px 40px;
+        /*height: 170px;*/
+        box-sizing: border-box;
+        line-height: 60px;
+        p{
+          padding-left: 25px;
+          font-size: 38px;
+        }
+        span{
+          color: #47BDC3;
+        }
+      }
+      input{
+        height: 120px;
+        line-height: 120px;
+        padding-left: 30px;
+        width:100%;
+        border: 1px solid #C7C7C7;
+        background: #fff ;
+        font-size:38px;
+        font-family:PingFangSC-Regular;
+        font-weight:400;
+        border-radius: 8px;
+        overflow: hidden;
+        color: #000000;
+      }
+      .btn2{
+        text-align: center;
+        border:none;
+        width: 100%;
+        height:110px;
+        line-height: 110px;
+        background:#47BDC3;
+        outline: none;
+        font-size:38px;
+        font-family:PingFangSC-Medium;
+        font-weight:500;
+        color:rgba(255,255,255,1);
+      }
     }
 	}
 </style>

@@ -182,6 +182,9 @@ export default {
           console.log(that.code);
           wx.setStorageSync('wxcode', that.code)
           that.getOpenId({code:that.code})
+          setTimeout(()=>{
+            that.showPhone=true
+          },100)
         }
       })
     },
@@ -199,14 +202,13 @@ export default {
             wx.setStorageSync('token',token);
             wx.setStorageSync('openId',this.openId);
             if(this.userInfo){
-              console.log('3——本地缓存有用户信息');
               wx.setStorageSync('userInfo', this.userInfo);
               wx.setStorageSync('userId', this.userInfo.id);
               wx.setStorageSync('phone', this.userInfo.username);
               this.getNurseList({serviceType:1,size:50})
               this.getHealthList({userId:this.userInfo.id})
             }else {
-                console.log('4——本地缓存无用户信息');
+                console.log('4——无用户信息');
                 this.showPhone =true
             }
         }
