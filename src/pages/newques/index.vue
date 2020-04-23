@@ -1,6 +1,7 @@
 <template>
   <div class="main">
-    <h3 style="padding: 20px;margin: 0 auto;text-align: center;color: #FF1706">新型冠状病毒感染流行病学史调查问卷</h3>
+    <h2 style="padding: 20px;margin: 0 auto;text-align: center;color: #FF1706">新型冠状病毒感染流行病学史调查问卷</h2>
+    <p v-if="isLook" class="p-tip">填写日期：{{addTime}}</p>
     <div class="content">
       <div class="body-one">
         <van-cell-group>
@@ -10,18 +11,20 @@
             v-model="name"
             placeholder="请输入真实姓名"
             required
+            :disabled="isLook"
             @change="changeName"
           />
           <div class="add-btn">
             <span class="tip"><em style="color: red;display: inline-block">*</em>国籍</span>
-            <van-radio-group v-model="oversea"   @change="onChangeOversea">
+            <van-radio-group v-model="oversea" :disabled="isLook"   @change="onChangeOversea">
               <van-radio name="0" checked-color="#07c160">国内</van-radio>
               <van-radio name="1" checked-color="#07c160">境外</van-radio>
             </van-radio-group>
           </div>
           <van-field v-if="oversea==1"
             required
-            size="large"
+                     :disabled="isLook"
+                     size="large"
             label="护照"
             v-model="idNumberHz"
             placeholder="请输入护照"
@@ -30,7 +33,8 @@
           />
           <van-field v-else
             required
-            size="large"
+                     :disabled="isLook"
+                     size="large"
             label="身份证号"
             v-model="idNumber"
             placeholder="请输入身份证号"
@@ -73,6 +77,7 @@
             v-model="healthData.residenceAddress"
             placeholder="请输入现住址"
             @change="changeAddress"
+            :disabled="isLook"
           />
           <van-field
             required
@@ -81,6 +86,7 @@
             v-model="username"
             placeholder="请输入本人电话"
             @change="changePhone"
+            :disabled="isLook"
           />
           <van-field
             size="large"
@@ -88,6 +94,7 @@
             v-model="healthData.residenceContact"
             placeholder="请输入联系人"
             @change="changeContact"
+            :disabled="isLook"
           />
           <van-field
             size="large"
@@ -95,6 +102,7 @@
             v-model="healthData.residenceContactPhone"
             placeholder="请输入联系人电话"
             @change="changeContactPhone"
+            :disabled="isLook"
           />
           <van-field
             required
@@ -117,7 +125,7 @@
         <div class="card">
           <span class="tip">1</span><em style="color: red;display: inline-block">*</em>
           近14天内您有到过以下地方吗？
-          <van-checkbox-group v-model="answer1" direction="horizontal" @change="onChange1" >
+          <van-checkbox-group v-model="answer1" direction="horizontal" @change="onChange1" :disabled="isLook" >
             <van-checkbox name="0" :disabled="disabled1" checked-color="#07c160">国外</van-checkbox>
             <input v-if="showOther1" class="input" v-model.lazy="answer011" placeholder="请填写具体国家和地区"/>
             <van-checkbox name="1" :disabled="disabled1" checked-color="#07c160">湖北或武汉</van-checkbox>
@@ -128,7 +136,7 @@
         <div class="card">
           <span class="tip">2</span><em style="color: red;display: inline-block">*</em>
           发病前您接触过以下地区来的发热或有呼吸道症状的患者吗？
-          <van-checkbox-group v-model="answer2" direction="horizontal" @change="onChange2" >
+          <van-checkbox-group v-model="answer2" direction="horizontal" @change="onChange2" :disabled="isLook" >
             <van-checkbox name="0" :disabled="disabled2" checked-color="#07c160">国外</van-checkbox>
             <input v-if="showOther2" class="input" v-model.lazy="answer021" placeholder="请填写具体国家和地区"/>
             <van-checkbox name="1" :disabled="disabled2" checked-color="#07c160">湖北或武汉</van-checkbox>
@@ -139,21 +147,21 @@
         <div class="card">
           <span class="tip">3</span><em style="color: red;display: inline-block">*</em>
           3.发病前您接触过新型冠状病毒感染者（核酸检测阳性者）吗？
-          <van-radio-group :value="answer3" @change="onChange3" >
+          <van-radio-group :value="answer3" @change="onChange3" :disabled="isLook" >
             <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
           </van-radio-group>
         </div>
         <div class="card">
           <span class="tip">4</span><em style="color: red;display: inline-block">*</em>
           近14天内您的家庭、学校或办公室等小范围内有无出现2例及以上发热和/或呼吸道症状
-          <van-radio-group :value="answer4" @change="onChange4" >
+          <van-radio-group :value="answer4" @change="onChange4" :disabled="isLook" >
             <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
           </van-radio-group>
         </div>
         <div class="card">
           <span class="tip">5</span><em style="color: red;display: inline-block">*</em>
           发病前您是否接触过高风险国家人员？
-          <van-radio-group :value="answer5" @change="onChange5" >
+          <van-radio-group :value="answer5" @change="onChange5" :disabled="isLook" >
             <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
           </van-radio-group>
         </div>
@@ -161,7 +169,7 @@
       <div class="body-three">
           <p>是否有以下症状？（如有请在症状前打勾）</p>
           <div style="margin-top: 10px">
-            <van-checkbox-group v-model="answerArr" direction="horizontal" @change="onChangeZz" >
+            <van-checkbox-group v-model="answerArr" :disabled="isLook" direction="horizontal" @change="onChangeZz" >
               <van-checkbox name="6"  checked-color="#07c160">发热，自测体温</van-checkbox>
               <input :disabled="!showTW" class="input" v-model.lazy="temp1" placeholder="自测体温(°C)"/>
               <van-checkbox name="7"  checked-color="#07c160">乏力</van-checkbox>
@@ -182,7 +190,7 @@
 
         <div class="add-btn">
           <span>现场即测体温(°C)：</span>
-          <input v-model.lazy="temp2" type="digit" :maxlength="5" />
+          <input :disabled="isLook"  v-model.lazy="temp2" type="digit" :maxlength="5" />
         </div>
       </div>
     </div>
@@ -234,25 +242,10 @@
 <script>
 
   export default {
-    // watch:{
-    //   idNumber(newValue,oldValue){
-    //     if (newValue&&newValue.length==18){
-    //       this.getIdCard()
-    //       setTimeout(()=>{
-    //         if(this.healthData.birthday){
-    //           let reg = /^((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
-    //           if (!reg.test(this.healthData.birthday) ||this.healthData.birthday.substring(0, 4)>2020) {
-    //             this.errorBirthday='请输入合法的出生年月(1980-01-01)'
-    //           }else {
-    //             this.errorBirthday=''
-    //           }
-    //         }
-    //       },1000)
-    //     }
-    //   }
-    // },
     data() {
       return {
+        addTime:'',
+        isLook:false,
         answerArr:[],
         showTW:false,
         showOT:false,
@@ -508,6 +501,7 @@
               if(res.data.list.length>0){
                 let data = res.data.list[0]
                 console.log(data);
+                this.addTime = data.addTime
                 this.answer1 =  Array.from(data.answer1)
                 this.answer2 =   Array.from(data.answer2)
                 this.answer3 =  data.answer3.toString()
@@ -1053,18 +1047,21 @@
           if(res.code === 200) {
             if(res.data===true){
               this.ifCommit =true
-              wx.showModal({
-                title:'提示',
-                content: '今天您已填写登记表，是否查看健康码？',
-                success (res) {
-                  if (res.confirm) {
-                    wx.redirectTo({ url:'../qrcode/main'})
-                  } else if (res.cancel) {
-                    console.log('用户点击取消')
-                    wx.navigateBack()
-                  }
-                }
-              })
+              this.isLook =true
+              // wx.showModal({
+              //   title:'提示',
+              //   content: '今天您已填写登记表，是否查看健康码？',
+              //   success (res) {
+              //     if (res.confirm) {
+              //       wx.redirectTo({ url:'../qrcode/main'})
+              //     } else if (res.cancel) {
+              //       console.log('用户点击取消')
+              //       wx.navigateBack()
+              //     }
+              //   }
+              // })
+            }else {
+              this.isLook =false
             }
           }
         })
@@ -1143,13 +1140,17 @@
       margin-top: 20px;
     }
     h2{
-      height:56px;
-      font-size:40px;
+      font-size:38px;
       font-family:PingFangSC;
       font-weight:500;
       color:rgba(51,51,51,1);
-      line-height:56px;
-      text-align: left;
+      line-height:48px;
+    }
+    .p-tip{
+      padding: 0 35px 30px;
+      text-align: right;
+      color: #8e8e93;
+      font-size: 24px;
     }
     .content{
       background-color: #fff;
