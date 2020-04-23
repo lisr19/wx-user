@@ -67,6 +67,13 @@
 					"pathName": "pages/newques/main",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": 1,
+					"name": "pages/index/main",
+					"pathName": "pages/index/main",
+					"query": "",
+					"scene": null
 				}
 			]
 		}

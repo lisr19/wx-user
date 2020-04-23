@@ -41,7 +41,7 @@
 			async getMsgList(params){
 				await this.$fly.request({
 					methods:'get',
-					url:"ncpQuestionnaire2/list",
+					url:"ncpQuestionnaire3/list",
 					params })
 					.then(res => {
 						if(res.code === 200) {

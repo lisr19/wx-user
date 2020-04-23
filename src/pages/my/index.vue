@@ -63,7 +63,7 @@
 			return {
         phone:'',
         showPhone:false,
-        edition:'当前版本：3.2.1',
+        edition:'当前版本：3.3.0',
         Qrcode:null,
         showQrcode:false,
 				showPassword:false, //修改密码弹窗
@@ -234,7 +234,8 @@
 			},
 
 			openMy() {
-				this.$router.push({path: '/pages/my/infor/main'})
+				// this.$router.push({path: '/pages/my/infor/main'})
+				this.$router.push({path:'/pages/newques/main'})
 			},
 			openCategory(params) {
 				if (params === '健康档案') {

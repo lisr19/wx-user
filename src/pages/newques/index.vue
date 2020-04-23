@@ -39,33 +39,33 @@
             :error-message=errorIdNumber
         />
           <van-cell required title="性别" :value="gender" size="large" @click="showSex"/>
-          <van-field
-            required
-            size="large"
-            label="出生年月"
-            v-model="healthData.birthday"
-            placeholder="请填写出生年月(1980-01-01)"
-            @change="changeBirthday"
-            :error-message=errorBirthday
-          />
-          <van-field
-            required
-            size="large"
-            label="年龄"
-            v-model="healthData.age"
-            placeholder="年龄自动计算"
-            disabled
-            v-if="!baby"
-          />
-          <van-field
-            v-else
-            required
-            size="large"
-            label="月龄"
-            v-model="healthData.age2"
-            placeholder="年龄自动计算"
-            disabled
-          />
+<!--          <van-field-->
+<!--            required-->
+<!--            size="large"-->
+<!--            label="出生年月"-->
+<!--            v-model="healthData.birthday"-->
+<!--            placeholder="请填写出生年月(1980-01-01)"-->
+<!--            @change="changeBirthday"-->
+<!--            :error-message=errorBirthday-->
+<!--          />-->
+<!--          <van-field-->
+<!--            required-->
+<!--            size="large"-->
+<!--            label="年龄"-->
+<!--            v-model="healthData.age"-->
+<!--            placeholder="年龄自动计算"-->
+<!--            disabled-->
+<!--            v-if="!baby"-->
+<!--          />-->
+<!--          <van-field-->
+<!--            v-else-->
+<!--            required-->
+<!--            size="large"-->
+<!--            label="月龄"-->
+<!--            v-model="healthData.age2"-->
+<!--            placeholder="年龄自动计算"-->
+<!--            disabled-->
+<!--          />-->
           <van-field
             required
             size="large"
@@ -77,10 +77,24 @@
           <van-field
             required
             size="large"
-            label="联系电话"
+            label="本人电话"
             v-model="username"
-            placeholder="请输入联系电话"
+            placeholder="请输入本人电话"
             @change="changePhone"
+          />
+          <van-field
+            size="large"
+            label="联系人"
+            v-model="healthData.residenceContact"
+            placeholder="请输入联系人"
+            @change="changeContact"
+          />
+          <van-field
+            size="large"
+            label="联系电话"
+            v-model="healthData.residenceContactPhone"
+            placeholder="请输入联系人电话"
+            @change="changeContactPhone"
           />
           <van-field
             required
@@ -102,76 +116,77 @@
         </div>
         <div class="card">
           <span class="tip">1</span><em style="color: red;display: inline-block">*</em>
-          就诊患者是否有发热（一周内）？
-          <van-radio-group :value="answer1" @change="onChange1"  style="display: flex">
-            <van-radio  v-for="(item,index) in radio1" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
-          </van-radio-group>
-          <div class="add-btn">
-            <span><em style="color: red;display: inline-block">*</em>请填写体温：</span>
-            <input v-model.lazy="answer11" type="digit" :maxlength="5" />
-          </div>
+          近14天内您有到过以下地方吗？
+          <van-checkbox-group v-model="answer1" direction="horizontal" @change="onChange1" >
+            <van-checkbox name="0" :disabled="disabled1" checked-color="#07c160">国外</van-checkbox>
+            <input v-if="showOther1" class="input" v-model.lazy="answer011" placeholder="请填写具体国家和地区"/>
+            <van-checkbox name="1" :disabled="disabled1" checked-color="#07c160">湖北或武汉</van-checkbox>
+            <van-checkbox name="2" :disabled="disabled1" checked-color="#07c160">其他有病例报告的社区</van-checkbox>
+            <van-checkbox name="3"  checked-color="#07c160">都没有</van-checkbox>
+          </van-checkbox-group>
         </div>
         <div class="card">
           <span class="tip">2</span><em style="color: red;display: inline-block">*</em>
-          就诊患者有没有咳嗽、气促等呼吸道症状？
-          <van-radio-group :value="answer2" @change="onChange2" >
+          发病前您接触过以下地区来的发热或有呼吸道症状的患者吗？
+          <van-checkbox-group v-model="answer2" direction="horizontal" @change="onChange2" >
+            <van-checkbox name="0" :disabled="disabled2" checked-color="#07c160">国外</van-checkbox>
+            <input v-if="showOther2" class="input" v-model.lazy="answer021" placeholder="请填写具体国家和地区"/>
+            <van-checkbox name="1" :disabled="disabled2" checked-color="#07c160">湖北或武汉</van-checkbox>
+            <van-checkbox name="2" :disabled="disabled2" checked-color="#07c160">其他有病例报告的社区  </van-checkbox>
+            <van-checkbox name="3"  checked-color="#07c160">都没有</van-checkbox>
+          </van-checkbox-group>
+        </div>
+        <div class="card">
+          <span class="tip">3</span><em style="color: red;display: inline-block">*</em>
+          3.发病前您接触过新型冠状病毒感染者（核酸检测阳性者）吗？
+          <van-radio-group :value="answer3" @change="onChange3" >
             <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
           </van-radio-group>
         </div>
         <div class="card">
-          <span class="tip">3</span><em style="color: red;display: inline-block">*</em>
-          就诊患者14天内有到过以下地方吗？
-          <p style="margin-top: -8px"></p>
-          <van-checkbox-group v-model="answer3" direction="horizontal" @change="onChange3" >
-            <van-checkbox name="0" checked-color="#07c160">都没有</van-checkbox>
-            <van-checkbox name="1" :disabled="disabled" checked-color="#07c160">湖北或武汉</van-checkbox>
-            <van-checkbox name="2" :disabled="disabled" checked-color="#07c160">国（境）外</van-checkbox>
-            <van-checkbox name="3" :disabled="disabled" checked-color="#07c160">其他明确的新冠肺炎疫区</van-checkbox>
-          </van-checkbox-group>
-          <div v-if="showOther">
-            <span>如果有，请填写具体国家和地区</span>
-            <input class="input" v-model.lazy="answer31" placeholder="请填写具体国家和地区"/>
-          </div>
-        </div>
-        <div class="card">
           <span class="tip">4</span><em style="color: red;display: inline-block">*</em>
-          就诊患者14天内接触过来自湖北、武汉，或境内其他有病例报告社区的发热或有呼吸道症状的患者？
+          近14天内您的家庭、学校或办公室等小范围内有无出现2例及以上发热和/或呼吸道症状
           <van-radio-group :value="answer4" @change="onChange4" >
             <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
           </van-radio-group>
         </div>
         <div class="card">
           <span class="tip">5</span><em style="color: red;display: inline-block">*</em>
-          就诊患者14天内接触过新冠肺炎确诊病例、疑似病例和无症状感染者吗？
+          发病前您是否接触过高风险国家人员？
           <van-radio-group :value="answer5" @change="onChange5" >
             <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
           </van-radio-group>
         </div>
-        <div class="card">
-          <span class="tip">6</span><em style="color: red;display: inline-block">*</em>
-          就诊患者14天内接触过外籍人员或境外返回人员吗？
-          <van-radio-group :value="answer6" @change="onChange6" >
-            <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
-          </van-radio-group>
-        </div>
-        <div class="card">
-          <span class="tip">7</span><em style="color: red;display: inline-block">*</em>
-          就诊患者14天内有无小范围内（如家庭、办公室、学校班级、车间等场所）出现2例及以上发热或呼吸道症状的病例？
-          <van-radio-group :value="answer7" @change="onChange7" >
-            <van-radio  v-for="(item,index) in radio" :name="item.label" :key="item" checked-color="#07c160">{{item.name}}</van-radio>
-          </van-radio-group>
-        </div>
-        <div class="card">
-          <span class="tip">8</span><em style="color: red;display: inline-block">*</em>
-          是否保证上述内容属实？
-          <van-radio-group :value="answer8" @change="onChange8" >
-            <van-radio  v-for="(item,index) in radio2" :name="item.label" :key="item" checked-color="#07c160" style="margin-bottom: 15px">{{item.name}}</van-radio>
-          </van-radio-group>
+      </div>
+      <div class="body-three">
+          <p>是否有以下症状？（如有请在症状前打勾）</p>
+          <div style="margin-top: 10px">
+            <van-checkbox-group v-model="answerArr" direction="horizontal" @change="onChangeZz" >
+              <van-checkbox name="6"  checked-color="#07c160">发热，自测体温</van-checkbox>
+              <input :disabled="!showTW" class="input" v-model.lazy="temp1" placeholder="自测体温(°C)"/>
+              <van-checkbox name="7"  checked-color="#07c160">乏力</van-checkbox>
+              <van-checkbox name="8"  checked-color="#07c160">咳嗽</van-checkbox>
+              <van-checkbox name="9"  checked-color="#07c160">呼吸困难</van-checkbox>
+              <van-checkbox name="10"  checked-color="#07c160">呕吐</van-checkbox>
+              <input  :disabled="!showOT" class="input" v-model.lazy="answer101" placeholder="呕吐（次/天） "/>
+              <van-checkbox name="11"  checked-color="#07c160">腹泻</van-checkbox>
+              <input  :disabled="!showFX"  class="input" v-model.lazy="answer111" placeholder="腹泻（次/天） "/>
+              <van-checkbox name="12"  checked-color="#07c160">鼻塞</van-checkbox>
+              <van-checkbox name="13"  checked-color="#07c160">流涕</van-checkbox>
+              <van-checkbox name="14"  checked-color="#07c160">咽痛</van-checkbox>
+              <van-checkbox name="15"  checked-color="#07c160">肌痛 </van-checkbox><br>
+              <van-checkbox name="16"  checked-color="#07c160">其它症状 </van-checkbox>
+              <input style="width: 100%" :disabled="!showQT" class="input" v-model.lazy="answer161" placeholder="其它症状 "/>
+            </van-checkbox-group>
+          </div>
+
+        <div class="add-btn">
+          <span>现场即测体温(°C)：</span>
+          <input v-model.lazy="temp2" type="digit" :maxlength="5" />
         </div>
       </div>
     </div>
-    <div v-if="!isSubmit&&!ifCommit&&oversea==0" class="btn" @click="saveData">提交</div>
-    <div v-else-if="!isSubmit&&!ifCommit&&oversea==1" class="btn" @click="saveData2">提交</div>
+    <div v-if="!isSubmit&&!ifCommit" class="btn" @click="saveData">提交</div>
     <div v-else class="btn" @click="goBackIndex">返回</div>
     <!--选择性别弹窗-->
     <van-popup :show="showSexBox">
@@ -219,27 +234,35 @@
 <script>
 
   export default {
-    watch:{
-      idNumber(newValue,oldValue){
-        if (newValue&&newValue.length==18){
-          this.getIdCard()
-          setTimeout(()=>{
-            if(this.healthData.birthday){
-              let reg = /^((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
-              if (!reg.test(this.healthData.birthday) ||this.healthData.birthday.substring(0, 4)>2020) {
-                this.errorBirthday='请输入合法的出生年月(1980-01-01)'
-              }else {
-                this.errorBirthday=''
-              }
-            }
-          },1000)
-        }
-      }
-    },
+    // watch:{
+    //   idNumber(newValue,oldValue){
+    //     if (newValue&&newValue.length==18){
+    //       this.getIdCard()
+    //       setTimeout(()=>{
+    //         if(this.healthData.birthday){
+    //           let reg = /^((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
+    //           if (!reg.test(this.healthData.birthday) ||this.healthData.birthday.substring(0, 4)>2020) {
+    //             this.errorBirthday='请输入合法的出生年月(1980-01-01)'
+    //           }else {
+    //             this.errorBirthday=''
+    //           }
+    //         }
+    //       },1000)
+    //     }
+    //   }
+    // },
     data() {
       return {
+        answerArr:[],
+        showTW:false,
+        showOT:false,
+        showFX:false,
+        showQT:false,
+        temp1:null,
+        temp2:null,
         oversea:'0',
-        disabled:false,
+        disabled1:false,
+        disabled2:false,
         errorBirthday:'',
         isRed:false,
         hospital:null,
@@ -260,15 +283,26 @@
         currDate:null,
         showSexBox:false,
         answer1:null,
-        answer11:null,
+        answer011:null,
         answer2:null,
-        answer3:[],
+        answer021:null,
+        answer3:null,
         answer4:null,
         answer5:null,
         answer6:null,
         answer7:null,
         answer8:null,
-        answer31:null,
+        answer9:null,
+        answer10:null,
+        answer101:null,
+        answer11:null,
+        answer111:null,
+        answer12:null,
+        answer13:null,
+        answer14:null,
+        answer15:null,
+        answer16:null,
+        answer161:null,
         radio:[
           {label: 1, name: '是'},
           {label: 0, name: '否'}
@@ -293,10 +327,13 @@
         imgName: '',
         gender:'男', //性别Value
         username:null,
+        residenceContact:null,
+        residenceContactPhone:null,
         myData:{},
         ifCommit:false,
         baby:false,
-        showOther:false
+        showOther1:false,
+        showOther2:false
       }
     },
     onShow() { //返回显示页面状态函数
@@ -306,11 +343,13 @@
       this.showQrcode =false
       this.getDay(0, '-'); //获取当前日期
       this.getHospital()
-      if(this.userId){
+      if(wx.getStorageSync('userId')){
         // this.getIfCommit({userId:this.userId})
         this.getQueList({userId :this.userId,size:2,page:1})
         this.getUserDate({userId:this.userId})
         this.getHealthRecordList({userId:this.userId})
+      }else {
+        this.$toast('账号信息过期，请重新登录')
       }
     },
     onLoad() {
@@ -318,91 +357,6 @@
       Object.assign(this, this.$options.data())
     },
     methods: {
-      //国外
-      saveData2(){
-        if(!this.userId){
-          this.$toast('用户信息过期，请重新登录')
-          return;
-        }
-        if(!this.answer11){
-          this.$toast('请填写体温')
-          return;
-        }
-        let params ={
-          id:this.userId,
-          gender:this.gender==='男'?1:2,
-          name:this.name,
-          username:this.username,
-          idNumber:this.idNumberHz,
-          oversea:1
-        }
-        //国外
-        this.result = 1
-        this.isRed = true
-        if(this.name===null||this.name===''){
-          wx.showToast({title: '请填写真实姓名', icon: 'none'})
-          return
-        }
-        if(this.idNumberHz===null||this.idNumberHz===''){
-          wx.showToast({title: '请输入护照', icon: 'none'})
-          return
-        }
-        if(this.healthData.residenceAddress===null||this.healthData.residenceAddress===''){
-          wx.showToast({title: '请输入现住址', icon: 'none'})
-          return
-        }
-        if(this.healthData.birthday===null||this.healthData.birthday===''){
-          wx.showToast({title: '请输入出生年月', icon: 'none'})
-          return
-        }
-        if(this.username===null||this.username===''){
-          wx.showToast({title: '请填写手机', icon: 'none'})
-          return
-        }
-        if(this.hospital===null){
-          wx.showToast({title: '请选择医院', icon: 'none'})
-          return
-        }
-        if(this.username){
-          let reg = /^1[0-9]{10}$/
-          if (!reg.test(this.username)) {
-            wx.showToast({title: "请输入正确电话号码", icon: 'none',})
-            return
-          }
-          params.username = this.username
-        }
-        if(this.healthData.birthday){
-          let reg = /^((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
-          if (!reg.test(this.healthData.birthday)) {
-            wx.showToast({title: "请输入合法的出生年月(1980-01-01)", icon: 'none',})
-            return
-          }
-        }else if(this.healthData.birthday===''){
-          wx.showToast({title: "出生年月不能为空", icon: 'none',})
-          return;
-        }
-        if(this.answer1===null||this.answer2===null||this.answer4===null||this.answer3.length===0
-          ||this.answer5===null||this.answer6===null ||this.answer7==null||this.answer8===null
-          || this.healthData.residenceAddress===''||this.healthData.birthday===null){
-          this.$toast('必填项不能为空')
-          return
-        }
-        let that = this
-        wx.showModal({
-          title:'提示',
-          content: '请再次确认信息，您确定现在提交吗？',
-          success (res) {
-            if (res.confirm) {
-              console.log(params);
-              that.userUptate(params)
-              that.addQue()
-              that.editHealthRecord()
-            } else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          }
-        })
-      },
       saveData(){
         if(!this.userId){
           this.$toast('用户信息过期，请重新登录')
@@ -413,25 +367,43 @@
           gender:this.gender==='男'?1:2,
           name:this.name,
           username:this.username,
-          idNumber:this.idNumber,
-          oversea:0
+          oversea:this.oversea
         }
         if(this.name===null||this.name===''){
           wx.showToast({title: '请填写真实姓名', icon: 'none'})
           return
         }
-        if(this.idNumber===null||this.idNumber===''){
-          wx.showToast({title: '请输入身份证号码', icon: 'none'})
-          return
+        if(this.oversea==0){
+          console.log('国内');
+          if(this.idNumber===null||this.idNumber===''){
+            wx.showToast({title: '请输入身份证号码', icon: 'none'})
+            return
+          }
+          if(this.idNumber){
+            let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+            if (!reg.test(this.idNumber)) {
+              wx.showToast({title: "请输入正确的身份证号码", icon: 'none',})
+              return;
+            }
+            params.idNumber=this.idNumber
+          }
+        }else {
+          console.log('国外');
+          if(this.idNumberHz===null||this.idNumberHz===''){
+            wx.showToast({title: '请输入护照', icon: 'none'})
+            return
+          }else {
+            params.idNumber=this.idNumberHz
+          }
         }
         if(this.healthData.residenceAddress===null||this.healthData.residenceAddress===''){
           wx.showToast({title: '请输入现住址', icon: 'none'})
           return
         }
-        if(this.healthData.birthday===null||this.healthData.birthday===''){
-          wx.showToast({title: '请输入出生年月', icon: 'none'})
-          return
-        }
+        // if(this.healthData.birthday===null||this.healthData.birthday===''){
+        //   wx.showToast({title: '请输入出生年月', icon: 'none'})
+        //   return
+        // }
         if(this.username===null||this.username===''){
           wx.showToast({title: '请填写手机', icon: 'none'})
           return
@@ -439,13 +411,6 @@
         if(this.hospital===null){
           wx.showToast({title: '请选择医院', icon: 'none'})
           return
-        }
-        if(this.idNumber){
-          let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-          if (!reg.test(this.idNumber)) {
-            wx.showToast({title: "请输入正确的身份证号码", icon: 'none',})
-            return;
-          }
         }
         if(this.username){
           let reg = /^1[0-9]{10}$/
@@ -455,32 +420,66 @@
           }
           params.username = this.username
         }
-        if(this.healthData.birthday){
-          let reg = /^((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
-          if (!reg.test(this.healthData.birthday)) {
-            wx.showToast({title: "请输入合法的出生年月(1980-01-01)", icon: 'none',})
-            return
+        if(this.showOther1){
+          if(!this.answer011){
+            this.$toast('请填写具体国家')
+            return;
           }
-        }else if(this.healthData.birthday===''){
-          wx.showToast({title: "出生年月不能为空", icon: 'none',})
-          return;
         }
-        if(this.answer1===null||this.answer2===null||this.answer3.length===0||this.answer4===null
-          ||this.answer5===null||this.answer6===null ||this.answer7==null||this.answer8===null
-          || this.healthData.residenceAddress===''||this.healthData.birthday===null){
+        if(this.showOther2){
+          if(!this.answer021){
+            this.$toast('请填写具体国家')
+            return;
+          }
+        }
+        if(this.answerArr.includes('6')){
+          if(!this.temp1){
+            this.$toast('请填写自测温度')
+            return;
+          }
+        }
+        if(this.answerArr.includes('10')){
+          if(!this.answer101){
+            this.$toast('请填写呕吐（次数/天）')
+            return;
+          }
+        }
+        if(this.answerArr.includes('11')){
+          if(!this.answer111){
+            this.$toast('请填写腹泻（次数/天）')
+            return;
+          }
+        }
+        if(this.answerArr.includes('16')){
+          if(!this.answer161){
+            this.$toast('请填写其它具体症状')
+            return;
+          }
+        }
+        // if(this.healthData.birthday){
+        //   let reg = /^((((19|20)\d{2})-(0?(1|[3-9])|1[012])-(0?[1-9]|[12]\d|30))|(((19|20)\d{2})-(0?[13578]|1[02])-31)|(((19|20)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))-0?2-29))$/
+        //   if (!reg.test(this.healthData.birthday)) {
+        //     wx.showToast({title: "请输入合法的出生年月(1980-01-01)", icon: 'none',})
+        //     return
+        //   }
+        // }else if(this.healthData.birthday===''){
+        //   wx.showToast({title: "出生年月不能为空", icon: 'none',})
+        //   return;
+        // }
+        if(this.answer1===null||this.answer2===null||this.answer3===null
+          ||this.answer4===null ||this.answer5===null){
           this.$toast('必填项不能为空')
           return
         }
-        if(this.answer1==1||this.answer2==1||this.answer4==1||this.answer5==1||this.answer6==1||this.answer7==1||this.answer8==1){
+        console.log(this.answerArr.length);
+        if(!this.answer1.includes('3')||!this.answer2.includes('3')||this.answerArr.length>0
+          ||this.oversea==1||this.answer3==1||this.answer4==1||this.answer5==1){
+          console.log('红码');
           this.result = 1
           this.isRed = true
         }else {
           this.result = 0
           this.isRed = false
-        }
-        if(!this.answer3.includes('0')){
-          console.log('红码');
-          this.result = 1
         }
         let that = this
         wx.showModal({
@@ -502,40 +501,87 @@
       async getQueList(params){
         await this.$fly.request({
           methods:'get',
-          url:"ncpQuestionnaire2/list",
+          url:"ncpQuestionnaire3/list",
           params })
           .then(res => {
             if(res.code === 200) {
               if(res.data.list.length>0){
                 let data = res.data.list[0]
                 console.log(data);
-                this.answer1 =  data.answer1.toString()
-                this.answer2 =  data.answer2.toString()
-                this.answer3 =  Array.from(data.answer3)
+                this.answer1 =  Array.from(data.answer1)
+                this.answer2 =   Array.from(data.answer2)
+                this.answer3 =  data.answer3.toString()
                 this.answer4 =  data.answer4.toString()
                 this.answer5 =  data.answer5.toString()
-                this.answer6 =  data.answer6.toString()
-                this.answer7 =  data.answer7.toString()
-                this.answer8 =  data.answer8.toString()
+                console.log(data.answer6);
+                if(data.answer6===1){
+                  this.answerArr.push('6')
+                  this.showTW = true
+                }if(data.answer7===1){
+                  this.answerArr.push('7')
+                }if(data.answer8===1){
+                  this.answerArr.push('8')
+                }if(data.answer9===1){
+                  this.answerArr.push('9')
+                }if(data.answer10===1){
+                  this.answerArr.push('10')
+                  this.showOT = true
+                }if(data.answer11===1){
+                  this.answerArr.push('11')
+                  this.showFX = true
+                }if(data.answer12===1){
+                  this.answerArr.push('12')
+                }if(data.answer13===1){
+                  this.answerArr.push('13')
+                }if(data.answer14===1){
+                  this.answerArr.push('14')
+                }if(data.answer15===1){
+                  this.answerArr.push('15')
+                }if(data.answer16===1){
+                  this.answerArr.push('16')
+                  this.showQT = true
+                }
+                console.log(this.answerArr);
                 this.hospitalId = data.hospital
-                console.log(this.answer3);
                 if(this.hospitalId===1){
                   this.hospital = '南部战区总医院'
                 }else {
                   this.hospital = '157医院'
                 }
-                if(this.answer3.includes("0")){
-                  this.disabled = true
-                  this.showOther = false
-                }else {
-                  this.disabled = false
-                  this.showOther = true
+                if(this.answer1.includes("3")){
+                  this.disabled1 = true
+                  this.showOther1 = false
+                }else if(this.answer1.includes("0")){
+                  this.disabled1 = false
+                  this.showOther1 = true
                 }
-                if(data.answer31){
-                  this.answer31 = data.answer31
+                if(this.answer2.includes("3")){
+                  this.disabled2 = true
+                  this.showOther2 = false
+                }else if(this.answer1.includes("0")){
+                  this.disabled2 = false
+                  this.showOther2 = true
                 }
-                if(data.answer11){
-                  this.answer11 = data.answer11
+                if(data.temp1){
+                  this.temp1 = data.temp1
+                }
+                if(data.temp2){
+                  this.temp2 = data.temp2
+                }
+                if(data.answer011){
+                  this.answer011 = data.answer011
+                }
+                if(data.answer021){
+                  this.answer021 = data.answer021
+                }
+                if(data.answer101){
+                  this.answer101 = data.answer101
+                }
+                if(data.answer111){
+                  this.answer111 = data.answer111
+                }
+                if(data.answer161){
+                  this.answer161 = data.answer161
                 }
               }
             }})
@@ -630,12 +676,11 @@
       //编辑健康档案
       async editHealthRecord(){
         let params = {
-          // 必填项
-          // id:this.healthData.id,
           userId:this.userId,
           residenceAddress:this.healthData.residenceAddress,
           birthday:this.healthData.birthday,
-          residenceContactPhone:this.username,
+          residenceContactPhone:this.healthData.residenceContactPhone,
+          residenceContact:this.healthData.residenceContact,
           gender:this.gender==='男'?1:2,
           name:this.name
         }
@@ -666,6 +711,12 @@
         }else {
           this.errorPhone=''
         }
+      },
+      changeContact(event){
+        this.healthData.residenceContact = event.mp.detail
+      },
+      changeContactPhone(event){
+        this.healthData.residenceContactPhone = event.mp.detail
       },
       changeAddress (event) {
         this.healthData.residenceAddress = event.mp.detail
@@ -745,24 +796,67 @@
       onChangeOversea (event) {
         this.oversea =event.mp.detail
       },
+      onChangeZz(event){
+        console.log(event.mp.detail);
+        this.answerArr = event.mp.detail
+        if(this.answerArr.includes('6')){
+          this.showTW =true
+        }else {
+          this.showTW =false
+          this.temp1 =''
+        }
+        if(this.answerArr.includes('10')){
+          this.showOT =true
+        }else {
+          this.showOT =false
+          this.answer101 =null
+        }
+        if(this.answerArr.includes('11')){
+          this.showFX =true
+        }else {
+          this.showFX =false
+          this.answer111 =null
+        }
+        if(this.answerArr.includes('16')){
+          this.showQT =true
+        }else {
+          this.showQT =false
+          this.answer161 =null
+        }
+      },
       onChange1 (event) {
-        this.answer1 =event.mp.detail
+        this.answer1 = event.mp.detail
+        console.log(this.answer1);
+        if(this.answer1.includes('3')){
+          this.disabled1=true
+          this.answer1=["3"]
+          this.showOther1 = false
+        }else if(this.answer1.includes('0')){
+          this.showOther1 = true
+        }else {
+          this.disabled1=false
+          this.showOther1=false
+        }
+        console.log(this.answer1);
       },
       onChange2 (event) {
         this.answer2 = event.mp.detail
-      },
-      onChange3 (event) {
-        this.answer3 = event.mp.detail
-        if(this.answer3.includes('0')){
-            this.disabled=true
-            this.answer3=["0"]
-            this.showOther = false
-            this.answer31=null
+        console.log(this.answer2);
+        if(this.answer2.includes('3')){
+          this.disabled2=true
+          this.answer2=["3"]
+          this.showOther2 = false
+        }else if(this.answer2.includes('0')){
+          this.showOther2 = true
         }else {
-          this.disabled=false
-          this.showOther = true
+          this.disabled2=false
+          this.showOther2=false
         }
       },
+      onChange3 (event) {
+        this.answer3 =event.mp.detail
+      },
+
       onChange4 (event) {
         this.answer4 = event.mp.detail
       },
@@ -813,25 +907,51 @@
       async addQue(){
         let params = {
           userId:wx.getStorageSync('userId'),
-          answer1:parseInt(this.answer1),
-          answer11:this.answer11,
-          answer2:parseInt(this.answer2),
-          answer3:this.answer3.toString(),
+          answer1:this.answer1.toString(),
+          answer2:this.answer2.toString(),
+          answer3:parseInt(this.answer3),
           answer4:parseInt(this.answer4),
           answer5:parseInt(this.answer5),
-          answer6:parseInt(this.answer6),
-          answer7:parseInt(this.answer7),
-          answer8:parseInt(this.answer8),
+          answer6:this.answerArr.includes('6')?1:0,
+          answer7:this.answerArr.includes('7')?1:0,
+          answer8:this.answerArr.includes('8')?1:0,
+          answer9:this.answerArr.includes('9')?1:0,
+          answer10:this.answerArr.includes('10')?1:0,
+          answer11:this.answerArr.includes('11')?1:0,
+          answer12:this.answerArr.includes('12')?1:0,
+          answer13:this.answerArr.includes('13')?1:0,
+          answer14:this.answerArr.includes('14')?1:0,
+          answer15:this.answerArr.includes('15')?1:0,
+          answer16:this.answerArr.includes('16')?1:0,
           hospital:this.hospitalId,
           result:parseInt(this.result)
         }
-        if(this.answer31){
-          params.answer31=this.answer31
+        if(this.answer011){
+          params.answer011= this.answer011
         }
+        if(this.answer021){
+          params.answer021= this.answer021
+        }
+        if(this.answer101){
+          params.answer101= this.answer101
+        }
+        if(this.answer111){
+          params.answer111= this.answer111
+        }
+        if(this.answer161){
+          params.answer161= this.answer161
+        }
+        if(this.temp1){
+          params.temp1= this.temp1
+        }
+        if(this.temp2){
+          params.temp2= this.temp2
+        }
+        console.log(this.answerArr);
         console.log(params);
         await this.$fly.request({
           method:'post',
-          url:"ncpQuestionnaire2/add",
+          url:"ncpQuestionnaire3/add",
           params
         }).then(res =>{
           if(res.code === 200) {
@@ -926,7 +1046,7 @@
       async getIfCommit(params) {
         await this.$fly.request({
           method:'get',
-          url:"ncpQuestionnaire2/ifCommit",
+          url:"ncpQuestionnaire3/ifCommit",
           params
         }).then(res =>{
           let that =this
@@ -966,6 +1086,10 @@
   }
   .van-picker-column__item--selected{
     color: red!important;
+  }
+  input[disabled]{
+    color:#333;
+    background-color: #f4f3e4;
   }
 </style>
 <style scoped>
@@ -1059,6 +1183,17 @@
       border-radius:10px;
       transition: all .3s;
       padding:40px 32px 5px;
+      ._van-checkbox-group{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      ._van-checkbox{
+        margin-right: 50px;
+      }
+      input{
+        margin: 0;
+      }
       .desc{
         line-height: 1.8;
         font-size: 30px;
@@ -1075,14 +1210,7 @@
           margin: 10px 10px 10px 0;
         }
       }
-      .add-btn{
-        display: flex;
-        align-items: center;
-        margin-top: 20px;
-        input{
-          margin:0 0 0 10px;
-        }
-      }
+
       h4{
         font-size:30px;
         font-family:PingFangSC;
@@ -1137,6 +1265,33 @@
         span{
           margin-right: 30px;
         }
+      }
+    }
+    .body-three{
+      background:rgba(255,255,255,1);
+      border-radius:10px;
+      transition: all .3s;
+      border-top: solid 0.5px #f4f3e4;
+      padding:40px 32px;
+      ._van-checkbox-group{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      ._van-checkbox{
+        margin-right:50px;
+      }
+      input{
+        width: 350px;
+        margin: 0;
+      }
+    }
+    .add-btn{
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      input{
+        margin:0 0 0 10px;
       }
     }
   }

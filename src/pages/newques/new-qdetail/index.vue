@@ -270,7 +270,7 @@
       async getDetail(params){
         await this.$fly.request({
           method:'get',
-          url:"ncpQuestionnaire2/detail",
+          url:"ncpQuestionnaire3/detail",
           params
         }).then(res =>{
           if(res.code === 200) {

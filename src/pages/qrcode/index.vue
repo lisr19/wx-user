@@ -11,8 +11,7 @@
       </div>
     </van-popup>
   </div>
-
-</template>`
+</template>
 
 <script>
 	export default {
@@ -36,7 +35,7 @@
       async getIfCommit(params) {
         await this.$fly.request({
           method:'get',
-          url:"ncpQuestionnaire2/ifCommit",
+          url:"ncpQuestionnaire3/ifCommit",
           params
         }).then(res =>{
           let that =this

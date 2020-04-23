@@ -126,7 +126,7 @@ export default {
   beforeMount(){
 
   },
-  mounted () {
+  onLoad(){
     if (wx.canIUse('getUpdateManager')) {
       const updateManager = wx.getUpdateManager()
       updateManager.onCheckForUpdate(function (res) {
