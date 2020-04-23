@@ -63,7 +63,7 @@
 			return {
         phone:'',
         showPhone:false,
-        edition:'当前版本：3.2.0',
+        edition:'当前版本：3.2.1',
         Qrcode:null,
         showQrcode:false,
 				showPassword:false, //修改密码弹窗
@@ -123,6 +123,7 @@
         wx.navigateTo({url:'../register/user-prot/main',query:{from:'index'}})
       },
       async newUserValid() {
+        console.log('点击了确定');
         if(!this.phone){
           this.$toast('请输入手机号码')
           return

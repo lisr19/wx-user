@@ -289,6 +289,7 @@ export default {
       if(wx.getStorageSync('userId')){
         this.$router.push(
           {path:'/pages/question/main'})
+          // {path:'/pages/newques/main'})
       } else {
         this.showPhone =true
       }

@@ -25,18 +25,18 @@
         ifCommit:false
 			}
 		},
-    beforeMount() {
-      this.userId = wx.getStorageSync('userId')
-      this.getQrcode()
-      this.getIfCommit({userId:this.userId})
-    },
 		onShow() {
+      this.userId = wx.getStorageSync('userId')
+      if(this.userId){
+        this.getIfCommit({userId:this.userId})
+        this.getQrcode()
+      }
 		},
 		methods: {
       async getIfCommit(params) {
         await this.$fly.request({
           method:'get',
-          url:"ncpQuestionnaire/ifCommit",
+          url:"ncpQuestionnaire2/ifCommit",
           params
         }).then(res =>{
           let that =this

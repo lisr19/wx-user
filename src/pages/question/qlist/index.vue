@@ -13,7 +13,6 @@
 			</ul>
 			<div  v-if="msgList.length===0" class="msg-null" style="margin-top: 50px">
         无上报记录
-<!--				<img  src="/static/icon/null-news.png" alt="">-->
 			</div>
 		</div>
 	</div>
@@ -42,7 +41,7 @@
 			async getMsgList(params){
 				await this.$fly.request({
 					methods:'get',
-					url:"ncpQuestionnaire/list",
+					url:"ncpQuestionnaire2/list",
 					params })
 					.then(res => {
 						if(res.code === 200) {
@@ -55,7 +54,8 @@
 						}})
 			},
 			openDetail(item){
-				this.$router.push({path:'/pages/question/qdetail/main',query:{id:item.id}})
+				// this.$router.push({path:'/pages/question/qdetail/main',query:{id:item.id}})
+				this.$router.push({path:'/pages/newques/new-qdetail/main',query:{id:item.id}})
 			}
 		},
 	}
