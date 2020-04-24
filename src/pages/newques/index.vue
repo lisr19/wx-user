@@ -43,15 +43,16 @@
             :error-message=errorIdNumber
         />
           <van-cell required title="性别" :value="gender" size="large" @click="showSex"/>
-<!--          <van-field-->
-<!--            required-->
-<!--            size="large"-->
-<!--            label="出生年月"-->
-<!--            v-model="healthData.birthday"-->
-<!--            placeholder="请填写出生年月(1980-01-01)"-->
-<!--            @change="changeBirthday"-->
-<!--            :error-message=errorBirthday-->
-<!--          />-->
+          <van-field
+            required
+            size="large"
+            label="出生年月"
+            v-model="healthData.birthday"
+            placeholder="请填写出生年月(1980-01-01)"
+            @change="changeBirthday"
+            :error-message=errorBirthday
+            style="display: none"
+          />
 <!--          <van-field-->
 <!--            required-->
 <!--            size="large"-->
@@ -127,7 +128,7 @@
           近14天内您有到过以下地方吗？
           <van-checkbox-group v-model="answer1" direction="horizontal" @change="onChange1" :disabled="isLook" >
             <van-checkbox name="0" :disabled="disabled1" checked-color="#07c160">国外</van-checkbox>
-            <input v-if="showOther1" class="input" v-model.lazy="answer011" placeholder="请填写具体国家和地区"/>
+            <input v-if="showOther1"   :disabled="isLook" class="input" v-model.lazy="answer011" placeholder="请填写具体国家和地区"/>
             <van-checkbox name="1" :disabled="disabled1" checked-color="#07c160">湖北或武汉</van-checkbox>
             <van-checkbox name="2" :disabled="disabled1" checked-color="#07c160">其他有病例报告的社区</van-checkbox>
             <van-checkbox name="3"  checked-color="#07c160">都没有</van-checkbox>
@@ -138,7 +139,7 @@
           发病前您接触过以下地区来的发热或有呼吸道症状的患者吗？
           <van-checkbox-group v-model="answer2" direction="horizontal" @change="onChange2" :disabled="isLook" >
             <van-checkbox name="0" :disabled="disabled2" checked-color="#07c160">国外</van-checkbox>
-            <input v-if="showOther2" class="input" v-model.lazy="answer021" placeholder="请填写具体国家和地区"/>
+            <input v-if="showOther2" class="input" v-model.lazy="answer021"   :disabled="isLook" placeholder="请填写具体国家和地区"/>
             <van-checkbox name="1" :disabled="disabled2" checked-color="#07c160">湖北或武汉</van-checkbox>
             <van-checkbox name="2" :disabled="disabled2" checked-color="#07c160">其他有病例报告的社区  </van-checkbox>
             <van-checkbox name="3"  checked-color="#07c160">都没有</van-checkbox>
@@ -269,6 +270,13 @@
 <script>
 
   export default {
+    watch:{
+      idNumber(newValue,oldValue){
+        if (newValue&&newValue.length==18){
+          this.getIdCard()
+        }
+      }
+    },
     data() {
       return {
         nurse:null,
@@ -493,7 +501,7 @@
         //   return;
         // }
         if(this.answer1===null||this.answer2===null||this.answer3===null
-          ||this.answer4===null ||this.answer5===null){
+          ||this.answer4===null ||this.answer5===null||this.answer1.length==0||this.answer2.length==0){
           this.$toast('必填项不能为空')
           return
         }
@@ -533,14 +541,14 @@
             if(res.code === 200) {
               if(res.data.list.length>0){
                 let data = res.data.list[0]
-                console.log(data);
+                // console.log(data);
+                console.log(data.answer1);
                 this.addTime = data.addTime
-                this.answer1 =  Array.from(data.answer1)
-                this.answer2 =   Array.from(data.answer2)
+                this.answer1 =  Array.from(data.answer1.split(','))
+                this.answer2 =  Array.from(data.answer2.split(','))
                 this.answer3 =  data.answer3.toString()
                 this.answer4 =  data.answer4.toString()
                 this.answer5 =  data.answer5.toString()
-                console.log(data.answer6);
                 if(data.answer6===1){
                   this.answerArr.push('6')
                   this.showTW = true
@@ -597,9 +605,11 @@
                 }
                 if(data.answer011){
                   this.answer011 = data.answer011
+                  this.showOther1 =true
                 }
                 if(data.answer021){
                   this.answer021 = data.answer021
+                  this.showOther2 =true
                 }
                 if(data.answer101){
                   this.answer101 = data.answer101
@@ -692,9 +702,11 @@
             }
             if(data.answer011){
               this.answer011 = data.answer011
+              this.showOther1 =true
             }
             if(data.answer021){
               this.answer021 = data.answer021
+              this.showOther2 =true
             }
             if(data.answer101){
               this.answer101 = data.answer101
@@ -808,6 +820,7 @@
       async editHealthRecord(){
         let params = {
           userId:this.userId,
+          birthday:this.healthData.birthday?this.healthData.birthday:'0000-00-00',
           residenceAddress:this.healthData.residenceAddress,
           gender:this.gender==='男'?1:2,
           name:this.name
@@ -977,11 +990,13 @@
           this.disabled1=true
           this.answer1=["3"]
           this.showOther1 = false
+          this.answer011=null
         }else if(this.answer1.includes('0')){
           this.showOther1 = true
         }else {
           this.disabled1=false
           this.showOther1=false
+          this.answer011=null
         }
         console.log(this.answer1);
       },
@@ -992,11 +1007,13 @@
           this.disabled2=true
           this.answer2=["3"]
           this.showOther2 = false
+          this.answer021=null
         }else if(this.answer2.includes('0')){
           this.showOther2 = true
         }else {
           this.disabled2=false
           this.showOther2=false
+          this.answer021=null
         }
       },
       onChange3 (event) {
@@ -1051,6 +1068,7 @@
       },
 
       async addQue(){
+        console.log(this.answer1.toString());
         let params = {
           userId:wx.getStorageSync('userId'),
           answer1:this.answer1.toString(),
@@ -1440,7 +1458,7 @@
         margin-right:50px;
       }
       input{
-        width: 320px;
+        width: 300px;
         margin: 0;
       }
       textarea{
