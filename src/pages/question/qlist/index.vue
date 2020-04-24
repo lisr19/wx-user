@@ -37,11 +37,11 @@
 			this.getMsgList({userId :this.userId,size:this.size,page:1})
 		},
 		methods: {
-			// 获取消息列表
+			// 获取列表
 			async getMsgList(params){
 				await this.$fly.request({
 					methods:'get',
-					url:"ncpQuestionnaire/list",
+					url:"ncpQuestionnaire3/list",
 					params })
 					.then(res => {
 						if(res.code === 200) {
@@ -54,8 +54,8 @@
 						}})
 			},
 			openDetail(item){
-				this.$router.push({path:'/pages/question/qdetail/main',query:{id:item.id}})
-				// this.$router.push({path:'/pages/newques/main',query:{wqid:item.id}})
+				// this.$router.push({path:'/pages/question/qdetail/main',query:{id:item.id}})
+				this.$router.push({path:'/pages/newques/main',query:{wqid:item.id}})
 			}
 		},
 	}

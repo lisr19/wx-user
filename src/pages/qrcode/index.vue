@@ -35,7 +35,7 @@
       async getIfCommit(params) {
         await this.$fly.request({
           method:'get',
-          url:"ncpQuestionnaire/ifCommit",
+          url:"ncpQuestionnaire3/ifCommit",
           params
         }).then(res =>{
           let that =this

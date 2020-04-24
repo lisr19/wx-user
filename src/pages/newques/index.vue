@@ -542,7 +542,6 @@
               if(res.data.list.length>0){
                 let data = res.data.list[0]
                 // console.log(data);
-                console.log(data.answer1);
                 this.addTime = data.addTime
                 this.answer1 =  Array.from(data.answer1.split(','))
                 this.answer2 =  Array.from(data.answer2.split(','))
