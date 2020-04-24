@@ -1261,7 +1261,7 @@
     color: red!important;
   }
   input[disabled]{
-    background-color: #f4f3e4;
+    background-color: #ebedf0;
   }
 </style>
 <style scoped>
@@ -1471,7 +1471,7 @@
       }
       textarea[disabled]{
         color:#333;
-        background-color: #f4f3e4;
+        background-color: #ebedf0;
       }
     }
     .add-btn{
