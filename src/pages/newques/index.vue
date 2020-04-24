@@ -171,30 +171,57 @@
           <div style="margin-top: 10px">
             <van-checkbox-group v-model="answerArr" :disabled="isLook" direction="horizontal" @change="onChangeZz" >
               <van-checkbox name="6"  checked-color="#07c160">发热，自测体温</van-checkbox>
-              <input :disabled="!showTW" class="input" v-model.lazy="temp1" placeholder="自测体温(°C)"/>
+              <input :disabled="!showTW||isLook"  class="input" type="digit" :maxlength="5" v-model.lazy="temp1" placeholder="自测体温(°C)"/>
               <van-checkbox name="7"  checked-color="#07c160">乏力</van-checkbox>
               <van-checkbox name="8"  checked-color="#07c160">咳嗽</van-checkbox>
               <van-checkbox name="9"  checked-color="#07c160">呼吸困难</van-checkbox>
               <van-checkbox name="10"  checked-color="#07c160">呕吐</van-checkbox>
-              <input  :disabled="!showOT" class="input" v-model.lazy="answer101" placeholder="呕吐（次/天） "/>
+              <input  :disabled="!showOT||isLook" class="input" v-model.lazy="answer101" type="number"  :maxlength="2" placeholder="呕吐（次/天） "/>
               <van-checkbox name="11"  checked-color="#07c160">腹泻</van-checkbox>
-              <input  :disabled="!showFX"  class="input" v-model.lazy="answer111" placeholder="腹泻（次/天） "/>
+              <input  :disabled="!showFX||isLook"  class="input" v-model.lazy="answer111" type="number" :maxlength="2" placeholder="腹泻（次/天） "/>
               <van-checkbox name="12"  checked-color="#07c160">鼻塞</van-checkbox>
               <van-checkbox name="13"  checked-color="#07c160">流涕</van-checkbox>
               <van-checkbox name="14"  checked-color="#07c160">咽痛</van-checkbox>
               <van-checkbox name="15"  checked-color="#07c160">肌痛 </van-checkbox><br>
               <van-checkbox name="16"  checked-color="#07c160">其它症状 </van-checkbox>
-              <input style="width: 100%" :disabled="!showQT" class="input" v-model.lazy="answer161" placeholder="其它症状 "/>
+              <textarea style="width: 100%" :disabled="!showQT||isLook" class="textarea" v-model.lazy="answer161" placeholder="请输入其它具体症状 "/>
+<!--              <input style="width: 100%" :disabled="!showQT||isLook" class="input" v-model.lazy="answer161" placeholder="请输入其它具体症状 "/>-->
             </van-checkbox-group>
           </div>
-
-        <div class="add-btn">
-          <span>现场即测体温(°C)：</span>
-          <input :disabled="isLook"  v-model.lazy="temp2" type="digit" :maxlength="5" />
+        <div style="margin-top: 30px">
+          <van-cell-group>
+            <van-field
+              size="large"
+              type="digit"
+              :maxlength="5"
+              title-width="auto"
+              label="现场即测体温(°C)"
+              v-model="temp2"
+              placeholder="现场即测体温(°C)"
+              :disabled="isLook"
+              @change="changeTemp2"
+            />
+            <van-field
+              size="large"
+              label="护士姓名"
+              v-model="nurse"
+              placeholder="请输入护士姓名"
+              :disabled="isLook"
+              @change="changeNurse"
+            />
+            <van-field
+              size="large"
+              label="医生姓名"
+              v-model="doctor"
+              placeholder="请输入医生姓名"
+              :disabled="isLook"
+              @change="changeDoctor"
+            />
+          </van-cell-group>
         </div>
       </div>
     </div>
-    <div v-if="!isSubmit&&!ifCommit" class="btn" @click="saveData">提交</div>
+    <div v-if="!isSubmit&&!ifCommit&&!isLook" class="btn" @click="saveData">提交</div>
     <div v-else class="btn" @click="goBackIndex">返回</div>
     <!--选择性别弹窗-->
     <van-popup :show="showSexBox">
@@ -244,6 +271,8 @@
   export default {
     data() {
       return {
+        nurse:null,
+        doctor:null,
         addTime:'',
         isLook:false,
         answerArr:[],
@@ -338,9 +367,13 @@
       this.getHospital()
       if(wx.getStorageSync('userId')){
         // this.getIfCommit({userId:this.userId})
-        this.getQueList({userId :this.userId,size:2,page:1})
         this.getUserDate({userId:this.userId})
         this.getHealthRecordList({userId:this.userId})
+        if(this.$route.query&&this.$route.query.wqid){
+          this.getDetail({id:this.$route.query.wqid})
+        }else {
+          this.getQueList({userId :this.userId,size:1,page:1})
+        }
       }else {
         this.$toast('账号信息过期，请重新登录')
       }
@@ -577,8 +610,112 @@
                 if(data.answer161){
                   this.answer161 = data.answer161
                 }
+                if(data.nurse){
+                  this.nurse = data.nurse
+                }
+                if(data.doctor){
+                  this.doctor = data.doctor
+                }
               }
             }})
+      },
+
+      async getDetail(params){
+        this.isLook=true
+        await this.$fly.request({
+          method:'get',
+          url:"ncpQuestionnaire3/detail",
+          params
+        }).then(res =>{
+          if(res.code === 200) {
+            let data = res.data
+            this.addTime = data.addTime
+            this.answer1 =  Array.from(data.answer1)
+            this.answer2 =   Array.from(data.answer2)
+            this.answer3 =  data.answer3.toString()
+            this.answer4 =  data.answer4.toString()
+            this.answer5 =  data.answer5.toString()
+            console.log(data.answer6);
+            if(data.answer6===1){
+              this.answerArr.push('6')
+              this.showTW = true
+            }if(data.answer7===1){
+              this.answerArr.push('7')
+            }if(data.answer8===1){
+              this.answerArr.push('8')
+            }if(data.answer9===1){
+              this.answerArr.push('9')
+            }if(data.answer10===1){
+              this.answerArr.push('10')
+              this.showOT = true
+            }if(data.answer11===1){
+              this.answerArr.push('11')
+              this.showFX = true
+            }if(data.answer12===1){
+              this.answerArr.push('12')
+            }if(data.answer13===1){
+              this.answerArr.push('13')
+            }if(data.answer14===1){
+              this.answerArr.push('14')
+            }if(data.answer15===1){
+              this.answerArr.push('15')
+            }if(data.answer16===1){
+              this.answerArr.push('16')
+              this.showQT = true
+            }
+            console.log(this.answerArr);
+            this.hospitalId = data.hospital
+            if(this.hospitalId===1){
+              this.hospital = '南部战区总医院'
+            }else {
+              this.hospital = '157医院'
+            }
+            if(this.answer1.includes("3")){
+              this.disabled1 = true
+              this.showOther1 = false
+            }else if(this.answer1.includes("0")){
+              this.disabled1 = false
+              this.showOther1 = true
+            }
+            if(this.answer2.includes("3")){
+              this.disabled2 = true
+              this.showOther2 = false
+            }else if(this.answer1.includes("0")){
+              this.disabled2 = false
+              this.showOther2 = true
+            }
+            if(data.temp1){
+              this.temp1 = data.temp1
+            }
+            if(data.temp2){
+              this.temp2 = data.temp2
+            }
+            if(data.answer011){
+              this.answer011 = data.answer011
+            }
+            if(data.answer021){
+              this.answer021 = data.answer021
+            }
+            if(data.answer101){
+              this.answer101 = data.answer101
+            }
+            if(data.answer111){
+              this.answer111 = data.answer111
+            }
+            if(data.answer161){
+              this.answer161 = data.answer161
+            }
+            if(data.nurse){
+              this.nurse = data.nurse
+            }
+            if(data.doctor){
+              this.doctor = data.doctor
+            }
+          } else {
+            this.$toast(res.message)
+          }}).catch((req)=>{
+          console.log(req)
+        })
       },
       //根据身份证获取出生年月和性别
       getIdCard(){
@@ -672,11 +809,14 @@
         let params = {
           userId:this.userId,
           residenceAddress:this.healthData.residenceAddress,
-          birthday:this.healthData.birthday,
-          residenceContactPhone:this.healthData.residenceContactPhone,
-          residenceContact:this.healthData.residenceContact,
           gender:this.gender==='男'?1:2,
           name:this.name
+        }
+        if(this.healthData.residenceContactPhone){
+          params.residenceContactPhone = this.healthData.residenceContactPhone
+        }
+        if(this.healthData.residenceContact){
+          params.residenceContact = this.healthData.residenceContact
         }
         await this.$fly.request({
           method:'post',
@@ -790,6 +930,15 @@
       onChangeOversea (event) {
         this.oversea =event.mp.detail
       },
+      changeTemp2(event){
+        this.temp2 = event.mp.detail
+      },
+      changeNurse(event){
+        this.nurse = event.mp.detail
+      },
+      changeDoctor(event){
+        this.doctor = event.mp.detail
+      },
       onChangeZz(event){
         console.log(event.mp.detail);
         this.answerArr = event.mp.detail
@@ -815,7 +964,10 @@
           this.showQT =true
         }else {
           this.showQT =false
-          this.answer161 =null
+          setTimeout(()=>{
+            this.answer161 =null
+          },10)
+
         }
       },
       onChange1 (event) {
@@ -940,6 +1092,12 @@
         }
         if(this.temp2){
           params.temp2= this.temp2
+        }
+        if(this.nurse){
+          params.nurse= this.nurse
+        }
+        if(this.doctor){
+          params.doctor= this.doctor
         }
         console.log(this.answerArr);
         console.log(params);
@@ -1072,7 +1230,7 @@
 </script>
 <style>
   .van-field__input{
-    color: #999999!important;
+    color: #999999 !important;
     text-align: right!important;
   }
   .van-field__error-message{
@@ -1085,7 +1243,6 @@
     color: red!important;
   }
   input[disabled]{
-    color:#333;
     background-color: #f4f3e4;
   }
 </style>
@@ -1283,8 +1440,20 @@
         margin-right:50px;
       }
       input{
-        width: 350px;
+        width: 320px;
         margin: 0;
+      }
+      textarea{
+        width: 100%;
+        height: 120px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-top: 10px;
+      }
+      textarea[disabled]{
+        color:#333;
+        background-color: #f4f3e4;
       }
     }
     .add-btn{

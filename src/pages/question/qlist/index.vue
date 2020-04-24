@@ -55,7 +55,7 @@
 			},
 			openDetail(item){
 				// this.$router.push({path:'/pages/question/qdetail/main',query:{id:item.id}})
-				this.$router.push({path:'/pages/newques/new-qdetail/main',query:{id:item.id}})
+				this.$router.push({path:'/pages/newques/main',query:{wqid:item.id}})
 			}
 		},
 	}
