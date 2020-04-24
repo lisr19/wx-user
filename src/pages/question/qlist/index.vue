@@ -41,7 +41,7 @@
 			async getMsgList(params){
 				await this.$fly.request({
 					methods:'get',
-					url:"ncpQuestionnaire3/list",
+					url:"ncpQuestionnaire/list",
 					params })
 					.then(res => {
 						if(res.code === 200) {
@@ -54,8 +54,8 @@
 						}})
 			},
 			openDetail(item){
-				// this.$router.push({path:'/pages/question/qdetail/main',query:{id:item.id}})
-				this.$router.push({path:'/pages/newques/main',query:{wqid:item.id}})
+				this.$router.push({path:'/pages/question/qdetail/main',query:{id:item.id}})
+				// this.$router.push({path:'/pages/newques/main',query:{wqid:item.id}})
 			}
 		},
 	}

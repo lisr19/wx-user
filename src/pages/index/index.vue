@@ -101,7 +101,8 @@ export default {
       ifCommit:false,
       code:null,
       userInfo:{},
-      openId:null
+      openId:null,
+      token:null
 		}
 	},
 
@@ -158,12 +159,12 @@ export default {
     }
   },
 	onShow(){
+    this.getTokenTime()
 		wx.showTabBar()
     this.userId = wx.getStorageSync('userId')
     this.openId = wx.getStorageSync('openId')
-    if(!this.userId||!this.openId){
+    if(!this.userId){
       this.wxlogin()
-      console.log('1——wx登录')
     }else {
       console.log('2——用户已登录')
       this.getHealthList({userId:this.userId})
@@ -171,6 +172,16 @@ export default {
     }
 	},
 	methods: {
+    getTokenTime() {
+      let tokenTime = wx.getStorageSync('tokenTime');//过期时间
+      let currentTime = new Date().getTime();// 当前时间
+      let newTokenTime = 1000*60*60*24*5;
+      console.log(new Date(tokenTime))
+      console.log(currentTime>tokenTime+newTokenTime);
+      if(!tokenTime||currentTime>tokenTime+newTokenTime) {
+        this.wxlogin()
+      }
+    },
     openUserProt(){
       wx.navigateTo({url:'../register/user-prot/main',query:{from:'index'}})
     },
@@ -178,13 +189,11 @@ export default {
       let that = this
       wx.login({
         success(res) {
+          console.log('微信登录');
           that.code=res.code
           console.log(that.code);
           wx.setStorageSync('wxcode', that.code)
           that.getOpenId({code:that.code})
-          setTimeout(()=>{
-            that.showPhone=true
-          },100)
         }
       })
     },
@@ -197,19 +206,19 @@ export default {
       }).then(res =>{
         if(res.code === 200) {
             this.openId = res.data.openId
-            this.userInfo = res.data.userInfo? res.data.userInfo:''
-            let token = res.data.token
-            wx.setStorageSync('token',token);
-            wx.setStorageSync('openId',this.openId);
-            if(this.userInfo){
+            if(!res.data.token){
+              this.showPhone =true
+            }else {
+              this.userInfo = res.data.userInfo
+              let token = res.data.token
+              wx.setStorageSync('token',token);
+              wx.setStorageSync('openId',this.openId);
+              wx.setStorageSync('tokenTime',new Date().getTime());
               wx.setStorageSync('userInfo', this.userInfo);
               wx.setStorageSync('userId', this.userInfo.id);
               wx.setStorageSync('phone', this.userInfo.username);
               this.getNurseList({serviceType:1,size:50})
               this.getHealthList({userId:this.userInfo.id})
-            }else {
-                console.log('4——无用户信息');
-                this.showPhone =true
             }
         }
       })
@@ -243,10 +252,6 @@ export default {
         }
       }
       let that = this
-      if(!this.openId){
-        this.$toast('openId为空，请重新登录')
-        return
-      }
       wx.showModal({
         title:'确认提示',
         content: '请再次确认您的手机号码',
@@ -304,9 +309,6 @@ export default {
     },
 		//获取健康档案信息
 		async getHealthList(params){
-      if(!this.userId){
-        this.showPhone=true
-      }
 			await this.$fly.request({
 				method:'get',
 				url:"userHealthRecord/list",

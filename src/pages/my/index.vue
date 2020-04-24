@@ -63,7 +63,7 @@
 			return {
         phone:'',
         showPhone:false,
-        edition:'当前版本：3.3.0',
+        edition:'当前版本：3.2.3',
         Qrcode:null,
         showQrcode:false,
 				showPassword:false, //修改密码弹窗
@@ -111,11 +111,22 @@
     onShow(){
       this.userId = wx.getStorageSync('userId')
       this.openId = wx.getStorageSync('openId')
-      if(this.userId&&this.openId){
+      if(this.userId){
         this.getUserDate({userId:this.userId})
         this.getQrcode()
       }else {
-        this.showPhone =true
+        wx.showModal({
+          title:'提示',
+          content: '请先绑定手机号码',
+          success (res) {
+            if (res.confirm) {
+              wx.switchTab({url: '../index/main'})
+            } else if (res.cancel) {
+              wx.switchTab({url: '../index/main'})
+              console.log('用户点击取消')
+            }
+          }
+        })
       }
     },
 		methods: {
@@ -196,14 +207,14 @@
             let that = this
             wx.showModal({
               title:'提示',
-              content: '请先绑定手机号码',
+              content: '请重新登录',
               success (res) {
                 if (res.confirm) {
-                  that.showPhone =true
-                  // wx.switchTab({url: '../index/main'})
+                  // that.showPhone =true
+                  wx.switchTab({url: '../index/main'})
                 } else if (res.cancel) {
-                  that.showPhone =true
-                  // wx.switchTab({url: '../index/main'})
+                  // that.showPhone =true
+                  wx.switchTab({url: '../index/main'})
                   console.log('用户点击取消')
                 }
               }
@@ -234,8 +245,8 @@
 			},
 
 			openMy() {
-				// this.$router.push({path: '/pages/my/infor/main'})
-				this.$router.push({path:'/pages/newques/main'})
+				this.$router.push({path: '/pages/my/infor/main'})
+				// this.$router.push({path:'/pages/newques/main'})
 			},
 			openCategory(params) {
 				if (params === '健康档案') {
@@ -322,7 +333,7 @@
                 if(res.code === 200) {
                   wx.clearStorage()
                   wx.clearStorageSync()
-                  that.$toast('解除绑定成功，请重新登录绑定')
+                  that.$toast('解除绑定成功')
                   wx.switchTab({ url: '../index/main' });
                 }else {
                   that.$toast(res.message)
