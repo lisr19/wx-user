@@ -374,7 +374,7 @@
       this.getDay(0, '-'); //获取当前日期
       this.getHospital()
       if(wx.getStorageSync('userId')){
-        // this.getIfCommit({userId:this.userId})
+        this.getIfCommit({userId:this.userId})
         this.getUserDate({userId:this.userId})
         this.getHealthRecordList({userId:this.userId})
         if(this.$route.query&&this.$route.query.wqid){

@@ -245,8 +245,7 @@
 			},
 
 			openMy() {
-				// this.$router.push({path: '/pages/my/infor/main'})
-				this.$router.push({path:'/pages/newques/main'})
+				this.$router.push({path: '/pages/my/infor/main'})
 			},
 			openCategory(params) {
 				if (params === '健康档案') {

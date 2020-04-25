@@ -293,8 +293,8 @@ export default {
     anQue(){
       if(wx.getStorageSync('userId')){
         this.$router.push(
-          {path:'/pages/question/main'})
-          // {path:'/pages/newques/main'})
+          // {path:'/pages/question/main'})
+          {path:'/pages/newques/main'})
       } else {
         this.showPhone =true
       }
