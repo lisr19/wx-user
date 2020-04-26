@@ -27,7 +27,7 @@ fly.interceptors.response.use(
 	(response) => {
 	  setTimeout(()=>{
       wx.hideLoading();
-    },500)
+    },300)
 		return response.data;//请求成功之后将返回值返回
 	},
 	(err) => {

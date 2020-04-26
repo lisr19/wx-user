@@ -516,19 +516,19 @@
 							console.log('有健康档案')
 							this.isEdit = true
 							this.healthData=res.data.list[0]
-              if(!this.healthData.littlePhysicalExercise){
-                this.healthData={
-                  birthday:null,
-                  name:null,
-                  cerebralApoplexyFactor:[],
-                  takeAntihypertensiveDrugs:null,
-                  diabetesMellitus:null,
-                  littlePhysicalExercise:null,
-                  smokingStatus:null,
-                  heavySmoking:null,
-                  hereditaryDisease:null,
-                }
-              }
+              // if(!this.healthData.littlePhysicalExercise){
+              //   this.healthData={
+              //     birthday:null,
+              //     name:null,
+              //     cerebralApoplexyFactor:[],
+              //     takeAntihypertensiveDrugs:null,
+              //     diabetesMellitus:null,
+              //     littlePhysicalExercise:null,
+              //     smokingStatus:null,
+              //     heavySmoking:null,
+              //     hereditaryDisease:null,
+              //   }
+              // }
 							this.sourceList.forEach((item,index)=>{
 								if(item.id===this.healthData.sourceOfReferral){
 									this.healthData.zjName=item.itemName

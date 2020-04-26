@@ -118,19 +118,23 @@
       </div>
       <div class="body-two">
         <div class="desc">
-          &nbsp;&nbsp;&nbsp;&nbsp;根据新型冠状病毒肺炎疫情防控要求，请如实填写下面的调查内容，
+          根据新型冠状病毒肺炎疫情防控要求，请如实填写下面的调查内容，
           如有隐瞒不报或者填写内容不属实，个人承担相关法律责任。
           <p>承诺人：{{name}}</p>
-          <p>日期：{{currDate}}</p>
+          <p v-if="!isLook">日期：{{currDate}}</p>
+          <p v-else>日期：{{txTime}}</p>
         </div>
         <div class="card">
           <span class="tip">1</span><em style="color: red;display: inline-block">*</em>
           近14天内您有到过以下地方吗？
           <van-checkbox-group v-model="answer1" direction="horizontal" @change="onChange1" :disabled="isLook" >
-            <van-checkbox name="0" :disabled="disabled1" checked-color="#07c160">国外</van-checkbox>
-            <input v-if="showOther1"   :disabled="isLook" class="input" v-model.lazy="answer011" placeholder="请填写具体国家和地区"/>
-            <van-checkbox name="1" :disabled="disabled1" checked-color="#07c160">湖北或武汉</van-checkbox>
-            <van-checkbox name="2" :disabled="disabled1" checked-color="#07c160">其他有病例报告的社区</van-checkbox>
+            <van-checkbox name="0"  checked-color="#07c160">国外</van-checkbox>
+            <input  :disabled="isLook||!showOther1" class="input" v-model.lazy="answer011" placeholder="请填写具体国家和地区"/>
+            <van-checkbox name="1"  checked-color="#07c160">湖北或武汉</van-checkbox>
+            <van-checkbox name="2"  checked-color="#07c160">其他有病例报告的社区</van-checkbox>
+<!--            <van-checkbox name="3"  checked-color="#07c160">都没有</van-checkbox>-->
+          </van-checkbox-group>
+          <van-checkbox-group v-model="answerone" direction="horizontal" @change="onChangeOne" :disabled="isLook" >
             <van-checkbox name="3"  checked-color="#07c160">都没有</van-checkbox>
           </van-checkbox-group>
         </div>
@@ -138,10 +142,12 @@
           <span class="tip">2</span><em style="color: red;display: inline-block">*</em>
           发病前您接触过以下地区来的发热或有呼吸道症状的患者吗？
           <van-checkbox-group v-model="answer2" direction="horizontal" @change="onChange2" :disabled="isLook" >
-            <van-checkbox name="0" :disabled="disabled2" checked-color="#07c160">国外</van-checkbox>
-            <input v-if="showOther2" class="input" v-model.lazy="answer021"   :disabled="isLook" placeholder="请填写具体国家和地区"/>
-            <van-checkbox name="1" :disabled="disabled2" checked-color="#07c160">湖北或武汉</van-checkbox>
-            <van-checkbox name="2" :disabled="disabled2" checked-color="#07c160">其他有病例报告的社区  </van-checkbox>
+            <van-checkbox name="0"  checked-color="#07c160">国外</van-checkbox>
+            <input :disabled="isLook||!showOther2" class="input" v-model.lazy="answer021"  placeholder="请填写具体国家和地区"/>
+            <van-checkbox name="1"  checked-color="#07c160">湖北或武汉</van-checkbox>
+            <van-checkbox name="2"  checked-color="#07c160">其他有病例报告的社区  </van-checkbox>
+          </van-checkbox-group>
+          <van-checkbox-group v-model="answertwo" direction="horizontal" @change="onChangeTwo" :disabled="isLook" >
             <van-checkbox name="3"  checked-color="#07c160">都没有</van-checkbox>
           </van-checkbox-group>
         </div>
@@ -185,41 +191,41 @@
               <van-checkbox name="14"  checked-color="#07c160">咽痛</van-checkbox>
               <van-checkbox name="15"  checked-color="#07c160">肌痛 </van-checkbox><br>
               <van-checkbox name="16"  checked-color="#07c160">其它症状 </van-checkbox>
-              <textarea style="width: 100%" :disabled="!showQT||isLook" class="textarea" v-model.lazy="answer161" placeholder="请输入其它具体症状 "/>
+              <textarea v-if="!showQrcode" style="width: 100%" :disabled="!showQT||isLook" class="textarea" v-model.lazy="answer161" placeholder="请输入其它具体症状 "/>
 <!--              <input style="width: 100%" :disabled="!showQT||isLook" class="input" v-model.lazy="answer161" placeholder="请输入其它具体症状 "/>-->
             </van-checkbox-group>
           </div>
-        <div style="margin-top: 30px">
-          <van-cell-group>
-            <van-field
-              size="large"
-              type="digit"
-              :maxlength="5"
-              title-width="auto"
-              label="现场即测体温(°C)"
-              v-model="temp2"
-              placeholder="现场即测体温(°C)"
-              :disabled="isLook"
-              @change="changeTemp2"
-            />
-            <van-field
-              size="large"
-              label="护士姓名"
-              v-model="nurse"
-              placeholder="请输入护士姓名"
-              :disabled="isLook"
-              @change="changeNurse"
-            />
-            <van-field
-              size="large"
-              label="医生姓名"
-              v-model="doctor"
-              placeholder="请输入医生姓名"
-              :disabled="isLook"
-              @change="changeDoctor"
-            />
-          </van-cell-group>
-        </div>
+<!--        <div style="margin-top: 30px">-->
+<!--          <van-cell-group>-->
+<!--            <van-field-->
+<!--              size="large"-->
+<!--              type="digit"-->
+<!--              :maxlength="5"-->
+<!--              title-width="auto"-->
+<!--              label="现场即测体温(°C)"-->
+<!--              v-model="temp2"-->
+<!--              placeholder="现场即测体温(°C)"-->
+<!--              :disabled="isLook"-->
+<!--              @change="changeTemp2"-->
+<!--            />-->
+<!--            <van-field-->
+<!--              size="large"-->
+<!--              label="护士姓名"-->
+<!--              v-model="nurse"-->
+<!--              placeholder="请输入护士姓名"-->
+<!--              :disabled="isLook"-->
+<!--              @change="changeNurse"-->
+<!--            />-->
+<!--            <van-field-->
+<!--              size="large"-->
+<!--              label="医生姓名"-->
+<!--              v-model="doctor"-->
+<!--              placeholder="请输入医生姓名"-->
+<!--              :disabled="isLook"-->
+<!--              @change="changeDoctor"-->
+<!--            />-->
+<!--          </van-cell-group>-->
+<!--        </div>-->
       </div>
     </div>
     <div v-if="!isSubmit&&!ifCommit&&!isLook" class="btn" @click="saveData">提交</div>
@@ -279,9 +285,12 @@
     },
     data() {
       return {
+        answerone:null,
+        answertwo:null,
         nurse:null,
         doctor:null,
         addTime:'',
+        txTime:'',
         isLook:false,
         answerArr:[],
         showTW:false,
@@ -500,13 +509,13 @@
         //   wx.showToast({title: "出生年月不能为空", icon: 'none',})
         //   return;
         // }
-        if(this.answer1===null||this.answer2===null||this.answer3===null
-          ||this.answer4===null ||this.answer5===null||this.answer1.length==0||this.answer2.length==0){
+        if((this.answer1===null&&this.answerone===null)||(this.answer2===null&&this.answertwo===null)||this.answer3===null
+          ||this.answer4===null ||this.answer5===null){
           this.$toast('必填项不能为空')
           return
         }
         console.log(this.answerArr.length);
-        if(!this.answer1.includes('3')||!this.answer2.includes('3')||this.answerArr.length>0
+        if(this.answer1||this.answer2||this.answerArr.length>0
           ||this.oversea==1||this.answer3==1||this.answer4==1||this.answer5==1){
           console.log('红码');
           this.result = 1
@@ -543,8 +552,19 @@
                 let data = res.data.list[0]
                 // console.log(data);
                 this.addTime = data.addTime
-                this.answer1 =  Array.from(data.answer1.split(','))
-                this.answer2 =  Array.from(data.answer2.split(','))
+                this.txTime = data.addTime.slice(0,10)
+                if(data.answer1==='3'){
+                  this.answerone = ['3']
+                  this.answer1=null
+                }else {
+                  this.answer1 = Array.from(data.answer1.split(','))
+                }
+                console.log(this.answer1);
+                if(data.answer2==='3'){
+                  this.answertwo = ['3']
+                }else {
+                  this.answer2 =  Array.from(data.answer2.split(','))
+                }
                 this.answer3 =  data.answer3.toString()
                 this.answer4 =  data.answer4.toString()
                 this.answer5 =  data.answer5.toString()
@@ -582,20 +602,6 @@
                 }else {
                   this.hospital = '157医院'
                 }
-                if(this.answer1.includes("3")){
-                  this.disabled1 = true
-                  this.showOther1 = false
-                }else if(this.answer1.includes("0")){
-                  this.disabled1 = false
-                  this.showOther1 = true
-                }
-                if(this.answer2.includes("3")){
-                  this.disabled2 = true
-                  this.showOther2 = false
-                }else if(this.answer1.includes("0")){
-                  this.disabled2 = false
-                  this.showOther2 = true
-                }
                 if(data.temp1){
                   this.temp1 = data.temp1
                 }
@@ -605,10 +611,14 @@
                 if(data.answer011){
                   this.answer011 = data.answer011
                   this.showOther1 =true
+                }else {
+                  this.showOther1 =false
                 }
                 if(data.answer021){
                   this.answer021 = data.answer021
                   this.showOther2 =true
+                }else {
+                  this.showOther2 =false
                 }
                 if(data.answer101){
                   this.answer101 = data.answer101
@@ -639,12 +649,23 @@
           if(res.code === 200) {
             let data = res.data
             this.addTime = data.addTime
-            this.answer1 =  Array.from(data.answer1)
-            this.answer2 =   Array.from(data.answer2)
+            this.txTime = data.addTime.slice(0,10)
+            if(data.answer1==='3'){
+              console.log(11111111);
+              this.answerone = ['3']
+              this.answer1=null
+            }else {
+              this.answer1 = Array.from(data.answer1.split(','))
+            }
+            console.log(this.answer1);
+            if(data.answer2==='3'){
+              this.answertwo = ['3']
+            }else {
+              this.answer2 =  Array.from(data.answer2.split(','))
+            }
             this.answer3 =  data.answer3.toString()
             this.answer4 =  data.answer4.toString()
             this.answer5 =  data.answer5.toString()
-            console.log(data.answer6);
             if(data.answer6===1){
               this.answerArr.push('6')
               this.showTW = true
@@ -678,20 +699,6 @@
               this.hospital = '南部战区总医院'
             }else {
               this.hospital = '157医院'
-            }
-            if(this.answer1.includes("3")){
-              this.disabled1 = true
-              this.showOther1 = false
-            }else if(this.answer1.includes("0")){
-              this.disabled1 = false
-              this.showOther1 = true
-            }
-            if(this.answer2.includes("3")){
-              this.disabled2 = true
-              this.showOther2 = false
-            }else if(this.answer1.includes("0")){
-              this.disabled2 = false
-              this.showOther2 = true
             }
             if(data.temp1){
               this.temp1 = data.temp1
@@ -982,37 +989,46 @@
 
         }
       },
+      onChangeOne(event){
+        this.answerone = event.mp.detail
+        if(this.answerone){
+          this.answer1=null
+          this.answer011=null
+          this.showOther1 = false
+        }
+      },
       onChange1 (event) {
         this.answer1 = event.mp.detail
         console.log(this.answer1);
-        if(this.answer1.includes('3')){
-          this.disabled1=true
-          this.answer1=["3"]
-          this.showOther1 = false
-          this.answer011=null
-        }else if(this.answer1.includes('0')){
-          this.showOther1 = true
-        }else {
-          this.disabled1=false
-          this.showOther1=false
-          this.answer011=null
+        if(this.answer1.length>0){
+          this.answerone = null
+          if(this.answer1.includes('0')){
+            this.showOther1 = true
+          }else {
+            this.showOther1 = false
+            this.answer011=null
+          }
         }
-        console.log(this.answer1);
+      },
+      onChangeTwo(event){
+        this.answertwo = event.mp.detail
+        if(this.answertwo){
+          this.answer2=null
+          this.answer021=null
+          this.showOther2 = false
+        }
       },
       onChange2 (event) {
         this.answer2 = event.mp.detail
         console.log(this.answer2);
-        if(this.answer2.includes('3')){
-          this.disabled2=true
-          this.answer2=["3"]
-          this.showOther2 = false
-          this.answer021=null
-        }else if(this.answer2.includes('0')){
-          this.showOther2 = true
-        }else {
-          this.disabled2=false
-          this.showOther2=false
-          this.answer021=null
+        if(this.answer2.length>0){
+          this.answertwo = null
+          if(this.answer2.includes('0')){
+            this.showOther2 = true
+          }else {
+            this.showOther2 = false
+            this.answer021=null
+          }
         }
       },
       onChange3 (event) {
@@ -1067,11 +1083,10 @@
       },
 
       async addQue(){
-        console.log(this.answer1.toString());
         let params = {
           userId:wx.getStorageSync('userId'),
-          answer1:this.answer1.toString(),
-          answer2:this.answer2.toString(),
+          answer1:this.answer1?this.answer1.toString():'3',
+          answer2:this.answer2?this.answer2.toString():'3',
           answer3:parseInt(this.answer3),
           answer4:parseInt(this.answer4),
           answer5:parseInt(this.answer5),
@@ -1089,6 +1104,8 @@
           hospital:this.hospitalId,
           result:parseInt(this.result)
         }
+        console.log(this.answer1);
+        console.log(this.answerone);
         if(this.answer011){
           params.answer011= this.answer011
         }
@@ -1116,7 +1133,6 @@
         if(this.doctor){
           params.doctor= this.doctor
         }
-        console.log(this.answerArr);
         console.log(params);
         await this.$fly.request({
           method:'post',
@@ -1371,9 +1387,11 @@
       }
       .desc{
         line-height: 1.8;
-        font-size: 30px;
+        font-size: 38px;
         margin: 20px 0;
-        color: #FF1706;
+        font-weight: 500;
+        text-indent:2em;
+        /*color: #FF1706;*/
         p{
           text-align: right;
         }
