@@ -87,7 +87,7 @@
             v-model="username"
             placeholder="请输入本人电话"
             @change="changePhone"
-            :disabled="isLook"
+            disabled
           />
           <van-field
             size="large"
@@ -104,6 +104,7 @@
             placeholder="请输入联系人电话"
             @change="changeContactPhone"
             :disabled="isLook"
+            type="digit"
           />
           <van-field
             required
@@ -1387,11 +1388,11 @@
       }
       .desc{
         line-height: 1.8;
-        font-size: 38px;
+        font-size: 36px;
         margin: 20px 0;
-        font-weight: 500;
+        font-weight: 700;
         text-indent:2em;
-        /*color: #FF1706;*/
+        color: #FF1706;
         p{
           text-align: right;
         }
