@@ -191,8 +191,8 @@
               <van-checkbox name="13"  checked-color="#07c160">流涕</van-checkbox>
               <van-checkbox name="14"  checked-color="#07c160">咽痛</van-checkbox>
               <van-checkbox name="15"  checked-color="#07c160">肌痛 </van-checkbox><br>
-              <van-checkbox name="16"  checked-color="#07c160">其它症状 </van-checkbox>
-              <textarea v-if="!showQrcode" style="width: 100%" :disabled="!showQT||isLook" class="textarea" v-model.lazy="answer161" placeholder="请输入其它具体症状 "/>
+<!--              <van-checkbox name="16"  checked-color="#07c160">其它症状 </van-checkbox>-->
+<!--              <textarea v-if="!showQrcode" style="width: 100%" :disabled="!showQT||isLook" class="textarea" v-model.lazy="answer161" placeholder="请输入其它具体症状 "/>-->
 <!--              <input style="width: 100%" :disabled="!showQT||isLook" class="input" v-model.lazy="answer161" placeholder="请输入其它具体症状 "/>-->
             </van-checkbox-group>
           </div>
